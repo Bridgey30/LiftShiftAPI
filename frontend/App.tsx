@@ -28,6 +28,13 @@ import {
   getPreferencesConfirmed,
   savePreferencesConfirmed,
   clearThemeMode,
+  getTimezone,
+  saveTimezone,
+  clearTimezone,
+  getLanguage,
+  saveLanguage,
+  clearLanguage,
+  Language,
 } from './utils/storage/localStorage';
 import { LayoutDashboard, Dumbbell, History, CheckCircle2, X, Calendar, BicepsFlexed, Pencil, RefreshCw, Sparkles, LogOut } from 'lucide-react';
 import { format, isSameDay, isWithinInterval, startOfDay, endOfDay } from 'date-fns';
@@ -202,6 +209,8 @@ const App: React.FC = () => {
     clearBodyMapGender();
     clearPreferencesConfirmed();
     clearThemeMode();
+    clearTimezone();
+    clearLanguage();
     computationCache.clear();
     window.location.reload();
   }, []);
@@ -221,6 +230,22 @@ const App: React.FC = () => {
   useEffect(() => {
     saveWeightUnit(weightUnit);
   }, [weightUnit]);
+
+  // Timezone state with localStorage persistence
+  const [timezone, setTimezone] = useState<string>(() => getTimezone());
+
+  // Persist timezone to localStorage when it changes
+  useEffect(() => {
+    saveTimezone(timezone);
+  }, [timezone]);
+
+  // Language state with localStorage persistence
+  const [language, setLanguage] = useState<Language>(() => getLanguage());
+
+  // Persist language to localStorage when it changes
+  useEffect(() => {
+    saveLanguage(language);
+  }, [language]);
 
   // Handler for navigating to ExerciseView from MuscleAnalysis
   const handleExerciseClick = (exerciseName: string) => {
@@ -1200,8 +1225,12 @@ const App: React.FC = () => {
             isLoading={isAnalyzing}
             initialGender={bodyMapGender}
             initialUnit={weightUnit}
+            initialTimezone={timezone}
+            initialLanguage={language}
             onGenderChange={(g) => setBodyMapGender(g)}
             onUnitChange={(u) => setWeightUnit(u)}
+            onTimezoneChange={(tz) => setTimezone(tz)}
+            onLanguageChange={(lang) => setLanguage(lang)}
             errorMessage={csvImportError}
             onBack={() => setOnboarding(null)}
             onClose={() => setOnboarding(null)}
@@ -1241,8 +1270,12 @@ const App: React.FC = () => {
           isLoading={isAnalyzing}
           initialGender={getPreferencesConfirmed() ? bodyMapGender : undefined}
           initialUnit={getPreferencesConfirmed() ? weightUnit : undefined}
+          initialTimezone={getPreferencesConfirmed() ? timezone : undefined}
+          initialLanguage={getPreferencesConfirmed() ? language : undefined}
           onGenderChange={(g) => setBodyMapGender(g)}
           onUnitChange={(u) => setWeightUnit(u)}
+          onTimezoneChange={(tz) => setTimezone(tz)}
+          onLanguageChange={(lang) => setLanguage(lang)}
           onContinue={(gender, unit) => {
             setBodyMapGender(gender);
             setWeightUnit(unit);
@@ -1271,8 +1304,12 @@ const App: React.FC = () => {
           isLoading={isAnalyzing}
           initialGender={getPreferencesConfirmed() ? bodyMapGender : undefined}
           initialUnit={getPreferencesConfirmed() ? weightUnit : undefined}
+          initialTimezone={getPreferencesConfirmed() ? timezone : undefined}
+          initialLanguage={getPreferencesConfirmed() ? language : undefined}
           onGenderChange={(g) => setBodyMapGender(g)}
           onUnitChange={(u) => setWeightUnit(u)}
+          onTimezoneChange={(tz) => setTimezone(tz)}
+          onLanguageChange={(lang) => setLanguage(lang)}
           onContinue={(gender, unit) => {
             setBodyMapGender(gender);
             setWeightUnit(unit);
@@ -1355,8 +1392,12 @@ const App: React.FC = () => {
           isLoading={isAnalyzing}
           initialGender={bodyMapGender}
           initialUnit={weightUnit}
+          initialTimezone={timezone}
+          initialLanguage={language}
           onGenderChange={(g) => setBodyMapGender(g)}
           onUnitChange={(u) => setWeightUnit(u)}
+          onTimezoneChange={(tz) => setTimezone(tz)}
+          onLanguageChange={(lang) => setLanguage(lang)}
           errorMessage={csvImportError}
           onBack={
             onboarding.intent === 'initial'
@@ -1386,8 +1427,12 @@ const App: React.FC = () => {
           isLoading={isAnalyzing}
           initialGender={bodyMapGender}
           initialUnit={weightUnit}
+          initialTimezone={timezone}
+          initialLanguage={language}
           onGenderChange={(g) => setBodyMapGender(g)}
           onUnitChange={(u) => setWeightUnit(u)}
+          onTimezoneChange={(tz) => setTimezone(tz)}
+          onLanguageChange={(lang) => setLanguage(lang)}
           errorMessage={csvImportError}
           onBack={
             onboarding.intent === 'initial'
@@ -1418,8 +1463,12 @@ const App: React.FC = () => {
           isLoading={isAnalyzing}
           initialGender={bodyMapGender}
           initialUnit={weightUnit}
+          initialTimezone={timezone}
+          initialLanguage={language}
           onGenderChange={(g) => setBodyMapGender(g)}
           onUnitChange={(u) => setWeightUnit(u)}
+          onTimezoneChange={(tz) => setTimezone(tz)}
+          onLanguageChange={(lang) => setLanguage(lang)}
           errorMessage={csvImportError}
           onBack={() => {
             if (onboarding.intent === 'initial') {
@@ -1452,8 +1501,12 @@ const App: React.FC = () => {
           isLoading={isAnalyzing}
           initialGender={bodyMapGender}
           initialUnit={weightUnit}
+          initialTimezone={timezone}
+          initialLanguage={language}
           onGenderChange={(g) => setBodyMapGender(g)}
           onUnitChange={(u) => setWeightUnit(u)}
+          onTimezoneChange={(tz) => setTimezone(tz)}
+          onLanguageChange={(lang) => setLanguage(lang)}
           errorMessage={csvImportError}
           onBack={() => {
             if (onboarding.intent === 'initial') {
