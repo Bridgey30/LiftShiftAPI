@@ -29,7 +29,7 @@ import {
   savePreferencesConfirmed,
   clearThemeMode,
 } from './utils/storage/localStorage';
-import { LayoutDashboard, Dumbbell, History, CheckCircle2, X, Calendar, BicepsFlexed, Pencil, RefreshCw, Sparkles } from 'lucide-react';
+import { LayoutDashboard, Dumbbell, History, CheckCircle2, X, Calendar, BicepsFlexed, Pencil, RefreshCw, Sparkles, LogOut } from 'lucide-react';
 import { format, isSameDay, isWithinInterval, startOfDay, endOfDay } from 'date-fns';
 import { CalendarSelector } from './components/CalendarSelector';
 import { formatDayYearContraction, formatHumanReadableDate } from './utils/date/dateUtils';
@@ -914,6 +914,14 @@ const App: React.FC = () => {
                             <RefreshCw className="w-4 h-4" />
                             <span>Update Data</span>
                           </button>
+                          <button
+                            type="button"
+                            onClick={clearCacheAndRestart}
+                            className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 px-3 py-1.5 bg-transparent border border-red-900/70 text-red-400 hover:border-red-500 hover:text-red-300 hover:bg-red-950/30 transition-all duration-200 gap-2"
+                          >
+                            <LogOut className="w-4 h-4" />
+                            <span>Logout</span>
+                          </button>
                         </div>
                       )}
                     />
@@ -931,6 +939,14 @@ const App: React.FC = () => {
                         <RefreshCw className="w-4 h-4" />
                         <span className="hidden sm:inline">Update Data</span>
                         <span className="sm:hidden">Update</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={clearCacheAndRestart}
+                        className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 px-3 py-1.5 bg-transparent border border-red-900/70 text-red-400 hover:border-red-500 hover:text-red-300 hover:bg-red-950/30 transition-all duration-200 gap-2"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        <span className="hidden sm:inline">Logout</span>
                       </button>
                     </div>
                   </div>
