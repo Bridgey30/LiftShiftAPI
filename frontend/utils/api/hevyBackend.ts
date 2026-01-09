@@ -94,7 +94,7 @@ export interface BackendSetsResponse<TSet> {
 
 const buildBackendUrl = (path: string): string => {
   const base = getBackendBaseUrl();
-  if (!base && !(import.meta as any).env?.DEV) throw new Error('Missing VITE_BACKEND_URL (backend API).');
+// In Docker, nginx proxies /api to backend (same-origin)
   return base ? `${base}${path}` : path;
 };
 
