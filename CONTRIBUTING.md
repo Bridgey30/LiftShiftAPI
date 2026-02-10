@@ -158,6 +158,8 @@ Use Cases:
 2. Get feedback from maintainers before starting major work
 3. Create a branch: `git checkout -b feature/your-feature-name`
 
+If your local `main` has drifted from your fork, run `scripts/sync-main.sh origin` to reset local `main` to `origin/main` and print how far your working branch is ahead/behind.
+
 ### Making Changes
 
 1. **Keep commits focused** - One feature/fix per commit
