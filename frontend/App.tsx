@@ -37,7 +37,7 @@ import {
   Language,
 } from './utils/storage/localStorage';
 import { LayoutDashboard, Dumbbell, History, CheckCircle2, X, Calendar, BicepsFlexed, Pencil, RefreshCw, Sparkles, LogOut } from 'lucide-react';
-import { format, isSameDay, isWithinInterval, startOfDay, endOfDay } from 'date-fns';
+import { format, isSameDay, isWithinInterval, startOfDay, endOfDay, startOfYear, endOfYear } from 'date-fns';
 import { CalendarSelector } from './components/CalendarSelector';
 import { formatDayYearContraction, formatHumanReadableDate } from './utils/date/dateUtils';
 import { trackPageView } from './utils/integrations/ga';
@@ -563,6 +563,15 @@ const App: React.FC = () => {
     return Array.from(months).sort().reverse(); // Descending order
   }, [parsedData]);
 
+  // Derive unique years for filter
+  const availableYears = useMemo(() => {
+    const years = new Set<number>();
+    parsedData.forEach(d => {
+      if (d.parsedDate) years.add(d.parsedDate.getFullYear());
+    });
+    return Array.from(years).sort().reverse(); // Descending order
+  }, [parsedData]);
+
   // Apply filters
   const filteredData = useMemo(() => {
     return parsedData.filter(d => {
@@ -644,6 +653,33 @@ const App: React.FC = () => {
 
   const hasActiveCalendarFilter = !!selectedDay || selectedWeeks.length > 0 || !!selectedRange;
 
+  // Detect if selectedRange covers exactly one full calendar year
+  const selectedYear = useMemo(() => {
+    if (!selectedRange || selectedDay || selectedWeeks.length > 0) return null;
+    const { start, end } = selectedRange;
+    const year = start.getFullYear();
+    const yearStart = startOfYear(start);
+    const yearEnd = endOfYear(start);
+    if (
+      start.getTime() === yearStart.getTime() &&
+      end.getTime() === yearEnd.getTime() &&
+      year === end.getFullYear()
+    ) return year;
+    return null;
+  }, [selectedRange, selectedDay, selectedWeeks]);
+
+  const handleYearFilter = (year: number) => {
+    if (selectedYear === year) {
+      // Toggle off
+      setSelectedRange(null);
+    } else {
+      const yearDate = new Date(year, 0, 1);
+      setSelectedRange({ start: startOfYear(yearDate), end: endOfYear(yearDate) });
+      setSelectedDay(null);
+      setSelectedWeeks([]);
+    }
+  };
+
   const calendarSummaryText = useMemo(() => {
     if (selectedDay) return formatHumanReadableDate(selectedDay, { now: effectiveNow });
     if (selectedRange) return `${formatDayYearContraction(selectedRange.start)} – ${formatDayYearContraction(selectedRange.end)}`;
@@ -662,7 +698,22 @@ const App: React.FC = () => {
     >
       <div className="flex-1 min-w-0 overflow-x-auto">
         <div className="flex items-center gap-2 flex-nowrap min-w-max">
-          {hasActiveCalendarFilter ? (
+          {availableYears.map(year => (
+            <button
+              key={year}
+              type="button"
+              onClick={() => handleYearFilter(year)}
+              className={`inline-flex items-center h-8 px-2.5 rounded-md border text-xs font-semibold transition-colors whitespace-nowrap ${
+                selectedYear === year
+                  ? 'bg-slate-200 text-slate-900 border-slate-300'
+                  : 'bg-black/50 hover:bg-white/5 border-slate-700/50 text-slate-300'
+              }`}
+              title={`Filter to ${year}`}
+            >
+              {year}
+            </button>
+          ))}
+          {hasActiveCalendarFilter && selectedYear === null ? (
             <button
               type="button"
               onClick={() => setCalendarOpen(true)}
@@ -672,23 +723,25 @@ const App: React.FC = () => {
               <span className="w-1.5 h-1.5 rounded-full bg-slate-300/80" />
               <span className="max-w-[220px] truncate">{calendarSummaryText}</span>
             </button>
-          ) : (
+          ) : !hasActiveCalendarFilter && availableYears.length === 0 ? (
             <span className="text-xs text-slate-500 whitespace-nowrap">No filter</span>
-          )}
+          ) : null}
         </div>
       </div>
 
       {hasActiveCalendarFilter ? (
         <div className="flex items-center gap-1">
-          <button
-            type="button"
-            onClick={() => setCalendarOpen(true)}
-            className="inline-flex items-center justify-center w-8 h-8 rounded-md bg-black/50 hover:bg-white/5 border border-slate-700/50 text-slate-200 transition-colors"
-            title="Edit filter"
-            aria-label="Edit filter"
-          >
-            <Pencil className="w-4 h-4 text-slate-300" />
-          </button>
+          {selectedYear === null && (
+            <button
+              type="button"
+              onClick={() => setCalendarOpen(true)}
+              className="inline-flex items-center justify-center w-8 h-8 rounded-md bg-black/50 hover:bg-white/5 border border-slate-700/50 text-slate-200 transition-colors"
+              title="Edit filter"
+              aria-label="Edit filter"
+            >
+              <Pencil className="w-4 h-4 text-slate-300" />
+            </button>
+          )}
           <button
             type="button"
             onClick={() => {
