@@ -19,7 +19,7 @@ FROM node:20-slim
 RUN apt-get update && apt-get install -y --no-install-recommends nginx supervisor && rm -rf /var/lib/apt/lists/*
 
 # Copy frontend build
-COPY --from=frontend-build /app/dist /usr/share/nginx/html
+COPY --from=frontend-build /app/dist/client /usr/share/nginx/html
 
 # Copy backend
 WORKDIR /app/backend
