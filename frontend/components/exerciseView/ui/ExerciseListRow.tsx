@@ -43,7 +43,11 @@ export const ExerciseListRow: React.FC<ExerciseListRowProps> = ({
   return (
     <button
       ref={rowRef}
-      onClick={onSelect}
+      onClick={(e) => {
+        e.preventDefault();
+        e.currentTarget.blur();
+        onSelect();
+      }}
       className={`w-full text-left px-2 py-1.5 rounded-md transition-all duration-200 flex items-center justify-between group border ${isSelected
         ? selectedHighlight.button
         : 'border-transparent hover:bg-black/60 hover:border-slate-600/50'
@@ -69,9 +73,14 @@ export const ExerciseListRow: React.FC<ExerciseListRowProps> = ({
 
       <div className="flex items-center gap-1.5 shrink-0">
         {isEligible ? (
-          <div className={`px-1.5 py-1 rounded-md ${status.bgColor} ${isSelected ? 'animate-in zoom-in-50 duration-200' : ''} flex items-center gap-1`}>
-            <RowStatusIcon className={`w-3 h-3 ${status.color}`} />
-            <span className={`text-[10px] font-bold ${status.color}`}>{displayLabel}</span>
+          <div className={`px-1 sm:px-1.5 py-0.5 sm:py-1 rounded-md ${status.bgColor} ${isSelected ? 'animate-in zoom-in-50 duration-200' : ''} flex items-center gap-1 sm:gap-1.5`}>
+            <RowStatusIcon className={`w-2.5 h-2.5 sm:w-3 sm:h-3 ${status.color}`} />
+            <span className={`text-[9px] sm:text-[10px] font-bold ${status.color}`}>{displayLabel}</span>
+            {status.diffPct !== undefined && (
+              <span className={`text-[9px] sm:text-[10px] font-mono ${status.diffPct > 0 ? 'text-emerald-400' : status.diffPct < 0 ? 'text-rose-400' : 'text-slate-400'}`}>
+                @ {status.diffPct > 0 ? '+' : ''}{status.diffPct.toFixed(1)}%
+              </span>
+            )}
           </div>
         ) : (
           <div className={`px-1.5 py-1 rounded-md bg-slate-700/20 border border-slate-700/30 ${isSelected ? 'animate-in zoom-in-50 duration-200' : ''} flex items-center gap-1`}>

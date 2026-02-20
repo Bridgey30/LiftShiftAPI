@@ -30,6 +30,7 @@ interface FlexCardRendererProps {
   effectiveYear: number;
   headlessHeatmap: FlexHeadlessHeatmap;
   bodyMapGender: BodyMapGender;
+  effectiveNow: Date;
 }
 
 export const FlexCardRenderer: React.FC<FlexCardRendererProps> = ({
@@ -46,6 +47,7 @@ export const FlexCardRenderer: React.FC<FlexCardRendererProps> = ({
   effectiveYear,
   headlessHeatmap,
   bodyMapGender,
+  effectiveNow,
 }) => {
   switch (cardId) {
     case 'summary':
@@ -95,6 +97,7 @@ export const FlexCardRenderer: React.FC<FlexCardRendererProps> = ({
           headlessHeatmap={headlessHeatmap}
           theme={cardTheme}
           gender={bodyMapGender}
+          effectiveNow={effectiveNow}
         />
       );
     default:

@@ -2,8 +2,13 @@
 export * from './muscleVolumeCalculations';
 
 import { CSV_TO_SVG_MUSCLE_MAP, CSV_TO_SVG_MUSCLE_MAP_LOWERCASE } from '../mapping/muscleCsvMappings';
-import { DETAILED_SVG_ID_TO_HEADLESS_ID, FULL_BODY_TARGET_GROUPS, HEADLESS_MUSCLE_NAMES } from '../mapping/muscleMappingConstants';
+import {
+  DETAILED_SVG_ID_TO_MUSCLE_ID,
+  FULL_BODY_TARGET_GROUPS,
+  MUSCLE_NAMES,
+} from '../mapping/muscleMappingConstants';
 import type { ExerciseMuscleData } from '../mapping/exerciseMuscleData';
+import { getVolumeThresholds, getVolumeZoneColor, type MuscleVolumeThresholds } from '../hypertrophy/muscleParams';
 
 /** @deprecated Use FULL_BODY_TARGET_GROUPS from muscleMappingConstants.ts */
 export const FULL_BODY_MUSCLES = FULL_BODY_TARGET_GROUPS;
@@ -19,15 +24,21 @@ export const getVolumeIntensity = (sets: number, maxSets: number): string => {
   return 'text-emerald-700';
 };
 
-export const getVolumeColor = (sets: number, maxSets: number): string => {
-  // Zero-volume muscles should always render as pure white across all themes/views.
+export const getVolumeColor = (sets: number, thresholds?: MuscleVolumeThresholds, maxVolume?: number): string => {
   if (sets === 0) return '#ffffff';
+  return getVolumeZoneColor(sets, thresholds, maxVolume);
+};
 
-  const ratioRaw = sets / Math.max(maxSets, 1);
-  const ratio = Math.max(0, Math.min(1, ratioRaw));
-  const lightness = 84 - ratio * 64; // 84% → 20%
-
-  return `hsl(var(--heatmap-hue), 75%, ${lightness}%)`;
+// Color for exercise view: shows primary vs secondary muscle involvement
+// Primary = full involvement (green), Secondary = partial involvement (lighter green/yellow)
+export const getExerciseMuscleColor = (sets: number): string => {
+  if (sets === 0) return '#ffffff';
+  // Primary muscles (1.0 sets) - strong green
+  if (sets >= 1) return '#22c55e';
+  // Secondary muscles (0.5 sets) - lighter green
+  if (sets >= 0.5) return '#86efac';
+  // Any other value - very light
+  return '#dcfce7';
 };
 
 // Generate muscle volumes for a specific exercise based on its primary/secondary muscles
@@ -136,45 +147,51 @@ export const getExerciseMuscleVolumes = (
   return { volumes, maxVolume: 1 };
 };
 
-// Convert detailed muscle volumes to headless volumes.
+// Convert detailed SVG muscle volumes to consolidated muscle volumes.
 // IMPORTANT: many upstream generators already propagate the same value across multiple
 // detailed SVG parts for a single anatomical muscle (e.g. chest -> both pec heads).
 // Summing would double-count and can push the value above maxVolume, producing invalid
 // HSL lightness values (and visually black regions). For UI bodymaps, we want the
 // per-muscle intensity, so we take the MAX across detailed parts.
-export const toHeadlessVolumeMap = (volumes: Map<string, number>): Map<string, number> => {
-  const headlessVolumes = new Map<string, number>();
+export const toMuscleVolumeMap = (volumes: Map<string, number>): Map<string, number> => {
+  const muscleVolumes = new Map<string, number>();
 
   volumes.forEach((val, key) => {
-    // If key is already a headless ID, use it directly (e.g. valid group IDs)
-    // Otherwise try to map from detailed -> headless
-    const headlessId = (HEADLESS_MUSCLE_NAMES as any)[key]
+    // If key is already a muscle ID, use it directly (e.g. valid group IDs)
+    // Otherwise try to map from detailed SVG ID -> muscle ID
+    const muscleId = (MUSCLE_NAMES as any)[key]
       ? key
-      : DETAILED_SVG_ID_TO_HEADLESS_ID[key];
+      : DETAILED_SVG_ID_TO_MUSCLE_ID[key];
 
-    if (!headlessId) return;
+    if (!muscleId) return;
 
-    const prev = headlessVolumes.get(headlessId) ?? 0;
-    if (val > prev) headlessVolumes.set(headlessId, val);
+    const prev = muscleVolumes.get(muscleId) ?? 0;
+    if (val > prev) muscleVolumes.set(muscleId, val);
   });
 
-  return headlessVolumes;
+  return muscleVolumes;
 };
+
+/** @deprecated Use toMuscleVolumeMap instead */
+export const toHeadlessVolumeMap = toMuscleVolumeMap;
 
 // Sum-aggregation variant for cases where detailed SVG volumes represent independent
 // contributions per head/part (i.e. not propagated duplicates).
-export const toHeadlessVolumeMapSum = (volumes: Map<string, number>): Map<string, number> => {
-  const headlessVolumes = new Map<string, number>();
+export const toMuscleVolumeMapSum = (volumes: Map<string, number>): Map<string, number> => {
+  const muscleVolumes = new Map<string, number>();
 
   volumes.forEach((val, key) => {
-    const headlessId = (HEADLESS_MUSCLE_NAMES as any)[key]
+    const muscleId = (MUSCLE_NAMES as any)[key]
       ? key
-      : DETAILED_SVG_ID_TO_HEADLESS_ID[key];
+      : DETAILED_SVG_ID_TO_MUSCLE_ID[key];
 
-    if (!headlessId) return;
+    if (!muscleId) return;
 
-    headlessVolumes.set(headlessId, (headlessVolumes.get(headlessId) ?? 0) + val);
+    muscleVolumes.set(muscleId, (muscleVolumes.get(muscleId) ?? 0) + val);
   });
 
-  return headlessVolumes;
+  return muscleVolumes;
 };
+
+/** @deprecated Use toMuscleVolumeMapSum instead */
+export const toHeadlessVolumeMapSum = toMuscleVolumeMapSum;

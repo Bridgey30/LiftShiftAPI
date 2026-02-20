@@ -3,7 +3,9 @@ import type {
   HevyLoginResponse,
   HevyPagedWorkoutsResponse,
 } from './types';
-import { getRecaptchaToken } from './hevyRecaptcha';
+import { clearTokenCache, getRecaptchaToken } from './hevyRecaptcha';
+
+const formatDuration = (ms: number): string => `${(ms / 1000).toFixed(1)}s`;
 
 const requireEnv = (key: string): string => {
   const v = process.env[key];
@@ -12,6 +14,14 @@ const requireEnv = (key: string): string => {
 };
 
 const HEVY_BASE_URL = process.env.HEVY_BASE_URL ?? 'https://api.hevyapp.com';
+
+const HEVY_LOGIN_TIMEOUT_MS = 130_000;
+const HEVY_REFRESH_TIMEOUT_MS = 60_000;
+const HEVY_REFRESH_PATH = '/auth/refresh_token';
+
+type HevyRequestContext = {
+  traceId?: string;
+};
 
 // Build headers for OAuth2 Bearer token authentication
 const buildHeaders = (accessToken?: string): Record<string, string> => {
@@ -29,6 +39,13 @@ const buildHeaders = (accessToken?: string): Record<string, string> => {
   return headers;
 };
 
+const mapOAuthResponse = (data: HevyLoginResponse): HevyLoginResponse => {
+  if (data.access_token && !data.auth_token) {
+    data.auth_token = data.access_token;
+  }
+  return data;
+};
+
 const parseErrorBody = async (res: Response): Promise<string> => {
   try {
     const text = await res.text();
@@ -38,111 +55,112 @@ const parseErrorBody = async (res: Response): Promise<string> => {
   }
 };
 
-export const hevyLogin = async (emailOrUsername: string, password: string): Promise<HevyLoginResponse> => {
-  const recaptchaToken = await getRecaptchaToken();
-
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-    'x-api-key': requireEnv('HEVY_X_API_KEY'),
-    'Origin': 'https://www.hevy.com',
-    'Referer': 'https://www.hevy.com/',
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-    'Accept': 'application/json, text/plain, */*',
-    'Accept-Language': 'en-US,en;q=0.9',
-    'Hevy-Platform': 'web',
-  };
-
-  const body = { emailOrUsername, password, recaptchaToken, useAuth2_0: true };
-  
-  console.log('[Hevy Login] Request:', {
-    url: `${HEVY_BASE_URL}/login`,
-    headers: { ...headers, 'x-api-key': '***' },
-    body: { ...body, password: '***' }
-  });
-
-  const res = await fetch(`${HEVY_BASE_URL}/login`, {
-    method: 'POST',
-    headers: headers,
-    body: JSON.stringify(body),
-  });
-
-  console.log('[Hevy Login] Response:', {
-    status: res.status,
-    statusText: res.statusText
-  });
-
-  if (!res.ok) {
-    const msg = await parseErrorBody(res);
-    console.error('[Hevy Login] Error:', msg);
-    const err = new Error(msg);
-    (err as any).statusCode = res.status;
-    throw err;
-  }
-
-  const data = await res.json() as HevyLoginResponse;
-  
-  // Map new OAuth2 format to expected format
-  // Hevy now returns access_token instead of auth_token
-  if (data.access_token && !data.auth_token) {
-    data.auth_token = data.access_token;
-  }
-  
-  return data;
+const timeoutSignal = (timeoutMs: number): AbortSignal | undefined => {
+  if (typeof AbortSignal === 'undefined') return undefined;
+  if (typeof AbortSignal.timeout !== 'function') return undefined;
+  return AbortSignal.timeout(timeoutMs);
 };
 
-// Refresh access token using refresh token
-export const hevyRefreshToken = async (refreshToken: string): Promise<HevyLoginResponse> => {
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-    'x-api-key': requireEnv('HEVY_X_API_KEY'),
-    'Origin': 'https://www.hevy.com',
-    'Referer': 'https://www.hevy.com/',
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-    'Accept': 'application/json, text/plain, */*',
-    'Accept-Language': 'en-US,en;q=0.9',
-    'Hevy-Platform': 'web',
+const buildEndpointUrl = (path: string): string => (
+  path.startsWith('/') ? `${HEVY_BASE_URL}${path}` : `${HEVY_BASE_URL}/${path}`
+);
+
+export const hevyLogin = async (
+  emailOrUsername: string,
+  password: string,
+  context: HevyRequestContext = {}
+): Promise<HevyLoginResponse> => {
+  const { token: recaptchaToken, usedCache } = await getRecaptchaToken();
+
+  if (usedCache) {
+    clearTokenCache();
+  }
+
+  const attemptLogin = async (token: string): Promise<{ res: Response; token: string }> => {
+    const headers = buildHeaders();
+    const body = { emailOrUsername, password, recaptchaToken: token, useAuth2_0: true };
+
+    let res: Response;
+    try {
+      res = await fetch(buildEndpointUrl('/login'), {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body),
+        signal: timeoutSignal(HEVY_LOGIN_TIMEOUT_MS),
+      });
+    } catch (err) {
+      throw err;
+    }
+    
+    return { res, token };
   };
 
-  const body = { refresh_token: refreshToken };
-  
-  console.log('[Hevy Refresh] Request:', {
-    url: `${HEVY_BASE_URL}/refresh_token`,
-    headers: { ...headers, 'x-api-key': '***' }
-  });
+  let { res } = await attemptLogin(recaptchaToken);
 
-  const res = await fetch(`${HEVY_BASE_URL}/refresh_token`, {
-    method: 'POST',
-    headers: headers,
-    body: JSON.stringify(body),
-  });
-
-  console.log('[Hevy Refresh] Response:', {
-    status: res.status,
-    statusText: res.statusText
-  });
+  if (res.status === 400) {
+    const freshResult = await getRecaptchaToken();
+    const retryResult = await attemptLogin(freshResult.token);
+    res = retryResult.res;
+    
+    if (freshResult.usedCache) {
+      clearTokenCache();
+    }
+  }
 
   if (!res.ok) {
     const msg = await parseErrorBody(res);
-    console.error('[Hevy Refresh] Error:', msg);
     const err = new Error(msg);
     (err as any).statusCode = res.status;
     throw err;
   }
 
-  const data = await res.json() as HevyLoginResponse;
-  
-  // Map new OAuth2 format
-  if (data.access_token && !data.auth_token) {
-    data.auth_token = data.access_token;
+  const payload = mapOAuthResponse(await res.json() as HevyLoginResponse);
+  return payload;
+};
+
+export const hevyRefreshToken = async (
+  refreshToken: string,
+  accessToken?: string,
+  context: HevyRequestContext = {}
+): Promise<HevyLoginResponse> => {
+  const startedAt = Date.now();
+  const trimmedRefreshToken = String(refreshToken ?? '').trim();
+  if (!trimmedRefreshToken) {
+    const err = new Error('Missing refresh_token');
+    (err as any).statusCode = 400;
+    throw err;
   }
-  
-  return data;
+
+  const headers = buildHeaders(accessToken);
+  const body = { refresh_token: trimmedRefreshToken };
+  const refreshUrl = buildEndpointUrl(HEVY_REFRESH_PATH);
+
+  let res: Response;
+  try {
+    res = await fetch(refreshUrl, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(body),
+      signal: timeoutSignal(HEVY_REFRESH_TIMEOUT_MS),
+    });
+  } catch (err) {
+    throw err;
+  }
+
+  if (!res.ok) {
+    const msg = await parseErrorBody(res);
+    const err = new Error(msg);
+    (err as any).statusCode = res.status;
+    throw err;
+  }
+
+  const payload = mapOAuthResponse(await res.json() as HevyLoginResponse);
+  return payload;
 };
 
 // Validate token by checking expiry or making a test request
 export const hevyValidateAuthToken = async (accessToken: string): Promise<boolean> => {
   try {
-    // Try to get account info - if it works, token is valid
     await hevyGetAccount(accessToken);
     return true;
   } catch (err) {
@@ -170,24 +188,39 @@ export const hevyGetAccount = async (accessToken: string): Promise<HevyAccountRe
 
 export const hevyGetWorkoutsPaged = async (
   accessToken: string,
-  opts: { username: string; offset: number }
+  opts: { username: string; offset: number; limit?: number }
 ): Promise<HevyPagedWorkoutsResponse> => {
-  const params = new URLSearchParams({
-    username: opts.username,
-    offset: String(opts.offset),
-  });
+  const limit = Math.min(Math.max(opts.limit ?? 5, 1), 10);
+  const chunkSize = 5;
+  const maxChunks = Math.ceil(limit / chunkSize);
+  const workouts: HevyPagedWorkoutsResponse['workouts'] = [];
 
-  const res = await fetch(`${HEVY_BASE_URL}/user_workouts_paged?${params.toString()}`, {
-    method: 'GET',
-    headers: buildHeaders(accessToken),
-  });
+  for (let i = 0; i < maxChunks; i += 1) {
+    const chunkOffset = opts.offset + (i * chunkSize);
+    const params = new URLSearchParams({
+      username: opts.username,
+      offset: String(chunkOffset),
+    });
 
-  if (!res.ok) {
-    const msg = await parseErrorBody(res);
-    const err = new Error(msg);
-    (err as any).statusCode = res.status;
-    throw err;
+    const res = await fetch(`${HEVY_BASE_URL}/user_workouts_paged?${params.toString()}`, {
+      method: 'GET',
+      headers: buildHeaders(accessToken),
+    });
+
+    if (!res.ok) {
+      const msg = await parseErrorBody(res);
+      const err = new Error(msg);
+      (err as any).statusCode = res.status;
+      throw err;
+    }
+
+    const data = (await res.json()) as HevyPagedWorkoutsResponse;
+    const chunkWorkouts = data.workouts ?? [];
+    workouts.push(...chunkWorkouts);
+
+    if (chunkWorkouts.length < chunkSize) break;
+    if (workouts.length >= limit) break;
   }
 
-  return (await res.json()) as HevyPagedWorkoutsResponse;
+  return { workouts: workouts.slice(0, limit) };
 };

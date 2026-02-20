@@ -1,6 +1,9 @@
 import express from 'express';
 import { lyfatGetAllWorkouts, lyfatGetAllWorkoutSummaries, lyfatValidateApiKey } from '../lyfta';
 import { mapLyfataWorkoutsToWorkoutSets } from '../mapLyfataWorkoutsToWorkoutSets';
+import { getClientIP, getCountryFromIP } from '../geoLocation';
+
+const formatDuration = (ms: number): string => `${(ms / 1000).toFixed(1)}s`;
 
 export const createLyftaRouter = (opts: {
   loginLimiter: express.RequestHandler;
@@ -21,7 +24,9 @@ export const createLyftaRouter = (opts: {
       res.json({ valid });
     } catch (err) {
       const status = (err as any).statusCode ?? 500;
-      res.status(status).json({ error: (err as Error).message || 'Validation failed' });
+      const message = (err as Error).message || 'Validation failed';
+      console.error(`❌ Lyfta validation failed: ${message}`);
+      res.status(status).json({ error: message });
     }
   });
 
@@ -30,10 +35,11 @@ export const createLyftaRouter = (opts: {
 
     if (!apiKey) return res.status(400).json({ error: 'Missing apiKey' });
 
+    const startedAt = Date.now();
+
     try {
       const cacheKey = `lyftaSets:${apiKey}`;
       const { workouts, sets } = await getCachedResponse(cacheKey, async () => {
-        // Fetch both workout details and summaries in parallel
         const [workouts, summaries] = await Promise.all([
           lyfatGetAllWorkouts(apiKey),
           lyfatGetAllWorkoutSummaries(apiKey),
@@ -41,10 +47,19 @@ export const createLyftaRouter = (opts: {
         const sets = mapLyfataWorkoutsToWorkoutSets(workouts, summaries);
         return { workouts, sets };
       });
+
+      const durationMs = Date.now() - startedAt;
+      const username = workouts[0]?.user?.username || 'unknown';
+      const ipCountryCode = await getCountryFromIP(getClientIP(req));
+      const countryInfo = ipCountryCode ? `[${ipCountryCode}] ` : '';
+      console.log(`👤 ${username} ${countryInfo}✅ Lyfta sync successful: ${sets.length} sets (${formatDuration(durationMs)})`);
       res.json({ sets, meta: { workouts: workouts.length } });
     } catch (err) {
       const status = (err as any).statusCode ?? 500;
-      res.status(status).json({ error: (err as Error).message || 'Failed to fetch sets' });
+      const message = (err as Error).message || 'Failed to fetch sets';
+      const durationMs = Date.now() - startedAt;
+      console.error(`❌ Lyfta sync failed (${formatDuration(durationMs)}): ${message}`);
+      res.status(status).json({ error: message });
     }
   });
 

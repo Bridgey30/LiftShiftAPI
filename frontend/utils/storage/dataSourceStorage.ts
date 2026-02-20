@@ -33,20 +33,39 @@ const hevyAuthTokenStorage = createStorageManager<string | null>({
   validator: (v) => v,
 });
 
-export const saveHevyAuthToken = (token: string): void => hevyAuthTokenStorage.set(token);
-export const getHevyAuthToken = (): string | null => hevyAuthTokenStorage.get();
-export const clearHevyAuthToken = (): void => hevyAuthTokenStorage.clear();
+// Hevy Auth Token Expiry
+const hevyAuthExpiresAtStorage = createStorageManager<string | null>({
+  key: 'hevy_auth_expires_at',
+  defaultValue: null,
+  validator: (v) => (typeof v === 'string' && v.trim().length > 0 ? v : null),
+});
 
 // Hevy Refresh Token
 const hevyRefreshTokenStorage = createStorageManager<string | null>({
   key: 'hevy_refresh_token',
   defaultValue: null,
-  validator: (v) => v,
+  validator: (v) => (typeof v === 'string' && v.trim().length > 0 ? v : null),
 });
 
+export const saveHevyAuthToken = (token: string): void => hevyAuthTokenStorage.set(token);
+export const getHevyAuthToken = (): string | null => hevyAuthTokenStorage.get();
+export const saveHevyAuthExpiresAt = (expiresAt: string | null): void => {
+  if (expiresAt && expiresAt.trim().length > 0) {
+    hevyAuthExpiresAtStorage.set(expiresAt);
+  } else {
+    hevyAuthExpiresAtStorage.clear();
+  }
+};
+export const getHevyAuthExpiresAt = (): string | null => hevyAuthExpiresAtStorage.get();
+export const clearHevyAuthExpiresAt = (): void => hevyAuthExpiresAtStorage.clear();
 export const saveHevyRefreshToken = (token: string): void => hevyRefreshTokenStorage.set(token);
 export const getHevyRefreshToken = (): string | null => hevyRefreshTokenStorage.get();
 export const clearHevyRefreshToken = (): void => hevyRefreshTokenStorage.clear();
+export const clearHevyAuthToken = (): void => {
+  hevyAuthTokenStorage.clear();
+  hevyAuthExpiresAtStorage.clear();
+  hevyRefreshTokenStorage.clear();
+};
 
 // Hevy Pro API Key
 const hevyProApiKeyStorage = createStorageManager<string | null>({

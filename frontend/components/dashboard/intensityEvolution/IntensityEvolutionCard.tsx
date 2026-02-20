@@ -27,7 +27,7 @@ import { LazyRender } from '../../ui/LazyRender';
 import { ChartSkeleton } from '../../ui/ChartSkeleton';
 import { formatNumber, formatSignedNumber } from '../../../utils/format/formatters';
 import { formatDeltaPercentage, getDeltaFormatPreset } from '../../../utils/format/deltaFormat';
-import { getRechartsXAxisInterval, RECHARTS_XAXIS_PADDING } from '../../../utils/chart/chartEnhancements';
+import { getRechartsXAxisInterval, RECHARTS_XAXIS_PADDING, RECHARTS_YAXIS_MARGIN, calculateYAxisDomain, formatAxisNumber } from '../../../utils/chart/chartEnhancements';
 import { formatVsPrevRollingWindow, getRollingWindowDaysForMode } from '../../../utils/date/dateUtils';
 
 type IntensityView = 'area' | 'stackedBar';
@@ -68,6 +68,10 @@ export const IntensityEvolutionCard = ({
 
   const chartData = baseData;
 
+  const yAxisDomain = useMemo(() => {
+    return calculateYAxisDomain(chartData, ['Strength', 'Hypertrophy', 'Endurance', 'total']);
+  }, [chartData]);
+
   const legendPayload = useMemo(() => {
     return [
       { value: 'Strength (1-5)', type: 'line', color: '#3b82f6', id: 'Strength' },
@@ -77,7 +81,7 @@ export const IntensityEvolutionCard = ({
   }, []);
 
   return (
-    <div className="bg-black/70 border border-slate-700/50 p-4 sm:p-6 rounded-xl min-h-[400px] sm:min-h-[480px] flex flex-col transition-all duration-300">
+    <div className="bg-black/70 border border-slate-700/50 px-2 sm:px-3 py-4 sm:py-6 rounded-xl min-h-[400px] sm:min-h-[480px] flex flex-col transition-all duration-300">
       <div className={`flex flex-row justify-between items-center mb-3 gap-3 transition-opacity duration-700 ${isMounted ? 'opacity-100' : 'opacity-0'}`}>
         <h3 className="text-sm sm:text-lg font-semibold text-white flex items-center gap-2 transition-opacity duration-200 hover:opacity-90">
           <Layers className="w-5 h-5 text-orange-500 transition-opacity duration-200 hover:opacity-80" />
@@ -160,7 +164,7 @@ export const IntensityEvolutionCard = ({
         >
           <LazyRender className="w-full" placeholder={<ChartSkeleton style={{ height: 250 }} />}>
             <ResponsiveContainer width="100%" height={250}>
-              <ComposedChart key={view} data={chartData} margin={{ left: -20, right: 10, top: 10, bottom: 0 }}>
+                  <ComposedChart key={view} data={chartData} margin={{ top: 10, ...RECHARTS_YAXIS_MARGIN, bottom: 0 }}>
                   <defs>
                     <linearGradient id="gStrength" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8} />
@@ -185,7 +189,7 @@ export const IntensityEvolutionCard = ({
                     padding={RECHARTS_XAXIS_PADDING as any}
                     interval={getRechartsXAxisInterval(chartData.length)}
                   />
-                  <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} />
+                  <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} domain={yAxisDomain} tickFormatter={(val) => formatAxisNumber(Number(val))} />
                   <Tooltip
                     contentStyle={tooltipStyle as any}
                     formatter={(val: number, name) => {

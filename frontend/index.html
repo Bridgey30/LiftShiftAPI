@@ -43,6 +43,14 @@
           var hash = (h ? decodeURIComponent(h) : '');
           var path = decodeURIComponent(p);
 
+          var baseHref = document.querySelector('base')?.getAttribute('href') || '/';
+          var basePath = baseHref.endsWith('/') ? baseHref : baseHref + '/';
+
+          if (basePath !== '/' && path.indexOf(basePath) !== 0) {
+            var baseNoSlash = basePath.slice(0, -1);
+            path = baseNoSlash + (path.startsWith('/') ? path : '/' + path);
+          }
+
           window.history.replaceState(null, '', path + search + hash);
         } catch (e) {
           // ignore

@@ -41,7 +41,7 @@ export const analyticsRequestMiddleware: express.RequestHandler = (req, res, nex
       duration_ms: durationMs,
       origin_host: getOriginHostname(req.header('origin')),
       ua: req.header('user-agent')?.slice(0, 200),
-      has_auth_token: Boolean(req.header('auth-token')),
+      has_auth_token: Boolean(req.header('authorization')),
     });
 
     if (res.statusCode >= 400) {

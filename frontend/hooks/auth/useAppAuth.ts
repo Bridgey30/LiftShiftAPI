@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from 'react';
-import { WorkoutSet } from '../types';
+import { WorkoutSet } from '../../types';
 import { WeightUnit } from '../../utils/storage/localStorage';
 import type { DataSourceChoice } from '../../utils/storage/dataSourceStorage';
 import type { OnboardingFlow } from '../../app/onboarding/types';
@@ -77,6 +77,7 @@ export function useAppAuth({
   const handlerDeps = useMemo<AppAuthHandlersDeps>(
     () => ({
       weightUnit,
+      isAnalyzing,
       setParsedData,
       setDataSource,
       setOnboarding,
@@ -92,6 +93,7 @@ export function useAppAuth({
     }),
     [
       weightUnit,
+      isAnalyzing,
       setParsedData,
       setDataSource,
       setOnboarding,

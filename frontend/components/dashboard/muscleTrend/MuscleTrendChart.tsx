@@ -15,7 +15,7 @@ import { normalizeMuscleGroup } from '../../../utils/muscle/analytics';
 import { MUSCLE_COLORS, INDIVIDUAL_MUSCLE_COLORS } from '../../../utils/domain/categories';
 import { LazyRender } from '../../ui/LazyRender';
 import { ChartSkeleton } from '../../ui/ChartSkeleton';
-import { getRechartsCategoricalTicks, RECHARTS_XAXIS_PADDING } from '../../../utils/chart/chartEnhancements';
+import { getRechartsCategoricalTicks, RECHARTS_XAXIS_PADDING, RECHARTS_YAXIS_MARGIN, calculateYAxisDomain, formatAxisNumber } from '../../../utils/chart/chartEnhancements';
 
 type MuscleGrouping = 'groups' | 'muscles';
 type MusclePeriod = 'daily' | 'weekly' | 'monthly' | 'yearly' | 'all';
@@ -50,6 +50,10 @@ export const MuscleTrendChart: React.FC<MuscleTrendChartProps> = ({
     return getRechartsCategoricalTicks(trendData, (row: any) => row?.dateFormatted);
   }, [trendData]);
 
+  const yAxisDomain = useMemo(() => {
+    return calculateYAxisDomain(trendData, trendKeys);
+  }, [trendData, trendKeys]);
+
   if (trendData.length === 0 || trendKeys.length === 0) {
     return (
       <div className="flex items-center justify-center h-[280px] text-slate-500 text-xs border border-dashed border-slate-800 rounded-lg">
@@ -62,7 +66,7 @@ export const MuscleTrendChart: React.FC<MuscleTrendChartProps> = ({
     <LazyRender className="w-full" placeholder={<ChartSkeleton style={{ height: 280 }} />}>
       <ResponsiveContainer width="100%" height={280}>
         {muscleTrendView === 'area' ? (
-          <AreaChart key={`area-${musclePeriod}-${muscleGrouping}`} data={trendData} margin={{ left: -20, right: 10, top: 10, bottom: 0 }}>
+          <AreaChart key={`area-${musclePeriod}-${muscleGrouping}`} data={trendData} margin={{ top: 10, ...RECHARTS_YAXIS_MARGIN, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
             <XAxis
               dataKey="dateFormatted"
@@ -74,7 +78,7 @@ export const MuscleTrendChart: React.FC<MuscleTrendChartProps> = ({
               interval={0}
               ticks={xTicks as any}
             />
-            <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} />
+            <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} domain={yAxisDomain} tickFormatter={(val) => formatAxisNumber(Number(val))} />
             <Tooltip contentStyle={tooltipStyle as any} />
             <Legend wrapperStyle={{ fontSize: '11px', left: '52%', transform: 'translateX(-50%)', position: 'absolute' }} />
             {trendKeys.map((k) => {
@@ -95,7 +99,7 @@ export const MuscleTrendChart: React.FC<MuscleTrendChartProps> = ({
             })}
           </AreaChart>
         ) : (
-          <BarChart key={`bar-${musclePeriod}-${muscleGrouping}`} data={trendData} margin={{ left: -20, right: 10, top: 10, bottom: 0 }}>
+          <BarChart key={`bar-${musclePeriod}-${muscleGrouping}`} data={trendData} margin={{ top: 10, ...RECHARTS_YAXIS_MARGIN, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
             <XAxis
               dataKey="dateFormatted"
@@ -107,7 +111,7 @@ export const MuscleTrendChart: React.FC<MuscleTrendChartProps> = ({
               interval={0}
               ticks={xTicks as any}
             />
-            <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} />
+            <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} domain={yAxisDomain} tickFormatter={(val) => formatAxisNumber(Number(val))} />
             <Tooltip contentStyle={tooltipStyle as any} cursor={{ fill: 'rgb(var(--overlay-rgb) / 0.12)' }} />
             <Legend wrapperStyle={{ fontSize: '11px', left: '52%', transform: 'translateX(-50%)', position: 'absolute' }} />
             {trendKeys.map((k, idx) => {

@@ -141,10 +141,10 @@ export const useDashboardTopExercises = (args: {
     const names = (topExercisesBarData.length > 0 ? topExercisesBarData : topExercisesData).map((e) => e.name);
     const rangeMode = topExerciseMode;
 
-    const { filtered, minTs, maxTs } = getWindowedWorkoutSets(fullData, rangeMode as any, effectiveNow);
+    const { filtered, minTs, maxTs } = getWindowedWorkoutSets(fullData, rangeMode as any, effectiveNow, filterCacheKey);
 
     const preferred: 'daily' | 'weekly' | 'monthly' =
-      rangeMode === 'all' ? allAggregationMode : rangeMode === 'yearly' ? 'weekly' : 'daily';
+      rangeMode === 'all' ? allAggregationMode : rangeMode === 'yearly' ? allAggregationMode : 'daily';
 
     const mode: 'daily' | 'weekly' | 'monthly' =
       Number.isFinite(minTs) && Number.isFinite(maxTs) && maxTs > minTs

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { BarChart3, Clock, Scan } from 'lucide-react';
 import {
   Bar,
@@ -22,7 +22,7 @@ import {
   InsightText,
   TrendBadge,
 } from '../insights/ChartBits';
-import { RECHARTS_XAXIS_PADDING } from '../../../utils/chart/chartEnhancements';
+import { RECHARTS_XAXIS_PADDING, RECHARTS_YAXIS_MARGIN, calculateYAxisDomain, formatAxisNumber } from '../../../utils/chart/chartEnhancements';
 
 type WeekShapeView = 'radar' | 'bar';
 
@@ -54,8 +54,12 @@ export const WeeklyRhythmCard = ({
   weeklyRhythmInsight: WeeklyRhythmInsight;
   tooltipStyle: Record<string, unknown>;
 }) => {
+  const yAxisDomain = useMemo(() => {
+    return calculateYAxisDomain(weekShapeData, ['A']);
+  }, [weekShapeData]);
+
   return (
-    <div className="bg-black/70 border border-slate-700/50 p-4 sm:p-6 rounded-xl min-h-[400px] sm:min-h-[520px] flex flex-col transition-all duration-300">
+    <div className="bg-black/70 border border-slate-700/50 px-2 sm:px-3 py-4 sm:py-6 rounded-xl min-h-[400px] sm:min-h-[520px] flex flex-col transition-all duration-300">
       <div className={`flex flex-row justify-between items-center mb-3 gap-3 transition-opacity duration-700 ${isMounted ? 'opacity-100' : 'opacity-0'}`}>
         <h3 className="text-sm sm:text-lg font-semibold text-white flex items-center gap-2 transition-opacity duration-200 hover:opacity-90">
           <Clock className="w-5 h-5 text-pink-500 transition-opacity duration-200 hover:opacity-80" />
@@ -111,10 +115,10 @@ export const WeeklyRhythmCard = ({
               <Tooltip contentStyle={tooltipStyle as any} />
             </RadarChart>
           ) : (
-            <BarChart key="bar" data={weekShapeData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <BarChart key="bar" data={weekShapeData} margin={{ top: 10, ...RECHARTS_YAXIS_MARGIN, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
               <XAxis dataKey="subject" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} padding={RECHARTS_XAXIS_PADDING as any} />
-              <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} />
+              <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} domain={yAxisDomain} tickFormatter={(val) => formatAxisNumber(Number(val))} />
               <Tooltip contentStyle={tooltipStyle as any} cursor={{ fill: 'rgb(var(--overlay-rgb) / 0.12)' }} />
               <Bar dataKey="A" name="Workouts" fill="#ec4899" radius={[8, 8, 0, 0]} animationDuration={1500} />
             </BarChart>

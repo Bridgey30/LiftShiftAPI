@@ -1,6 +1,6 @@
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { useTheme } from '../../components/theme/ThemeProvider';
-import { setContext, trackEvent } from '../../utils/integrations/analytics';
+import { setContext } from '../../utils/integrations/analytics';
 import {
   WeightUnit,
   getWeightUnit,
@@ -14,9 +14,6 @@ import {
   ExerciseTrendMode,
   getExerciseTrendMode,
   saveExerciseTrendMode,
-  HeatmapTheme,
-  getHeatmapTheme,
-  saveHeatmapTheme,
 } from '../../utils/storage/localStorage';
 import { BodyMapGender } from '../../components/bodyMap/BodyMap';
 
@@ -40,10 +37,6 @@ export interface UseAppPreferencesReturn {
   // Exercise trend mode
   exerciseTrendMode: ExerciseTrendMode;
   setExerciseTrendMode: (mode: ExerciseTrendMode) => void;
-  
-  // Heatmap theme
-  heatmapTheme: HeatmapTheme;
-  setHeatmapTheme: (theme: HeatmapTheme) => void;
 }
 
 export function useAppPreferences(): UseAppPreferencesReturn {
@@ -53,7 +46,6 @@ export function useAppPreferences(): UseAppPreferencesReturn {
   const [bodyMapGender, setBodyMapGenderState] = useState<BodyMapGender>(() => getBodyMapGender());
   const [dateMode, setDateModeState] = useState<DateMode>(() => getDateMode());
   const [exerciseTrendMode, setExerciseTrendModeState] = useState<ExerciseTrendMode>(() => getExerciseTrendMode());
-  const [heatmapTheme, setHeatmapThemeState] = useState<HeatmapTheme>(() => getHeatmapTheme());
 
   // Persist weight unit
   useEffect(() => {
@@ -77,28 +69,13 @@ export function useAppPreferences(): UseAppPreferencesReturn {
     saveExerciseTrendMode(exerciseTrendMode);
   }, [exerciseTrendMode]);
 
-  // Persist heatmap theme
-  useEffect(() => {
-    saveHeatmapTheme(heatmapTheme);
-    setContext({ heatmap_theme: heatmapTheme });
-    trackEvent('heatmap_theme_change', { heatmap_theme: heatmapTheme });
-  }, [heatmapTheme]);
-
-  // Apply heatmap CSS variables
+  // Apply CSS variables - always use multicolor
   useLayoutEffect(() => {
     const root = document.documentElement;
-
-    const preset =
-      heatmapTheme === 'blue'
-        ? { hue: 215, hoverRgb: '220 38 38', selectionRgb: '220 38 38' }
-        : heatmapTheme === 'brown'
-          ? { hue: 25, hoverRgb: '59 130 246', selectionRgb: '59 130 246' }
-          : { hue: 5, hoverRgb: '59 130 246', selectionRgb: '59 130 246' };
-
-    root.style.setProperty('--heatmap-hue', String(preset.hue));
-    root.style.setProperty('--bodymap-hover-rgb', preset.hoverRgb);
-    root.style.setProperty('--bodymap-selection-rgb', preset.selectionRgb);
-  }, [heatmapTheme]);
+    root.style.setProperty('--heatmap-hue', 'multicolor');
+    root.style.setProperty('--bodymap-hover-rgb', '14 90 182');
+    root.style.setProperty('--bodymap-selection-rgb', '37 99 235');
+  }, []);
 
   return {
     mode,
@@ -111,7 +88,5 @@ export function useAppPreferences(): UseAppPreferencesReturn {
     setDateMode: setDateModeState,
     exerciseTrendMode,
     setExerciseTrendMode: setExerciseTrendModeState,
-    heatmapTheme,
-    setHeatmapTheme: setHeatmapThemeState,
   };
 }

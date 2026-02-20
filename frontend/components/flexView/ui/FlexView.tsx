@@ -89,6 +89,7 @@ export const FlexView: React.FC<FlexViewProps> = ({
       effectiveYear={effectiveNow.getFullYear()}
       headlessHeatmap={ytdHeadlessHeatmap}
       bodyMapGender={bodyMapGender}
+      effectiveNow={effectiveNow}
     />
   );
 

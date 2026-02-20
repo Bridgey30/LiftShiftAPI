@@ -9,6 +9,7 @@ import { ExerciseOverviewCard } from './ExerciseOverviewCard';
 import { ExerciseStatusCard } from './ExerciseStatusCard';
 import type { StatusResult } from '../trend/exerciseTrendUi';
 import type { ExerciseMuscleTargets, InactiveReason } from '../utils/exerciseViewTypes';
+import type { MuscleVolumeThresholds } from '../../../utils/muscle/hypertrophy/muscleParams';
 
 interface ExerciseSummaryPanelProps {
   selectedStats: ExerciseStats | null | undefined;
@@ -18,6 +19,7 @@ interface ExerciseSummaryPanelProps {
   selectedExerciseMuscleInfo: ExerciseMuscleTargets;
   selectedExerciseHeadlessVolumes: Map<string, number>;
   selectedExerciseHeadlessMaxVolume: number;
+  volumeThresholds: MuscleVolumeThresholds;
   exerciseBodyMapHoverMeta: { name: string; role: string } | null;
   onBodyMapHover: (muscleId: string | null) => void;
   isSelectedEligible: boolean;
@@ -34,6 +36,7 @@ export const ExerciseSummaryPanel: React.FC<ExerciseSummaryPanelProps> = ({
   selectedExerciseMuscleInfo,
   selectedExerciseHeadlessVolumes,
   selectedExerciseHeadlessMaxVolume,
+  volumeThresholds,
   exerciseBodyMapHoverMeta,
   onBodyMapHover,
   isSelectedEligible,
@@ -54,6 +57,7 @@ export const ExerciseSummaryPanel: React.FC<ExerciseSummaryPanelProps> = ({
         selectedExerciseMuscleInfo={selectedExerciseMuscleInfo}
         selectedExerciseHeadlessVolumes={selectedExerciseHeadlessVolumes}
         selectedExerciseHeadlessMaxVolume={selectedExerciseHeadlessMaxVolume}
+        volumeThresholds={volumeThresholds}
         exerciseBodyMapHoverMeta={exerciseBodyMapHoverMeta}
         onBodyMapHover={onBodyMapHover}
       />

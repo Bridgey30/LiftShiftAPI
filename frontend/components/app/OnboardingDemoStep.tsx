@@ -44,6 +44,7 @@ export const OnboardingDemoStep: React.FC<OnboardingDemoStepProps> = ({
       onSetBodyMapGender(gender);
       onSetWeightUnit(unit);
       savePreferencesConfirmed(true);
+      localStorage.setItem('hevy_analytics_demo_mode', '1');
 
       try {
         onSetCsvImportError(null);

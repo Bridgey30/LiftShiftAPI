@@ -30,6 +30,7 @@ export const summarizeExerciseHistory = (
         totalReps: 0,
         maxReps: 0,
         prTypes: [],
+        silverPrTypes: [],
         side: separateSides ? h.side : undefined,
       };
       bySession.set(key, entry);
@@ -45,6 +46,13 @@ export const summarizeExerciseHistory = (
       const currentTypes = new Set(entry.prTypes || []);
       h.prTypes.forEach((type) => currentTypes.add(type));
       entry.prTypes = Array.from(currentTypes);
+    }
+    
+    // Aggregate Silver PR types from all sets in this session
+    if (h.silverPrTypes && h.silverPrTypes.length > 0) {
+      const currentSilverTypes = new Set(entry.silverPrTypes || []);
+      h.silverPrTypes.forEach((type) => currentSilverTypes.add(type));
+      entry.silverPrTypes = Array.from(currentSilverTypes);
     }
 
     if ((h.oneRepMax || 0) >= (entry.oneRepMax || 0)) {

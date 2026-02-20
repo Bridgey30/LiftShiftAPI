@@ -1,46 +1,11 @@
 import { useMemo, useState, useEffect } from 'react';
 import type { Session } from '../utils/historySessions';
-
-const ITEMS_PER_PAGE = 3;
-
-const formatWorkoutDuration = (ms: number): string | null => {
-  if (!Number.isFinite(ms) || ms <= 0) return null;
-
-  const totalMinutes = Math.round(ms / (60 * 1000));
-  if (totalMinutes <= 0) return 'less than 1 min';
-
-  const hours = Math.floor(totalMinutes / 60);
-  const minutes = totalMinutes % 60;
-
-  const hourPart = hours > 0 ? `${hours} hour${hours === 1 ? '' : 's'}` : '';
-  const minutePart = minutes > 0 ? `${minutes} min${minutes === 1 ? '' : 's'}` : '';
-
-  if (hourPart && minutePart) return `${hourPart} ${minutePart}`;
-  return hourPart || minutePart;
-};
-
-const getSessionDurationMs = (session: Session): number | null => {
-  const start = session.date;
-  if (!start) return null;
-
-  let endMs = NaN;
-  for (const ex of session.exercises) {
-    for (const s of ex.sets) {
-      const end = (s as any).end_time ? new Date(String((s as any).end_time).trim()) : null;
-      const t = end?.getTime?.() ?? NaN;
-      if (Number.isFinite(t)) endMs = Math.max(Number.isFinite(endMs) ? endMs : t, t);
-    }
-  }
-
-  if (!Number.isFinite(endMs)) return null;
-  const dur = endMs - start.getTime();
-  return Number.isFinite(dur) && dur > 0 ? dur : null;
-};
-
-const isSameCalendarDay = (a: Date, b: Date) => {
-  const format = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-  return format(a) === format(b);
-};
+import {
+  ITEMS_PER_PAGE,
+  formatWorkoutDuration,
+  getDateKey,
+  getSessionDurationMs,
+} from '../utils/historyViewConstants';
 
 export interface useHistorySessionReturn {
   currentPage: number;
@@ -49,8 +14,6 @@ export interface useHistorySessionReturn {
   totalPages: number;
   collapsedSessions: Set<string>;
   toggleSessionCollapse: (key: string) => void;
-  formatWorkoutDuration: (ms: number) => string | null;
-  getSessionDurationMs: (session: Session) => number | null;
   sessionKeys: string[];
 }
 
@@ -87,8 +50,9 @@ export const useHistorySession = (
   useEffect(() => {
     if (!targetDate || sessions.length === 0) return;
 
-    const targetSessionIndex = sessions.findIndex(session =>
-      session.date && isSameCalendarDay(session.date, targetDate)
+    const targetKey = getDateKey(targetDate);
+    const targetSessionIndex = sessions.findIndex(
+      (session) => session.date && getDateKey(session.date) === targetKey
     );
 
     if (targetSessionIndex !== -1) {
@@ -121,8 +85,6 @@ export const useHistorySession = (
     totalPages,
     collapsedSessions,
     toggleSessionCollapse,
-    formatWorkoutDuration,
-    getSessionDurationMs,
     sessionKeys,
   };
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Dumbbell, TrendingUp } from 'lucide-react';
+import { TrendingUp } from 'lucide-react';
 
 import type { RecentPR } from '../../utils/analysis/insights';
 import type { ExerciseAsset } from '../../utils/data/exerciseAssets';
@@ -27,15 +27,22 @@ export const RecentPRCard: React.FC<RecentPRCardProps> = ({
   now,
   onExerciseClick,
 }) => {
-  const { exercise, weight, reps, date, improvement } = pr;
+  const { exercise, weight, reps, date, improvement, isSilver } = pr;
   const clickable = typeof onExerciseClick === 'function';
+  
+  // Silver PR styling: slate/gray instead of gold/emerald - darker for visibility
+  const cardClass = isSilver 
+    ? (isLatest ? 'bg-slate-500/15 border border-slate-500/40' : 'bg-black/50')
+    : (isLatest ? 'bg-emerald-500/10 border border-emerald-500/20' : 'bg-black/50');
+    
+  const improvementClass = isSilver ? 'text-slate-300' : 'text-emerald-400';
 
   return (
     <button
       type="button"
       onClick={() => onExerciseClick?.(exercise)}
       disabled={!clickable}
-      className={`w-full flex items-center gap-3 p-2 rounded-lg text-left ${isLatest ? 'bg-emerald-500/10 border border-emerald-500/20' : 'bg-black/50'} ${clickable ? 'cursor-pointer border border-transparent hover:border-slate-600/40 transition-all' : 'cursor-default'}`}
+      className={`w-full flex items-center gap-3 p-2 rounded-lg text-left ${cardClass} ${clickable ? 'cursor-pointer border border-transparent hover:border-slate-600/40 transition-all' : 'cursor-default'}`}
     >
       <div className="flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 rounded-md overflow-hidden">
         <ExerciseThumbnail
@@ -51,11 +58,14 @@ export const RecentPRCard: React.FC<RecentPRCardProps> = ({
       <div className="text-right">
         <div className="text-sm font-bold text-[color:var(--text-primary)]">{convertWeight(weight, weightUnit)}{weightUnit}</div>
         {improvement > 0 ? (
-          <div className="text-[10px] font-bold text-emerald-400 flex items-center justify-end gap-0.5">
+          <div className={`text-[10px] font-bold ${improvementClass} flex items-center justify-end gap-0.5`}>
             <TrendingUp className="w-3 h-3" />+{convertWeight(improvement, weightUnit)}{weightUnit}
           </div>
         ) : (
           <div className="text-[10px] text-slate-500">×{reps}</div>
+        )}
+        {isSilver && (
+          <div className="text-[10px] text-slate-300 font-medium">2-Month Best</div>
         )}
       </div>
     </button>

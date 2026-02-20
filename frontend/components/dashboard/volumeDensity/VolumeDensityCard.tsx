@@ -14,7 +14,7 @@ import {
 import type { TimeFilterMode, WeightUnit } from '../../../utils/storage/localStorage';
 import { formatNumber, formatSignedNumber } from '../../../utils/format/formatters';
 import { formatDeltaPercentage, getDeltaFormatPreset } from '../../../utils/format/deltaFormat';
-import { getRechartsTickIndexMap, getRechartsXAxisInterval, IndexFilteredDot, RECHARTS_XAXIS_PADDING } from '../../../utils/chart/chartEnhancements';
+import { getRechartsTickIndexMap, getRechartsXAxisInterval, IndexFilteredDot, RECHARTS_XAXIS_PADDING, RECHARTS_YAXIS_MARGIN, calculateYAxisDomain, formatAxisNumber } from '../../../utils/chart/chartEnhancements';
 import {
   BadgeLabel,
   ChartDescription,
@@ -64,12 +64,16 @@ export const VolumeDensityCard = ({
     return volumeDurationData;
   }, [volumeDurationData]);
 
+  const yAxisDomain = useMemo(() => {
+    return calculateYAxisDomain(chartData, ['volumePerSet', 'setCount']);
+  }, [chartData]);
+
   const tickIndexMap = useMemo(() => {
     return getRechartsTickIndexMap(chartData.length);
   }, [chartData.length]);
 
   return (
-    <div className="bg-black/70 border border-slate-700/50 p-4 sm:p-6 rounded-xl min-h-[400px] sm:min-h-[520px] flex flex-col transition-all duration-300">
+    <div className="bg-black/70 border border-slate-700/50 px-2 sm:px-3 py-4 sm:py-6 rounded-xl min-h-[400px] sm:min-h-[520px] flex flex-col transition-all duration-300">
       <div className={`flex flex-row justify-between items-center mb-3 gap-3 transition-opacity duration-700 ${isMounted ? 'opacity-100' : 'opacity-0'}`}>
         <h3 className="text-sm sm:text-lg font-semibold text-white flex items-center gap-2 transition-opacity duration-200 hover:opacity-90">
           <Timer className="w-5 h-5 text-purple-500 transition-opacity duration-200 hover:opacity-80" />
@@ -151,7 +155,7 @@ export const VolumeDensityCard = ({
 
       <div className={`flex-1 w-full min-h-[250px] sm:min-h-[300px] transition-all duration-700 delay-100 ${isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
         <ResponsiveContainer width="100%" height={300} minWidth={0}>
-          <ComposedChart key={view} data={chartData} margin={{ left: -20, right: 10, top: 10, bottom: 0 }}>
+          <ComposedChart key={view} data={chartData} margin={{ top: 10, ...RECHARTS_YAXIS_MARGIN, bottom: 0 }}>
             <defs>
               <linearGradient id="gDensityArea" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.5} />
@@ -173,7 +177,8 @@ export const VolumeDensityCard = ({
               fontSize={11}
               tickLine={false}
               axisLine={false}
-              tickFormatter={(val) => `${formatNumber(Number(val), { maxDecimals: 0 })}${weightUnit}`}
+              domain={yAxisDomain}
+              tickFormatter={(val) => formatAxisNumber(Number(val), weightUnit)}
             />
             <Tooltip
               contentStyle={tooltipStyle as any}

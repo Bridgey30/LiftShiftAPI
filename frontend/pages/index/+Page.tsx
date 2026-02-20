@@ -1,7 +1,7 @@
 export { Page };
 
 import React, { useEffect } from 'react';
-import { BrowserRouter } from 'react-router';
+import { HashRouter } from 'react-router';
 import App from '../../App';
 import { initGA } from '../../utils/integrations/ga';
 
@@ -18,8 +18,8 @@ function Page() {
   }, []);
 
   return (
-    <BrowserRouter basename={getRouterBasename()}>
+    <HashRouter basename={getRouterBasename()}>
       <App />
-    </BrowserRouter>
+    </HashRouter>
   );
 }

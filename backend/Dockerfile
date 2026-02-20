@@ -40,4 +40,4 @@ COPY --from=build /app/dist ./dist
 RUN npm install --omit=dev
 
 EXPOSE 5050
-CMD ["npm", "start"]
+CMD ["node", "dist/index.js"]

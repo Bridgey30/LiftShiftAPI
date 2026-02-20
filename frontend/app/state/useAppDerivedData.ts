@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { getDailySummaries, getExerciseStats } from '../../utils/analysis/core';
 import { computationCache } from '../../utils/storage/computationCache';
 import { getEffectiveNowFromWorkoutData } from '../../utils/date/dateUtils';
-import { getDataAgeInfo } from '../../hooks/app';
+import { computeEffectiveNow, getDataAgeInfo } from '../../hooks/app';
 import type { WorkoutSet } from '../../types';
 
 interface AppDerivedDataArgs {
@@ -15,12 +15,12 @@ interface AppDerivedDataArgs {
 export const useAppDerivedData = ({ parsedData, filteredData, filterCacheKey, dateMode }: AppDerivedDataArgs) => {
   const filteredEffectiveNow = useMemo(() => {
     const dataBasedNow = getEffectiveNowFromWorkoutData(filteredData, new Date(0));
-    return dateMode === 'actual' ? new Date() : dataBasedNow;
+    return computeEffectiveNow(dataBasedNow, dateMode);
   }, [filteredData, dateMode]);
 
   const calendarEffectiveNow = useMemo(() => {
     const dataBasedNow = getEffectiveNowFromWorkoutData(parsedData, new Date(0));
-    return dateMode === 'actual' ? new Date() : dataBasedNow;
+    return computeEffectiveNow(dataBasedNow, dateMode);
   }, [parsedData, dateMode]);
 
   const dataAgeInfo = useMemo(() => {

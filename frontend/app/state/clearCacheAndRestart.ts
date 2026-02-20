@@ -1,5 +1,6 @@
 import { trackEvent } from '../../utils/integrations/analytics';
 import { computationCache } from '../../utils/storage/computationCache';
+import { browserCache } from '../../utils/storage/browserCache';
 import {
   clearBodyMapGender,
   clearCSVData,
@@ -11,7 +12,6 @@ import {
 import {
   clearDataSourceChoice,
   clearHevyAuthToken,
-  clearHevyRefreshToken,
   clearHevyProApiKey,
   clearLastCsvPlatform,
   clearLastLoginMethod,
@@ -23,9 +23,7 @@ export const clearCacheAndRestart = (): void => {
   trackEvent('cache_clear', {});
   clearCSVData();
   clearHevyAuthToken();
-  clearHevyRefreshToken();
   clearHevyProApiKey();
-  // Keep credentials for auto-relogin unless user explicitly logs out
   clearLyfataApiKey();
   clearDataSourceChoice();
   clearLastCsvPlatform();
@@ -37,5 +35,6 @@ export const clearCacheAndRestart = (): void => {
   clearThemeMode();
   clearDateMode();
   computationCache.clear();
+  browserCache.clearAllCache();
   window.location.reload();
 };

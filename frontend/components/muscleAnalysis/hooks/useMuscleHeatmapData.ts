@@ -7,7 +7,6 @@ import { MUSCLE_GROUP_ORDER, SVG_TO_MUSCLE_GROUP, getHeadlessRadarSeries } from 
 import type { NormalizedMuscleGroup } from '../../../utils/muscle/analytics';
 import { resolveSelectedSubjectKeys } from '../utils/selectedSubjectKeys';
 import type { ExerciseAsset } from '../../../utils/data/exerciseAssets';
-import type { QuickFilterCategory } from './useMuscleSelection';
 import { muscleCacheKeys } from '../../../utils/storage/cacheKeys';
 
 interface UseMuscleHeatmapDataParams {
@@ -16,9 +15,7 @@ interface UseMuscleHeatmapDataParams {
   windowStart: Date | null;
   effectiveNow: Date;
   weeklySetsWindow: WeeklySetsWindow;
-  viewMode: 'muscle' | 'group' | 'headless';
   selectedMuscle: string | null;
-  activeQuickFilter: QuickFilterCategory | null;
   filterCacheKey: string;
 }
 
@@ -28,9 +25,7 @@ export const useMuscleHeatmapData = ({
   windowStart,
   effectiveNow,
   weeklySetsWindow,
-  viewMode,
   selectedMuscle,
-  activeQuickFilter,
   filterCacheKey,
 }: UseMuscleHeatmapDataParams) => {
   const weeklySetsDashboardMuscles = useMemo(() => {
@@ -62,17 +57,11 @@ export const useMuscleHeatmapData = ({
   const windowedHeatmapData = useMemo(() => {
     if (!assetsMap || !windowStart) return { volumes: new Map<string, number>(), maxVolume: 1 };
 
-    if (viewMode === 'group') {
-      return weeklySetsDashboardGroups?.heatmap ?? { volumes: new Map<string, number>(), maxVolume: 1 };
-    }
-
     const heatmap = weeklySetsDashboardMuscles?.heatmap ?? { volumes: new Map<string, number>(), maxVolume: 1 };
-    if (viewMode !== 'headless') return heatmap;
-
     const headlessVolumes = toHeadlessVolumeMap(heatmap.volumes);
     const headlessMaxVolume = Math.max(1, ...(Array.from(headlessVolumes.values()) as number[]));
     return { volumes: headlessVolumes, maxVolume: headlessMaxVolume };
-  }, [assetsMap, windowStart, viewMode, weeklySetsDashboardGroups, weeklySetsDashboardMuscles]);
+  }, [assetsMap, windowStart, weeklySetsDashboardMuscles]);
 
   const muscleVolumes = useMemo(() => windowedHeatmapData.volumes, [windowedHeatmapData]);
   const maxVolume = useMemo(() => Math.max(windowedHeatmapData.maxVolume, 1), [windowedHeatmapData]);
@@ -113,8 +102,8 @@ export const useMuscleHeatmapData = ({
   }, [windowedGroupVolumes]);
 
   const selectedSubjectKeys = useMemo(() => {
-    return resolveSelectedSubjectKeys({ viewMode, selectedMuscle, activeQuickFilter });
-  }, [activeQuickFilter, selectedMuscle, viewMode]);
+    return resolveSelectedSubjectKeys({ selectedMuscle });
+  }, [selectedMuscle]);
 
   const groupWeeklyRatesBySubject = useMemo(() => {
     if (!assetsMap || !windowStart) return null;

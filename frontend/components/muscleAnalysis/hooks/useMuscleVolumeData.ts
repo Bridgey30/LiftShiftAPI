@@ -10,6 +10,7 @@ import {
   lookupExerciseMuscleData,
   toHeadlessVolumeMap,
 } from '../../../utils/muscle/mapping';
+import { toHeadlessVolumeMapSum } from '../../../utils/muscle/volume/muscleVolumeUtils';
 import { getExerciseAssets, ExerciseAsset } from '../../../utils/data/exerciseAssets';
 import { getEffectiveNowFromWorkoutData } from '../../../utils/date/dateUtils';
 import { subDays } from 'date-fns';
@@ -29,6 +30,8 @@ export interface UseMuscleVolumeDataReturn {
   windowStart: Date | null;
   effectiveNow: Date;
   allTimeWindowStart: Date | null;
+  /** Lifetime total sets per headless muscle ID (all-time, sum-aggregated) */
+  lifetimeHeadlessVolumes: Map<string, number>;
   getChipTextColor: (sets: number, maxSets: number) => string;
 }
 
@@ -39,6 +42,7 @@ export function useMuscleVolumeData({
 }: UseMuscleVolumeDataProps): UseMuscleVolumeDataReturn {
   const [exerciseMuscleData, setExerciseMuscleData] = useState<Map<string, ExerciseMuscleData>>(new Map());
   const [muscleVolume, setMuscleVolume] = useState<Map<string, MuscleVolumeEntry>>(new Map());
+  const [lifetimeHeadlessVolumes, setLifetimeHeadlessVolumes] = useState<Map<string, number>>(new Map());
   const [isLoading, setIsLoading] = useState(true);
   const [assetsMap, setAssetsMap] = useState<Map<string, ExerciseAsset> | null>(null);
 
@@ -102,6 +106,23 @@ export function useMuscleVolumeData({
     calculateMuscleVolume(processedData, exerciseMuscleData).then(setMuscleVolume);
   }, [data, exerciseMuscleData, windowStart]);
 
+  // Calculate lifetime (all-time) headless muscle volumes for achievement tracking
+  useEffect(() => {
+    if (exerciseMuscleData.size === 0 || data.length === 0) {
+      setLifetimeHeadlessVolumes(new Map());
+      return;
+    }
+
+    calculateMuscleVolume(data, exerciseMuscleData).then((allTimeVolume) => {
+      // Convert detailed SVG volumes → headless muscle totals (sum, not max)
+      const detailedSets = new Map<string, number>();
+      allTimeVolume.forEach((entry, svgId) => {
+        detailedSets.set(svgId, entry.sets);
+      });
+      setLifetimeHeadlessVolumes(toHeadlessVolumeMapSum(detailedSets));
+    });
+  }, [data, exerciseMuscleData]);
+
   return {
     exerciseMuscleData,
     muscleVolume,
@@ -110,6 +131,7 @@ export function useMuscleVolumeData({
     windowStart,
     effectiveNow,
     allTimeWindowStart,
+    lifetimeHeadlessVolumes,
     getChipTextColor,
   };
 }

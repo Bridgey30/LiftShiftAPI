@@ -1,11 +1,12 @@
 import { useMemo } from 'react';
+import { differenceInCalendarDays } from 'date-fns';
 
 import type { WorkoutSet } from '../../../types';
 import { isWarmupSet } from '../../../utils/analysis/classification';
 import {
   getExerciseMuscleVolumes,
   lookupExerciseMuscleData,
-  toHeadlessVolumeMap,
+  toMuscleVolumeMap,
   type ExerciseMuscleData,
 } from '../../../utils/muscle/mapping';
 import type { FlexHeadlessHeatmap } from '../utils/flexViewTypes';
@@ -17,6 +18,10 @@ export const useFlexHeadlessHeatmap = (
 ): FlexHeadlessHeatmap =>
   useMemo(() => {
     const ytdStart = new Date(effectiveNow.getFullYear(), 0, 1);
+
+    // Calculate weeks for averaging
+    const daysSinceYtd = Math.max(1, differenceInCalendarDays(effectiveNow, ytdStart) + 1);
+    const weeks = Math.max(1, daysSinceYtd / 7);
 
     const detailed = new Map<string, number>();
     const exerciseCache = new Map<string, ExerciseMuscleData | undefined>();
@@ -43,7 +48,13 @@ export const useFlexHeadlessHeatmap = (
       });
     }
 
-    const headlessVolumes = toHeadlessVolumeMap(detailed);
-    const maxVolume = Math.max(1, ...Array.from(headlessVolumes.values()));
-    return { volumes: headlessVolumes, maxVolume };
+    // Convert to muscle volumes and calculate weekly averages
+    const totalVolumes = toMuscleVolumeMap(detailed);
+    const weeklyVolumes = new Map<string, number>();
+    totalVolumes.forEach((total, muscleId) => {
+      weeklyVolumes.set(muscleId, Math.round((total / weeks) * 10) / 10);
+    });
+
+    const maxVolume = Math.max(1, ...Array.from(weeklyVolumes.values()));
+    return { volumes: weeklyVolumes, maxVolume };
   }, [data, effectiveNow, exerciseMuscleData]);

@@ -36,10 +36,10 @@ export const useDashboardPrTrend = (args: {
   const { fullData, rangeMode, allAggregationMode, effectiveNow, dashboardInsights, filterCacheKey } = args;
 
   const prsData = useMemo<PrsOverTimePoint[]>(() => {
-    const { filtered, minTs, maxTs } = getWindowedWorkoutSets(fullData, rangeMode, effectiveNow);
+    const { filtered, minTs, maxTs } = getWindowedWorkoutSets(fullData, rangeMode, effectiveNow, filterCacheKey);
 
     const preferred: 'daily' | 'weekly' | 'monthly' =
-      rangeMode === 'all' ? allAggregationMode : rangeMode === 'yearly' ? 'weekly' : 'daily';
+      rangeMode === 'all' ? allAggregationMode : rangeMode === 'yearly' ? allAggregationMode : 'daily';
 
     const mode =
       Number.isFinite(minTs) && Number.isFinite(maxTs) && maxTs > minTs

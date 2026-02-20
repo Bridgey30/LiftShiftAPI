@@ -59,6 +59,8 @@ export const getExerciseStats = (data: WorkoutSet[]): ExerciseStats[] => {
       volume,
       isPr: set.isPr ?? false,
       prTypes: set.prTypes,
+      isSilverPr: set.isSilverPr,
+      silverPrTypes: set.silverPrTypes,
       side,
     });
 

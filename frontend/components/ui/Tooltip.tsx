@@ -1,9 +1,11 @@
 import React from 'react';
 import { AnalysisStatus } from '../../types';
-import { TOOLTIP_THEMES, TOOLTIP_CONFIG, calculateCenteredTooltipPosition } from '../../utils/ui/uiConstants';
+import { TOOLTIP_THEMES, TOOLTIP_CONFIG, calculateCenteredTooltipPosition, calculateMouseTooltipPosition } from '../../utils/ui/uiConstants';
 
 export interface TooltipData {
-  rect: DOMRect;
+  rect?: DOMRect;
+  mouseX?: number;
+  mouseY?: number;
   title: string;
   body: string;
   footer?: string;
@@ -16,9 +18,17 @@ interface TooltipProps {
 }
 
 export const Tooltip: React.FC<TooltipProps> = ({ data }) => {
-  const { rect, title, body, footer, status, metrics } = data;
+  const { rect, mouseX, mouseY, title, body, footer, status, metrics } = data;
   const theme = TOOLTIP_THEMES[status];
-  const positionStyle = calculateCenteredTooltipPosition(rect, TOOLTIP_CONFIG.WIDTH);
+  
+  let positionStyle;
+  if (mouseX !== undefined && mouseY !== undefined) {
+    positionStyle = calculateMouseTooltipPosition(mouseX, mouseY, TOOLTIP_CONFIG.WIDTH);
+  } else if (rect) {
+    positionStyle = calculateCenteredTooltipPosition(rect, TOOLTIP_CONFIG.WIDTH);
+  } else {
+    positionStyle = {};
+  }
 
   return (
     <div
@@ -55,9 +65,9 @@ export const useTooltip = () => {
   const [tooltip, setTooltip] = React.useState<TooltipData | null>(null);
 
   const showTooltip = React.useCallback(
-    (e: React.MouseEvent, data: Omit<TooltipData, 'rect'>) => {
-      const rect = e.currentTarget.getBoundingClientRect();
-      setTooltip({ ...data, rect });
+    (e: React.MouseEvent, data: Omit<TooltipData, 'rect' | 'mouseX' | 'mouseY'>) => {
+      // Use mouse position for positioning
+      setTooltip({ ...data, mouseX: e.clientX, mouseY: e.clientY });
     },
     []
   );

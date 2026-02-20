@@ -1,97 +1,39 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Quick Filter Categories
-// Reusable mappings for PUSH/PULL/LEGS, UPPER/LOWER, ANTERIOR/POSTERIOR filters
+// Quick Filter Categories - DEPRECATED
+// This file previously contained PUSH/PULL/LEGS, UPPER/LOWER, ANTERIOR/POSTERIOR filters
+// which have been removed as per product requirements.
+// File kept for backward compatibility - no quick filters are currently active.
 // ─────────────────────────────────────────────────────────────────────────────
 
-/** Quick filter category type */
-export type QuickFilterCategory =
-  | 'PUS' | 'PUL' | 'LEG'
-  | 'UPP' | 'LOW'
-  | 'ANT' | 'POS';
+/** 
+ * Quick filter category type - DEPRECATED
+ * Previously used for PPL (Push/Pull/Legs), UL (Upper/Lower), AP (Anterior/Posterior) filters
+ * Now kept as a placeholder type for backward compatibility
+ */
+export type QuickFilterCategory = never;
 
-/** Display labels for quick filter categories */
-export const QUICK_FILTER_LABELS: Readonly<Record<QuickFilterCategory, string>> = {
-  PUS: 'Push',
-  PUL: 'Pull',
-  LEG: 'Legs',
-  UPP: 'Upper',
-  LOW: 'Lower',
-  ANT: 'Anterior',
-  POS: 'Posterior',
-};
+/** 
+ * Display labels for quick filter categories - DEPRECATED
+ * Previously mapped filter IDs to display names
+ */
+export const QUICK_FILTER_LABELS: Readonly<Record<never, string>> = {};
 
-/** Quick filter category groupings for UI display */
-export const QUICK_FILTER_GROUPS: readonly { label: string; filters: QuickFilterCategory[] }[] = [
-  { label: 'PPL', filters: ['PUS', 'PUL', 'LEG'] },
-  { label: 'UL', filters: ['UPP', 'LOW'] },
-  { label: 'AP', filters: ['ANT', 'POS'] },
-];
+/** 
+ * Quick filter category groupings - DEPRECATED
+ * Previously grouped filters for UI display
+ */
+export const QUICK_FILTER_GROUPS: readonly { label: string; filters: never[] }[] = [];
 
-/** SVG IDs for each quick filter category (detailed muscle view) */
-export const QUICK_FILTER_SVG_IDS: Readonly<Record<QuickFilterCategory, readonly string[]>> = {
-  // PUSH: Chest, Front/Lateral Delts, Triceps
-  PUS: [
-    'mid-lower-pectoralis', 'upper-pectoralis',
-    'anterior-deltoid', 'lateral-deltoid',
-    'medial-head-triceps', 'long-head-triceps', 'lateral-head-triceps',
-  ],
-  // PULL: Back (Lats, Traps, Lower Back), Rear Delts, Biceps, Forearms
-  PUL: [
-    'lats', 'lowerback',
-    'upper-trapezius', 'lower-trapezius', 'traps-middle',
-    'posterior-deltoid',
-    'long-head-bicep', 'short-head-bicep',
-    'wrist-extensors', 'wrist-flexors',
-  ],
-  // LEGS: Quads, Hamstrings, Glutes, Calves, Adductors
-  LEG: [
-    'outer-quadricep', 'rectus-femoris', 'inner-quadricep',
-    'medial-hamstrings', 'lateral-hamstrings',
-    'gluteus-maximus', 'gluteus-medius',
-    'gastrocnemius', 'soleus', 'tibialis',
-    'inner-thigh',
-  ],
-  // UPPER: Everything above the waist
-  UPP: [
-    'mid-lower-pectoralis', 'upper-pectoralis',
-    'lats', 'lowerback',
-    'upper-trapezius', 'lower-trapezius', 'traps-middle',
-    'anterior-deltoid', 'lateral-deltoid', 'posterior-deltoid',
-    'long-head-bicep', 'short-head-bicep',
-    'medial-head-triceps', 'long-head-triceps', 'lateral-head-triceps',
-    'wrist-extensors', 'wrist-flexors',
-    'lower-abdominals', 'upper-abdominals', 'obliques',
-  ],
-  // LOWER: Legs only
-  LOW: [
-    'outer-quadricep', 'rectus-femoris', 'inner-quadricep',
-    'medial-hamstrings', 'lateral-hamstrings',
-    'gluteus-maximus', 'gluteus-medius',
-    'gastrocnemius', 'soleus', 'tibialis',
-    'inner-thigh',
-  ],
-  // ANTERIOR: Front of body - Chest, Front Delts, Biceps, Abs, Quads, Tibialis
-  ANT: [
-    'mid-lower-pectoralis', 'upper-pectoralis',
-    'anterior-deltoid', 'lateral-deltoid',
-    'long-head-bicep', 'short-head-bicep',
-    'lower-abdominals', 'upper-abdominals', 'obliques',
-    'outer-quadricep', 'rectus-femoris', 'inner-quadricep',
-    'tibialis', 'inner-thigh',
-  ],
-  // POSTERIOR: Back of body - Back, Rear Delts, Triceps, Glutes, Hamstrings, Calves
-  POS: [
-    'lats', 'lowerback',
-    'upper-trapezius', 'lower-trapezius', 'traps-middle',
-    'posterior-deltoid',
-    'medial-head-triceps', 'long-head-triceps', 'lateral-head-triceps',
-    'gluteus-maximus', 'gluteus-medius',
-    'medial-hamstrings', 'lateral-hamstrings',
-    'gastrocnemius', 'soleus',
-  ],
-};
+/** 
+ * SVG IDs for each quick filter category - DEPRECATED
+ * Previously contained muscle mappings for each filter category
+ */
+export const QUICK_FILTER_SVG_IDS: Readonly<Record<never, readonly string[]>> = {};
 
-/** Get SVG IDs for a quick filter category */
-export const getSvgIdsForQuickFilter = (category: QuickFilterCategory): readonly string[] => {
-  return QUICK_FILTER_SVG_IDS[category] ?? [];
+/** 
+ * Get SVG IDs for a quick filter category - DEPRECATED
+ * @deprecated Quick filters have been removed from the application
+ */
+export const getSvgIdsForQuickFilter = (_category: never): readonly string[] => {
+  return [];
 };

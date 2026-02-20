@@ -1,5 +1,16 @@
 export const RECHARTS_XAXIS_PADDING = { left: 10, right: 10 } as const;
 
+export const RECHARTS_YAXIS_MARGIN = { left: -10, right: 20 } as const;
+
+export const formatAxisNumber = (val: number, unit?: string): string => {
+  const num = Number(val);
+  if (Number.isNaN(num)) return `${val}`;
+  if (num >= 1000) {
+    return `${(num / 1000).toFixed(1).replace(/\.0$/, '')}k${unit || ''}`;
+  }
+  return `${Math.round(num)}${unit || ''}`;
+};
+
 const DEFAULT_MAX_TICKS_DESKTOP = 8;
 const DEFAULT_MAX_TICKS_MOBILE = 6;
 const DEFAULT_MOBILE_BREAKPOINT_PX = 640;
@@ -106,4 +117,39 @@ export const getRechartsCategoricalTicks = <T,>(
   }
 
   return ticks;
+};
+
+export const calculateYAxisDomain = (
+  data: any[],
+  dataKeys: string[],
+  opts?: { paddingPercent?: number; fallbackMin?: number; fallbackMax?: number }
+): [number, number] => {
+  const paddingPercent = opts?.paddingPercent ?? 0.15;
+  const fallbackMin = opts?.fallbackMin ?? 0;
+  const fallbackMax = opts?.fallbackMax ?? 100;
+
+  if (!Array.isArray(data) || data.length === 0) return [fallbackMin, fallbackMax];
+
+  let values: number[] = [];
+  for (const key of dataKeys) {
+    const extracted = data
+      .filter(d => d != null && d[key] != null)
+      .map(d => Number(d[key]))
+      .filter(n => Number.isFinite(n));
+    values = values.concat(extracted);
+  }
+
+  if (values.length === 0) return [fallbackMin, fallbackMax];
+
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const range = max - min;
+
+  if (range === 0) {
+    const padding = min * 0.1;
+    return [Math.max(0, min - padding), max + padding];
+  }
+
+  const padding = range * paddingPercent;
+  return [Math.max(0, min - padding), max + padding];
 };

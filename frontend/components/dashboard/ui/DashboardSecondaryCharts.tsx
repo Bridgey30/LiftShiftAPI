@@ -94,25 +94,27 @@ export const DashboardSecondaryCharts: React.FC<DashboardSecondaryChartsProps> =
       </LazyRender>
     </div>
 
-    <LazyRender className="min-w-0" placeholder={<ChartSkeleton className="min-h-[360px]" />}>
-      <Suspense fallback={<ChartSkeleton className="min-h-[360px]" />}>
-        <TopExercisesCard
-          isMounted={isMounted}
-          topExerciseMode={topExerciseMode}
-          setTopExerciseMode={setTopExerciseMode}
-          topExercisesView={topExercisesView}
-          setTopExercisesView={setTopExercisesView}
-          topExercisesBarData={topExercisesBarData}
-          topExercisesOverTimeData={topExercisesOverTimeData}
-          topExerciseNames={topExerciseNames}
-          topExercisesInsight={topExercisesInsight}
-          pieColors={pieColors}
-          tooltipStyle={tooltipStyle as any}
-          onExerciseClick={onExerciseClick}
-          assetsMap={assetsMap}
-          assetsLowerMap={assetsLowerMap}
-        />
-      </Suspense>
-    </LazyRender>
+    <div className="min-w-0">
+      <LazyRender className="min-w-0" placeholder={<ChartSkeleton className="min-h-[360px]" />}>
+        <Suspense fallback={<ChartSkeleton className="min-h-[360px]" />}>
+          <TopExercisesCard
+            isMounted={isMounted}
+            topExerciseMode={topExerciseMode}
+            setTopExerciseMode={setTopExerciseMode}
+            topExercisesView={topExercisesView}
+            setTopExercisesView={setTopExercisesView}
+            topExercisesBarData={topExercisesBarData}
+            topExercisesOverTimeData={topExercisesOverTimeData}
+            topExerciseNames={topExerciseNames}
+            topExercisesInsight={topExercisesInsight}
+            pieColors={pieColors}
+            tooltipStyle={tooltipStyle as any}
+            onExerciseClick={onExerciseClick}
+            assetsMap={assetsMap}
+            assetsLowerMap={assetsLowerMap}
+          />
+        </Suspense>
+      </LazyRender>
+    </div>
   </>
 );

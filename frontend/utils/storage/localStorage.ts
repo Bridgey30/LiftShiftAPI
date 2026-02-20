@@ -88,24 +88,6 @@ export const saveThemeMode = themeModeStorage.set;
 export const getThemeMode = themeModeStorage.get;
 export const clearThemeMode = themeModeStorage.clear;
 
-// Heatmap Theme
-export type HeatmapTheme = 'red' | 'brown' | 'blue';
-
-const heatmapThemeStorage = createStorageManager<HeatmapTheme>({
-  key: 'hevy_analytics_heatmap_theme',
-  defaultValue: 'red',
-  migrator: (stored) => {
-    // Backward compatibility: previously supported themes (cyan/violet/emerald) map to red.
-    if (stored === 'blue') return 'blue';
-    if (stored === 'brown') return 'brown';
-    return null;
-  },
-});
-
-export const saveHeatmapTheme = heatmapThemeStorage.set;
-export const getHeatmapTheme = heatmapThemeStorage.get;
-export const clearHeatmapTheme = heatmapThemeStorage.clear;
-
 // Date Mode
 // 'effective' = use the latest workout date as "now" (default, better for relative time displays)
 // 'actual' = use the real current date as "now"

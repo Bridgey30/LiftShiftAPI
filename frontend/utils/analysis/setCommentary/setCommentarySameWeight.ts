@@ -41,6 +41,12 @@ export const SAME_WEIGHT_REPS_INCREASED: SetCommentaryOptions = {
     'Energy levels rebounded',
     'Better breathing technique',
   ] as const,
+  improveLines: [
+    'Keep longer rests to sustain',
+    'You have more in the tank',
+    'Push even harder next time',
+    'Maintain this energy level',
+  ] as const,
 };
 
 export const SAME_WEIGHT_REPS_SAME: SetCommentaryOptions = {
@@ -83,6 +89,12 @@ export const SAME_WEIGHT_REPS_SAME: SetCommentaryOptions = {
     'Workload distributed evenly',
     'Rest periods optimal',
     'Neural system firing consistently',
+  ] as const,
+  improveLines: [
+    'Try to push for more reps',
+    'Increase weight slightly',
+    'Add one more rep next time',
+    'You could go harder',
   ] as const,
 };
 
@@ -127,6 +139,11 @@ export const SAME_WEIGHT_DROP_MILD: SetCommentaryOptions = {
     'Work capacity holding',
     'Strength curve normal',
   ] as const,
+  improveLines: [
+    'Extend rest by 30 seconds',
+    'Pace slower on first sets',
+    'Focus on breathing between sets',
+  ] as const,
 };
 
 export const SAME_WEIGHT_DROP_MODERATE: SetCommentaryOptions = {
@@ -170,6 +187,12 @@ export const SAME_WEIGHT_DROP_MODERATE: SetCommentaryOptions = {
     'Form still holding',
     'Push through fatigue',
   ] as const,
+  improveLines: [
+    'Take longer rest between sets',
+    'Reduce weight slightly',
+    'Focus on fewer but harder sets',
+    'Consider deload week',
+  ] as const,
 };
 
 export const SAME_WEIGHT_DROP_SEVERE: SetCommentaryOptions = {
@@ -212,5 +235,11 @@ export const SAME_WEIGHT_DROP_SEVERE: SetCommentaryOptions = {
     'Potential overreach',
     'Recovery signals present',
     'Body asking for rest',
+  ] as const,
+  improveLines: [
+    'Stop set and rest longer',
+    'Reduce weight significantly',
+    'Take a deload week',
+    'Your body needs recovery',
   ] as const,
 };

@@ -1,14 +1,17 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import { formatDeltaPercentage } from '../../../utils/format/deltaFormat';
 import { type BodyMapGender } from '../../bodyMap/BodyMap';
 import { ChartDescription, InsightLine, InsightText, TrendBadge, BadgeLabel } from '../insights/ChartBits';
-import { toHeadlessVolumeMap } from '../../../utils/muscle/mapping';
+import { toHeadlessVolumeMap, HEADLESS_MUSCLE_NAMES } from '../../../utils/muscle/mapping';
 import { getHeadlessRadarSeries } from '../../../utils/muscle/mapping';
 import { differenceInCalendarDays } from 'date-fns';
 import { isPlausibleDate } from '../../../utils/date/dateUtils';
 import { WeeklySetsHeader } from './WeeklySetsHeader';
 import { WeeklySetsRadarView } from './WeeklySetsRadarView';
 import { WeeklySetsHeatmapView } from './WeeklySetsHeatmapView';
+import { Tooltip, type TooltipData } from '../../ui/Tooltip';
+import { weeklyStimulusFromThresholds } from '../../../utils/muscle/hypertrophy/hypertrophyCalculations';
+import { getVolumeThresholds, getVolumeZoneColor, getVolumeZone, type TrainingLevel } from '../../../utils/muscle/hypertrophy/muscleParams';
 
 type WeeklySetsView = 'radar' | 'heatmap';
 type WeeklySetsWindow = 'all' | '7d' | '30d' | '365d';
@@ -39,6 +42,7 @@ export const WeeklySetsCard = ({
   bodyMapGender,
   windowStart,
   now,
+  trainingLevel,
 }: {
   isMounted: boolean;
   weeklySetsView: WeeklySetsView;
@@ -47,15 +51,48 @@ export const WeeklySetsCard = ({
   setMuscleCompQuick: (v: WeeklySetsWindow) => void;
   heatmap: HeatmapData;
   tooltipStyle: Record<string, unknown>;
-  onMuscleClick?: (muscleId: string, viewMode: 'muscle' | 'group' | 'headless') => void;
+  onMuscleClick?: (muscleId: string, weeklySetsWindow: 'all' | '7d' | '30d' | '365d') => void;
   bodyMapGender?: BodyMapGender;
   windowStart?: Date | null;
   now: Date;
+  trainingLevel: TrainingLevel;
 }) => {
   const [heatmapHoveredMuscle, setHeatmapHoveredMuscle] = useState<string | null>(null);
+  const [hoverTooltip, setHoverTooltip] = useState<TooltipData | null>(null);
 
   const headlessVolumes = useMemo(() => toHeadlessVolumeMap(heatmap.volumes), [heatmap.volumes]);
   const radarData = useMemo(() => getHeadlessRadarSeries(headlessVolumes), [headlessVolumes]);
+  const volumeThresholds = useMemo(() => getVolumeThresholds(trainingLevel), [trainingLevel]);
+
+  const handleMuscleHover = useCallback((muscleId: string | null, e?: MouseEvent) => {
+    if (!muscleId || !e) {
+      setHoverTooltip(null);
+      setHeatmapHoveredMuscle(null);
+      return;
+    }
+
+    const target = e.target as Element | null;
+    const groupEl = target?.closest?.('g[id]') as Element | null;
+    const rect = groupEl?.getBoundingClientRect?.() as DOMRect | undefined;
+    if (!rect) {
+      setHoverTooltip(null);
+      return;
+    }
+
+    setHeatmapHoveredMuscle(muscleId);
+
+    const rate = headlessVolumes.get(muscleId) || 0;
+    const stimulus = weeklyStimulusFromThresholds(rate, volumeThresholds);
+    const zone = getVolumeZone(rate, volumeThresholds);
+    const bodyText = `${rate.toFixed(1)} sets/wk — ${zone.label}\n${stimulus}% of wkly possible gains\n${zone.explanation}`;
+
+    setHoverTooltip({
+      rect,
+      title: (HEADLESS_MUSCLE_NAMES as any)[muscleId] ?? muscleId,
+      body: bodyText,
+      status: rate > 0 ? 'success' : 'default',
+    });
+  }, [headlessVolumes, volumeThresholds]);
 
   const weeklySetsInsight = useMemo(() => {
     const hasData = radarData.some((d) => (d.value ?? 0) > 0);
@@ -76,13 +113,13 @@ export const WeeklySetsCard = ({
     return { total, top, top3Share, durationLabel };
   }, [radarData, windowStart, now]);
 
-  const heatmapHoveredMuscleIds = undefined;
+  const heatmapHoveredMuscleIds = heatmapHoveredMuscle ? [heatmapHoveredMuscle] : undefined;
 
   const handleBodyMapClick = (muscleId: string) => {
     if (!onMuscleClick) return;
     const isDesktop = typeof window === 'undefined' ? true : (window.matchMedia?.('(min-width: 640px)')?.matches ?? true);
     if (!isDesktop) return;
-    onMuscleClick(muscleId, 'headless');
+    onMuscleClick(muscleId, muscleCompQuick);
   };
 
   return (
@@ -106,10 +143,10 @@ export const WeeklySetsCard = ({
             heatmap={heatmap}
             headlessVolumes={headlessVolumes}
             heatmapHoveredMuscleIds={heatmapHoveredMuscleIds}
-            heatmapHoveredMuscle={heatmapHoveredMuscle}
-            setHeatmapHoveredMuscle={setHeatmapHoveredMuscle}
             onBodyMapClick={handleBodyMapClick}
             bodyMapGender={bodyMapGender}
+            onMuscleHover={handleMuscleHover}
+            volumeThresholds={volumeThresholds}
           />
         )}
       </div>
@@ -125,22 +162,29 @@ export const WeeklySetsCard = ({
         topSlot={
           weeklySetsView === 'heatmap' ? (
             <div className="flex items-center gap-3 text-xs text-slate-400 bg-slate-950/75 border border-slate-700/50 backdrop-blur-sm rounded-lg px-3 py-1.5 w-fit">
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-2 rounded border border-slate-700/50" style={{ backgroundColor: '#ffffff' }}></div>
-                <span>None</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-2 rounded" style={{ backgroundColor: 'hsl(var(--heatmap-hue), 75%, 75%)' }}></div>
-                <span>Low</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-2 rounded" style={{ backgroundColor: 'hsl(var(--heatmap-hue), 75%, 50%)' }}></div>
-                <span>Med</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-2 rounded" style={{ backgroundColor: 'hsl(var(--heatmap-hue), 75%, 25%)' }}></div>
-                <span>High</span>
-              </div>
+              {(() => {
+                const thresholds = getVolumeThresholds(trainingLevel);
+                return (
+                  <>
+                    <div className="flex items-center gap-1">
+                      <div className="w-3 h-2 rounded border border-slate-700/50" style={{ backgroundColor: '#ffffff' }}></div>
+                      <span>None</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <div className="w-3 h-2 rounded" style={{ backgroundColor: getVolumeZoneColor(thresholds.mv, thresholds) }}></div>
+                      <span>Activate</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <div className="w-3 h-2 rounded" style={{ backgroundColor: getVolumeZoneColor(thresholds.mev, thresholds) }}></div>
+                      <span>Stimulate</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <div className="w-3 h-2 rounded" style={{ backgroundColor: getVolumeZoneColor(thresholds.maxv, thresholds) }}></div>
+                      <span>Overdrive</span>
+                    </div>
+                  </>
+                );
+              })()}
             </div>
           ) : null
         }
@@ -173,6 +217,8 @@ export const WeeklySetsCard = ({
         </InsightLine>
         <InsightText text="Read this as your weekly set allocation. If the Top 3 share is high, your volume is concentrated. This is great for specialization, but watch balance." />
       </ChartDescription>
+
+      {hoverTooltip && <Tooltip data={hoverTooltip} />}
     </div>
   );
 };

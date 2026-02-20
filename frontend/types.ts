@@ -18,6 +18,8 @@ export interface WorkoutSet {
   parsedDate?: Date;
   isPr?: boolean;
   prTypes?: PrType[];
+  isSilverPr?: boolean;
+  silverPrTypes?: PrType[];
 }
 
 export interface ExerciseHistoryEntry {
@@ -28,6 +30,8 @@ export interface ExerciseHistoryEntry {
   volume: number;
   isPr: boolean;
   prTypes?: PrType[];
+  isSilverPr?: boolean;
+  silverPrTypes?: PrType[];
   /** For unilateral exercises: 'left', 'right', or undefined for bilateral */
   side?: 'left' | 'right';
 }

@@ -1,4 +1,4 @@
-export const HEADLESS_MUSCLE_IDS = [
+export const MUSCLE_IDS = [
   'chest',
   'biceps',
   'triceps',
@@ -16,9 +16,15 @@ export const HEADLESS_MUSCLE_IDS = [
   'adductors',
 ] as const;
 
-export type HeadlessMuscleId = typeof HEADLESS_MUSCLE_IDS[number];
+/** @deprecated Use MuscleId instead */
+export const HEADLESS_MUSCLE_IDS = MUSCLE_IDS;
 
-export const HEADLESS_MUSCLE_NAMES: Readonly<Record<HeadlessMuscleId, string>> = {
+export type MuscleId = typeof MUSCLE_IDS[number];
+
+/** @deprecated Use MuscleId instead */
+export type HeadlessMuscleId = MuscleId;
+
+export const MUSCLE_NAMES: Readonly<Record<MuscleId, string>> = {
   chest: 'Chest',
   biceps: 'Biceps',
   triceps: 'Triceps',
@@ -36,13 +42,19 @@ export const HEADLESS_MUSCLE_NAMES: Readonly<Record<HeadlessMuscleId, string>> =
   adductors: 'Adductors',
 };
 
+/** @deprecated Use MUSCLE_NAMES instead */
+export const HEADLESS_MUSCLE_NAMES = MUSCLE_NAMES;
+
 const roundToOneDecimal = (n: number): number => Math.round(n * 10) / 10;
 
-/** Build radar chart series from headless volume map: order by value descending (highest first), rounded values. */
-export function getHeadlessRadarSeries(headlessVolumes: Map<string, number>): { subject: string; value: number }[] {
-  const raw = HEADLESS_MUSCLE_IDS.map((id) => ({
-    subject: HEADLESS_MUSCLE_NAMES[id],
-    value: roundToOneDecimal(headlessVolumes.get(id) ?? 0),
+/** Build radar chart series from muscle volume map: order by value descending (highest first), rounded values. */
+export function getMuscleRadarSeries(muscleVolumes: Map<string, number>): { subject: string; value: number }[] {
+  const raw = MUSCLE_IDS.map((id) => ({
+    subject: MUSCLE_NAMES[id],
+    value: roundToOneDecimal(muscleVolumes.get(id) ?? 0),
   }));
   return [...raw].sort((a, b) => b.value - a.value);
 }
+
+/** @deprecated Use getMuscleRadarSeries instead */
+export const getHeadlessRadarSeries = getMuscleRadarSeries;

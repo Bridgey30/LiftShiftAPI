@@ -7,6 +7,8 @@ import { ExerciseTrendMode, WeightUnit, getSmartFilterMode } from '../../../util
 import { summarizeExerciseHistory, analyzeExerciseTrendCore, type ExerciseSessionEntry } from '../../../utils/analysis/exerciseTrend';
 import { getRechartsCategoricalTicks, getRechartsTickIndexMap } from '../../../utils/chart/chartEnhancements';
 import { prefetchMuscleData } from '../../../utils/prefetch/prefetchStrategies';
+import { getVolumeThresholds } from '../../../utils/muscle/hypertrophy/muscleParams';
+import { useTrainingLevel } from '../../../hooks/app/useTrainingLevel';
 
 import { buildExerciseChartData } from '../utils/exerciseChartData';
 import { computeEffectiveNowFromStats, resolveEffectiveNow } from '../utils/effectiveNow';
@@ -50,6 +52,9 @@ export const ExerciseView: React.FC<ExerciseViewProps> = ({
 }) => {
   const computedEffectiveNow = useMemo(() => computeEffectiveNowFromStats(stats), [stats]);
   const effectiveNow = useMemo(() => resolveEffectiveNow(computedEffectiveNow, now), [computedEffectiveNow, now]);
+
+  // Calculate user's training level for personalized volume thresholds
+  const { trainingLevel } = useTrainingLevel(filteredData, effectiveNow);
 
   const {
     selectedExerciseName,
@@ -156,11 +161,13 @@ export const ExerciseView: React.FC<ExerciseViewProps> = ({
     return Math.max(1, ...(Array.from(selectedExerciseHeadlessVolumes.values()) as number[]));
   }, [selectedExerciseHeadlessVolumes]);
 
+  const volumeThresholds = useMemo(() => getVolumeThresholds(trainingLevel), [trainingLevel]);
+
   const [exerciseBodyMapHoveredMuscle, setExerciseBodyMapHoveredMuscle] = useState<string | null>(null);
 
   const exerciseBodyMapHoverMeta = useMemo(() => {
-    return getBodyMapHoverMeta(exerciseBodyMapHoveredMuscle, selectedExerciseHeadlessVolumes);
-  }, [exerciseBodyMapHoveredMuscle, selectedExerciseHeadlessVolumes]);
+    return getBodyMapHoverMeta(exerciseBodyMapHoveredMuscle, selectedExerciseHeadlessVolumes, volumeThresholds);
+  }, [exerciseBodyMapHoveredMuscle, selectedExerciseHeadlessVolumes, volumeThresholds]);
 
   const isSelectedEligible = useMemo(() => {
     if (!selectedStats) return true;
@@ -246,7 +253,7 @@ export const ExerciseView: React.FC<ExerciseViewProps> = ({
           setSelectedExerciseName={setSelectedExerciseName}
         />
 
-        <div className="lg:col-span-1 flex flex-col gap-2 h-full min-h-0">
+        <div data-exercise-summary-panel className="lg:col-span-1 flex flex-col gap-2 h-full min-h-0">
           <ExerciseSummaryPanel
             selectedStats={selectedStats}
             currentStatus={currentStatus}
@@ -255,6 +262,7 @@ export const ExerciseView: React.FC<ExerciseViewProps> = ({
             selectedExerciseMuscleInfo={selectedExerciseMuscleInfo}
             selectedExerciseHeadlessVolumes={selectedExerciseHeadlessVolumes}
             selectedExerciseHeadlessMaxVolume={selectedExerciseHeadlessMaxVolume}
+            volumeThresholds={volumeThresholds}
             exerciseBodyMapHoverMeta={exerciseBodyMapHoverMeta}
             onBodyMapHover={setExerciseBodyMapHoveredMuscle}
             isSelectedEligible={isSelectedEligible}

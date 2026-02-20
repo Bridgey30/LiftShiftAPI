@@ -1,15 +1,12 @@
 import { differenceInDays, subDays } from 'date-fns';
 import { WorkoutSet } from '../../../types';
-import { isWarmupSet } from '../classification/setClassification';
+import {
+  PRDetectionResult,
+  detectGoldAndSilverPRs,
+  sortSetsChronologically,
+} from '../core/prCalculation';
 
-export interface RecentPR {
-  date: Date;
-  exercise: string;
-  weight: number;
-  reps: number;
-  previousBest: number;
-  improvement: number;
-}
+export type RecentPR = PRDetectionResult & { isSilver?: boolean };
 
 export interface PRInsights {
   daysSinceLastPR: number;
@@ -19,18 +16,25 @@ export interface PRInsights {
   recentPRs: RecentPR[];
   prFrequency: number;
   totalPRs: number;
+  totalSilverPRs: number;
+  recentSilverPRs: RecentPR[];
 }
 
+const SILVER_PR_WINDOW_DAYS = 60;
+
+const PR_TYPE_PRIORITY: Record<string, number> = {
+  weight: 3,
+  oneRm: 2,
+  volume: 1,
+};
+
+const getPriority = (pr: RecentPR): number => {
+  if (pr.isSilver) return 0;
+  return PR_TYPE_PRIORITY[pr.type] ?? 0;
+};
+
 export const calculatePRInsights = (data: WorkoutSet[], now: Date = new Date(0)): PRInsights => {
-  const sorted = [...data]
-    .filter((s) => s.parsedDate && !isWarmupSet(s) && (s.weight_kg || 0) > 0)
-    .map((s, i) => ({ s, i }))
-    .sort((a, b) => {
-      const dt = (a.s.parsedDate!.getTime() || 0) - (b.s.parsedDate!.getTime() || 0);
-      if (dt !== 0) return dt;
-      return a.i - b.i;
-    })
-    .map(({ s }) => s);
+  const sorted = sortSetsChronologically(data);
 
   if (sorted.length === 0) {
     return {
@@ -41,59 +45,47 @@ export const calculatePRInsights = (data: WorkoutSet[], now: Date = new Date(0))
       recentPRs: [],
       prFrequency: 0,
       totalPRs: 0,
+      totalSilverPRs: 0,
+      recentSilverPRs: [],
     };
   }
 
-  const bestByExercise = new Map<string, number>();
-  const prEvents: RecentPR[] = [];
+  const { goldPRs, silverPRs } = detectGoldAndSilverPRs(sorted, SILVER_PR_WINDOW_DAYS, now);
 
-  for (const set of sorted) {
-    const key = set.exercise_title || 'Unknown';
-    const bestSoFar = bestByExercise.get(key) ?? 0;
-    const current = set.weight_kg || 0;
+  const lastGoldPR = goldPRs[goldPRs.length - 1];
+  const daysSinceLastPR = lastGoldPR ? differenceInDays(now, lastGoldPR.date) : 0;
 
-    if (current > bestSoFar) {
-      const improvement = current - bestSoFar;
-      prEvents.push({
-        date: set.parsedDate!,
-        exercise: key,
-        weight: current,
-        reps: set.reps || 0,
-        previousBest: bestSoFar,
-        improvement,
-      });
-      bestByExercise.set(key, current);
+  const recentGoldPRs: RecentPR[] = goldPRs.slice(-5).reverse().map(pr => ({ ...pr, isSilver: false }));
+  const recentSilverPRs: RecentPR[] = silverPRs.slice(-3).reverse().map(pr => ({ ...pr, isSilver: true }));
+  
+  const allRecent: RecentPR[] = [...recentGoldPRs, ...recentSilverPRs];
+  
+  const deduped = allRecent.reduce<RecentPR[]>((acc, pr) => {
+    const existing = acc.find(p => p.exercise === pr.exercise);
+    if (!existing) {
+      acc.push(pr);
+    } else if (getPriority(pr) > getPriority(existing)) {
+      const idx = acc.indexOf(existing);
+      acc[idx] = pr;
     }
-  }
+    return acc;
+  }, []);
 
-  if (prEvents.length === 0) {
-    return {
-      daysSinceLastPR: 0,
-      lastPRDate: null,
-      lastPRExercise: null,
-      prDrought: false,
-      recentPRs: [],
-      prFrequency: 0,
-      totalPRs: 0,
-    };
-  }
-
-  const lastPR = prEvents[prEvents.length - 1];
-  const daysSinceLastPR = differenceInDays(now, lastPR.date);
-
-  const recentPRs: RecentPR[] = prEvents.slice(-5).reverse();
+  const recentPRs = deduped.sort((a, b) => b.date.getTime() - a.date.getTime()).slice(0, 5);
 
   const thirtyDaysAgo = subDays(now, 30);
-  const recentPRCount = prEvents.filter((pr) => pr.date >= thirtyDaysAgo).length;
-  const prFrequency = Math.round((recentPRCount / 4) * 10) / 10;
+  const recentGoldCount = goldPRs.filter((pr) => pr.date >= thirtyDaysAgo).length;
+  const prFrequency = Math.round((recentGoldCount / 4) * 10) / 10;
 
   return {
     daysSinceLastPR,
-    lastPRDate: lastPR.date,
-    lastPRExercise: lastPR.exercise,
+    lastPRDate: lastGoldPR?.date ?? null,
+    lastPRExercise: lastGoldPR?.exercise ?? null,
     prDrought: daysSinceLastPR > 14,
     recentPRs,
     prFrequency,
-    totalPRs: prEvents.length,
+    totalPRs: goldPRs.length,
+    totalSilverPRs: silverPRs.length,
+    recentSilverPRs,
   };
 };

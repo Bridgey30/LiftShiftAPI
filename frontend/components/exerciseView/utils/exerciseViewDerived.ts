@@ -3,6 +3,7 @@ import { ExerciseStats } from '../../../types';
 import { ExerciseMuscleData, getExerciseMuscleVolumes, lookupExerciseMuscleData, SVG_MUSCLE_NAMES } from '../../../utils/muscle/mapping';
 import { summarizeExerciseHistory, MIN_SESSIONS_FOR_TREND } from '../../../utils/analysis/exerciseTrend';
 import { HEADLESS_MUSCLE_NAMES } from '../../../utils/muscle/mapping';
+import { getVolumeZone, getVolumeThresholds } from '../../../utils/muscle/hypertrophy/muscleParams';
 import type { ExerciseMuscleTargets, InactiveReason } from './exerciseViewTypes';
 
 export const getInactiveReason = (
@@ -76,11 +77,13 @@ export const buildExerciseMuscleTargets = (
 
 export const getBodyMapHoverMeta = (
   hoveredMuscle: string | null,
-  headlessVolumes: Map<string, number>
-): { name: string; role: string } | null => {
+  headlessVolumes: Map<string, number>,
+  thresholds?: { mv: number; mev: number; mrv: number; maxv: number }
+): { name: string; role: string; zoneLabel: string; zoneExplanation: string } | null => {
   if (!hoveredMuscle) return null;
   const name = (HEADLESS_MUSCLE_NAMES as any)[hoveredMuscle] ?? hoveredMuscle;
   const w = headlessVolumes.get(hoveredMuscle) ?? 0;
   const role = w >= 1 ? 'Primary' : w > 0 ? 'Secondary' : '';
-  return { name, role };
+  const zone = getVolumeZone(w, thresholds ?? getVolumeThresholds());
+  return { name, role, zoneLabel: zone.label, zoneExplanation: zone.explanation };
 };

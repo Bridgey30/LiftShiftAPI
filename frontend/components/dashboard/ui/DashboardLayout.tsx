@@ -2,6 +2,7 @@ import React from 'react';
 import type { BodyMapGender } from '../../bodyMap/BodyMap';
 import type { DailySummary, ExerciseStats, WorkoutSet } from '../../../types';
 import type { WeightUnit } from '../../../utils/storage/localStorage';
+import type { TimelineProgress } from '../../../utils/training/trainingTimeline';
 import { DashboardHeaderBar } from './DashboardHeaderBar';
 import { DashboardInsightsSection } from './DashboardInsightsSection';
 import { DashboardPrimaryCharts } from './DashboardPrimaryCharts';
@@ -17,7 +18,7 @@ interface DashboardLayoutProps {
   totalPrs: number;
   dashboardInsights: any;
   onDayClick?: (date: Date) => void;
-  onMuscleClick?: (muscleId: string, viewMode: 'muscle' | 'group' | 'headless', weeklySetsWindow: 'all' | '7d' | '30d' | '365d') => void;
+  onMuscleClick?: (muscleId: string, weeklySetsWindow: 'all' | '7d' | '30d' | '365d') => void;
   onExerciseClick?: (exerciseName: string) => void;
   activePlateauExercises: any[];
   assetsMap?: Map<string, any> | null;
@@ -25,6 +26,8 @@ interface DashboardLayoutProps {
   weightUnit: WeightUnit;
   dailyData: DailySummary[];
   effectiveNow: Date;
+  trainingLevel: import('../../../utils/muscle/hypertrophy/muscleParams').TrainingLevel;
+  timelineProgress: TimelineProgress;
   chartModes: { volumeVsDuration: 'daily' | 'weekly' | 'monthly' | 'yearly'; intensityEvo: 'daily' | 'weekly' | 'monthly' | 'yearly'; prTrend: 'daily' | 'weekly' | 'monthly' | 'yearly' };
   toggleChartMode: (key: 'volumeVsDuration' | 'intensityEvo' | 'prTrend', mode: 'daily' | 'weekly' | 'monthly' | 'yearly') => void;
   prTrendView: 'area' | 'bar';
@@ -97,6 +100,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = (props) => {
     weightUnit,
     dailyData,
     effectiveNow,
+    trainingLevel,
+    timelineProgress,
     chartModes,
     toggleChartMode,
     prTrendView,
@@ -154,7 +159,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = (props) => {
   return (
     <>
       <style>{animationKeyframes}</style>
-      <div className={`space-y-1 pb-4 sm:pb-12 transition-opacity duration-700 ease-out ${isMounted ? 'opacity-100' : 'opacity-0'}`}>
+      <div className={`space-y-2 pb-2 transition-opacity duration-700 ease-out ${isMounted ? 'opacity-100' : 'opacity-0'}`}>
         <DashboardHeaderBar
           totalWorkouts={totalWorkouts}
           filtersSlot={filtersSlot}
@@ -176,6 +181,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = (props) => {
           assetsLowerMap={assetsLowerMap}
           dailyData={dailyData}
           onAIAnalyze={() => setAiAnalyzeOpen(true)}
+          timelineProgress={timelineProgress}
         />
 
         <DashboardPrimaryCharts
@@ -196,6 +202,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = (props) => {
           onMuscleClick={onMuscleClick}
           bodyMapGender={bodyMapGender}
           effectiveNow={effectiveNow}
+          trainingLevel={trainingLevel}
           intensityView={intensityView}
           setIntensityView={setIntensityView}
           intensityData={intensityData}
@@ -214,33 +221,35 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = (props) => {
         />
       </div>
 
-      <DashboardSecondaryCharts
-        isMounted={isMounted}
-        weekShapeView={weekShapeView}
-        setWeekShapeView={setWeekShapeView}
-        weekShapeData={weekShapeData}
-        weeklyRhythmInsight={weeklyRhythmInsight}
-        chartModes={chartModes}
-        toggleChartMode={toggleChartMode}
-        volumeView={volumeView}
-        setVolumeView={setVolumeView}
-        weightUnit={weightUnit}
-        volumeDurationData={volumeDurationData}
-        volumeDensityTrend={volumeDensityTrend}
-        topExerciseMode={topExerciseMode}
-        setTopExerciseMode={setTopExerciseMode}
-        topExercisesView={topExercisesView}
-        setTopExercisesView={setTopExercisesView}
-        topExercisesBarData={topExercisesBarData}
-        topExercisesOverTimeData={topExercisesOverTimeData}
-        topExerciseNames={topExerciseNames}
-        topExercisesInsight={topExercisesInsight}
-        pieColors={pieColors}
-        tooltipStyle={tooltipStyle}
-        onExerciseClick={onExerciseClick}
-        assetsMap={assetsMap}
-        assetsLowerMap={assetsLowerMap}
-      />
+      <div className="space-y-2">
+        <DashboardSecondaryCharts
+          isMounted={isMounted}
+          weekShapeView={weekShapeView}
+          setWeekShapeView={setWeekShapeView}
+          weekShapeData={weekShapeData}
+          weeklyRhythmInsight={weeklyRhythmInsight}
+          chartModes={chartModes}
+          toggleChartMode={toggleChartMode}
+          volumeView={volumeView}
+          setVolumeView={setVolumeView}
+          weightUnit={weightUnit}
+          volumeDurationData={volumeDurationData}
+          volumeDensityTrend={volumeDensityTrend}
+          topExerciseMode={topExerciseMode}
+          setTopExerciseMode={setTopExerciseMode}
+          topExercisesView={topExercisesView}
+          setTopExercisesView={setTopExercisesView}
+          topExercisesBarData={topExercisesBarData}
+          topExercisesOverTimeData={topExercisesOverTimeData}
+          topExerciseNames={topExerciseNames}
+          topExercisesInsight={topExercisesInsight}
+          pieColors={pieColors}
+          tooltipStyle={tooltipStyle}
+          onExerciseClick={onExerciseClick}
+          assetsMap={assetsMap}
+          assetsLowerMap={assetsLowerMap}
+        />
+      </div>
 
       <AIAnalyzeModal
         isOpen={aiAnalyzeOpen}

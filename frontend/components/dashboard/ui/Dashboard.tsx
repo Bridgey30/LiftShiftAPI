@@ -20,6 +20,8 @@ import { useTheme } from '../../theme/ThemeProvider';
 import { DashboardLayout } from './DashboardLayout';
 import { useDashboardPlateaus } from '../hooks/useDashboardPlateaus';
 import { useWeeklyRhythm } from '../hooks/useWeeklyRhythm';
+import { useTrainingLevel } from '../../../hooks/app/useTrainingLevel';
+import { useTrainingTimeline } from '../../../hooks/app/useTrainingTimeline';
 
 interface DashboardProps {
   dailyData: DailySummary[];
@@ -29,7 +31,6 @@ interface DashboardProps {
   onDayClick?: (date: Date) => void;
   onMuscleClick?: (
     muscleId: string,
-    viewMode: 'muscle' | 'group' | 'headless',
     weeklySetsWindow: 'all' | '7d' | '30d' | '365d'
   ) => void;
   onExerciseClick?: (exerciseName: string) => void;
@@ -59,6 +60,12 @@ export const Dashboard: React.FC<DashboardProps> = ({
   const { mode: themeMode } = useTheme();
 
   const effectiveNow = useMemo(() => now ?? getEffectiveNowFromWorkoutData(fullData), [now, fullData]);
+
+  // Calculate user's training level for personalized volume thresholds
+  const { trainingLevel } = useTrainingLevel(fullData, effectiveNow);
+
+  // Calculate training timeline progress (hybrid sessions + months)
+  const timelineProgress = useTrainingTimeline(fullData, effectiveNow);
 
   const spanDays = useMemo(() => {
     if (!fullData.length) return 0;
@@ -258,6 +265,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
       weightUnit={weightUnit}
       dailyData={dailyData}
       effectiveNow={effectiveNow}
+      trainingLevel={trainingLevel}
+      timelineProgress={timelineProgress}
       chartModes={chartModes}
       toggleChartMode={toggleChartMode}
       prTrendView={prTrendView}

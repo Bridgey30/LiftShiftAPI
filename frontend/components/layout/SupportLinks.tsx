@@ -116,7 +116,7 @@ export const SupportLinks: React.FC<{
   }
 
   return (
-    <div className={`mt-6 pt-4 border-t border-slate-800/70 ${className ?? ''}`.trim()}>
+    <div className={`mt-6 pt-4  ${className ?? ''}`.trim()}>
       <div className="flex flex-col items-stretch gap-4">
         <div className="flex flex-col items-stretch justify-center gap-3">{content}</div>
       </div>

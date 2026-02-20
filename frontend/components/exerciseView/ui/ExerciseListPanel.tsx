@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { ArrowUpDown, Search } from 'lucide-react';
 import { ExerciseStats } from '../../../types';
 import { ExerciseAssetLookup } from '../../../utils/exercise/exerciseAssetLookup';
@@ -42,6 +42,27 @@ export const ExerciseListPanel: React.FC<ExerciseListPanelProps> = ({
   onExerciseClick,
   setSelectedExerciseName,
 }) => {
+  const handleSelect = useCallback((exerciseName: string) => {
+    if (onExerciseClick) {
+      onExerciseClick(exerciseName);
+    } else {
+      setSelectedExerciseName(exerciseName);
+    }
+    
+    // Auto-scroll on mobile to show the exercise details below
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+      // Small delay to let React render and blur take effect
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          const summaryPanel = document.querySelector('[data-exercise-summary-panel]');
+          if (summaryPanel) {
+            summaryPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 100);
+      });
+    }
+  }, [onExerciseClick, setSelectedExerciseName]);
+
   return (
     <div className="lg:col-span-1 flex flex-col gap-1 h-[25vh] lg:h-0 lg:min-h-full">
       <div className="relative shrink-0">
@@ -112,13 +133,7 @@ export const ExerciseListPanel: React.FC<ExerciseListPanelProps> = ({
                 inactiveLabel={inactiveLabel}
                 lastDone={lastDone}
                 effectiveNow={effectiveNow}
-                onSelect={() => {
-                  if (onExerciseClick) {
-                    onExerciseClick(exercise.name);
-                    return;
-                  }
-                  setSelectedExerciseName(exercise.name);
-                }}
+                onSelect={() => handleSelect(exercise.name)}
                 rowRef={(el) => {
                   exerciseButtonRefs.current[exercise.name] = el;
                 }}

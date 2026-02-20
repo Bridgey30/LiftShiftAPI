@@ -1,7 +1,16 @@
 import type { PrType, WorkoutSet } from '../../../types';
 import { getDateKey, type TimePeriod, sortByTimestamp } from '../../date/dateUtils';
-import { roundTo } from '../../format/formatters';
 import { isWarmupSet } from '../classification/setClassification';
+import {
+  PRTracker,
+  createWeightTracker,
+  createOneRmTracker,
+  createVolumeTracker,
+  roundTo,
+  detectGoldAndSilverPRs,
+  sortSetsChronologically,
+  PRDetectionResult,
+} from './prCalculation';
 
 const sortByParsedDate = (sets: WorkoutSet[], ascending: boolean): WorkoutSet[] => {
   const sign = ascending ? 1 : -1;
@@ -34,57 +43,101 @@ export interface PRTypeFlags {
   isVolumePr: boolean;
 }
 
-export const identifyPersonalRecords = (data: WorkoutSet[]): WorkoutSet[] => {
+const SILVER_PR_WINDOW_DAYS = 60;
+
+interface PRMatchKey {
+  exercise: string;
+  timestamp: number;
+  weight: number;
+  reps: number;
+}
+
+const createPRMatchKey = (pr: { exercise: string; date: Date; weight: number; reps: number }): PRMatchKey => ({
+  exercise: pr.exercise,
+  timestamp: pr.date.getTime(),
+  weight: pr.weight,
+  reps: pr.reps,
+});
+
+const prMatchesSet = (key: PRMatchKey, set: WorkoutSet): boolean => {
+  if (!set.parsedDate) return false;
+  return (
+    key.exercise === set.exercise_title &&
+    key.timestamp === set.parsedDate.getTime() &&
+    key.weight === set.weight_kg &&
+    key.reps === set.reps
+  );
+};
+
+export const identifyPersonalRecords = (data: WorkoutSet[], referenceDate?: Date): WorkoutSet[] => {
   const sorted = sortByParsedDate(data, true);
-  const maxWeightMap = new Map<string, number>();
-  const maxOneRmMap = new Map<string, number>();
-  const maxVolumeMap = new Map<string, number>();
-  const prTypesMap = new Map<WorkoutSet, PrType[]>();
-
-  for (const set of sorted) {
-    if (isWarmupSet(set)) {
-      prTypesMap.set(set, []);
-      continue;
+  
+  // Calculate reference date from data if not provided
+  // Use latest date in dataset, not actual current date
+  const effectiveReferenceDate = referenceDate ?? (() => {
+    let maxTs = -Infinity;
+    for (const set of data) {
+      if (set.parsedDate) {
+        const ts = set.parsedDate.getTime();
+        if (Number.isFinite(ts) && ts > maxTs) {
+          maxTs = ts;
+        }
+      }
     }
-    const exercise = set.exercise_title;
-    const currentWeight = set.weight_kg || 0;
-    const currentReps = set.reps || 0;
-    const currentOneRm = calculateOneRepMax(currentWeight, currentReps);
-    const currentVolume = currentWeight * currentReps;
-
-    const previousMaxWeight = maxWeightMap.get(exercise) ?? 0;
-    const previousMaxOneRm = maxOneRmMap.get(exercise) ?? 0;
-    const previousMaxVolume = maxVolumeMap.get(exercise) ?? 0;
-
-    const prTypes: PrType[] = [];
-
-    // Weight PR
-    if (currentWeight > 0 && currentWeight > previousMaxWeight) {
-      prTypes.push('weight');
-      maxWeightMap.set(exercise, currentWeight);
+    return Number.isFinite(maxTs) ? new Date(maxTs) : new Date();
+  })();
+  
+  // Use centralized detection for both gold and silver PRs
+  const { goldPRs, silverPRs } = detectGoldAndSilverPRs(
+    sorted,
+    SILVER_PR_WINDOW_DAYS,
+    effectiveReferenceDate
+  );
+  
+  // Create lookup maps using object pooling for efficiency
+  const goldPRMap = new Map<number, PrType[]>();
+  const silverPRMap = new Map<number, PrType[]>();
+  
+  // Build index of PRs by set index for O(1) lookup
+  for (let i = 0; i < sorted.length; i++) {
+    const set = sorted[i];
+    if (!set.parsedDate || isWarmupSet(set)) continue;
+    
+    // Check for gold PR match
+    const goldTypes: PrType[] = [];
+    for (const pr of goldPRs) {
+      if (prMatchesSet(createPRMatchKey(pr), set)) {
+        goldTypes.push(pr.type);
+      }
     }
-
-    // 1RM PR
-    if (currentOneRm > 0 && currentOneRm > previousMaxOneRm) {
-      prTypes.push('oneRm');
-      maxOneRmMap.set(exercise, currentOneRm);
+    if (goldTypes.length > 0) {
+      goldPRMap.set(i, goldTypes);
     }
-
-    // Volume PR
-    if (currentVolume > 0 && currentVolume > previousMaxVolume) {
-      prTypes.push('volume');
-      maxVolumeMap.set(exercise, currentVolume);
+    
+    // Check for silver PR match
+    const silverTypes: PrType[] = [];
+    for (const pr of silverPRs) {
+      if (prMatchesSet(createPRMatchKey(pr), set)) {
+        silverTypes.push(pr.type);
+      }
     }
-
-    prTypesMap.set(set, prTypes);
+    if (silverTypes.length > 0) {
+      silverPRMap.set(i, silverTypes);
+    }
   }
-
-  return sortByParsedDate(sorted, false).map((set) => {
-    const prTypes = prTypesMap.get(set) ?? [];
+  
+  // Map PRs back to sets
+  return sortByParsedDate(sorted, false).map((set, index) => {
+    const originalIndex = sorted.indexOf(set);
+    const prTypes = goldPRMap.get(originalIndex) ?? [];
+    const silverPrTypes = silverPRMap.get(originalIndex) ?? [];
+    
     return {
       ...set,
       isPr: prTypes.length > 0,
       prTypes,
+      isSilverPr: silverPrTypes.length > 0,
+      silverPrTypes,
     };
   });
 };

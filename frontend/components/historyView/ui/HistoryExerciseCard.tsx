@@ -8,7 +8,6 @@ import type { ExerciseBestEvent, ExerciseVolumePrEvent } from '../utils/historyV
 import { HistoryCardSkeleton } from './HistoryCardSkeleton';
 import { HistoryExerciseHeader } from './HistoryExerciseHeader';
 import { HistorySetList } from './HistorySetList';
-import { HistoryExerciseHeatmap } from './HistoryExerciseHeatmap';
 import { LazyRender } from '../../ui/LazyRender';
 import { ExerciseAsset } from '../../../utils/data/exerciseAssets';
 import type { TooltipState } from './HistoryTooltipPortal';
@@ -122,13 +121,6 @@ export const HistoryExerciseCard: React.FC<HistoryExerciseCardProps> = ({
             onTooltipToggle={onTooltipToggle}
             onMouseEnter={onMouseEnter}
             onClearTooltip={onClearTooltip}
-          />
-
-          <HistoryExerciseHeatmap
-            group={group}
-            exerciseMuscleData={exerciseMuscleData}
-            bodyMapGender={bodyMapGender}
-            setTooltip={setTooltip}
           />
         </div>
       </div>

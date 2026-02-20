@@ -62,10 +62,10 @@ export const InsightsPanel: React.FC<InsightsPanelProps> = memo(function Insight
   const showAICard = onAIAnalyze && isMobile;
 
   return (
-    <div className={`grid gap-2 sm:gap-3 ${showAICard ? 'grid-cols-2 lg:grid-cols-4' : 'grid-cols-2 lg:grid-cols-3'}`}>
+    <div className={`grid gap-2 ${showAICard ? 'grid-cols-2 lg:grid-cols-4' : 'grid-cols-2 lg:grid-cols-3'}`}>
       {/* Workouts */}
       <KPICard
-        title="Last 7d"
+        title="Lst 7d"
         value={rolling7d.current.totalWorkouts}
         subtitle="workouts"
         icon={Calendar}
@@ -80,7 +80,7 @@ export const InsightsPanel: React.FC<InsightsPanelProps> = memo(function Insight
       <KPICard
         title="Sets"
         value={rolling7d.current.totalSets}
-        subtitle="last 7d"
+        subtitle="lst 7d"
         icon={Dumbbell}
         iconColor="text-purple-400"
         delta={rolling7d.sets ?? undefined}

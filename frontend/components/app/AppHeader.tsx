@@ -1,16 +1,21 @@
 import React from 'react';
-import { Calendar, LayoutDashboard, Pencil, RefreshCw, Settings, X } from 'lucide-react';
+import { Calendar, LayoutDashboard, Pencil, RefreshCw, Settings, X, ArrowLeft } from 'lucide-react';
 import { assetPath } from '../../constants';
 import { Tab } from '../../app/navigation';
 import { SupportLinks } from '../layout/SupportLinks';
 import { ThemeToggleButton } from '../theme/ThemeToggleButton';
+import type { OnboardingFlow } from '../../app/onboarding/types';
+
+const DEMO_MODE_KEY = 'hevy_analytics_demo_mode';
+
+const isDemoMode = (): boolean => localStorage.getItem(DEMO_MODE_KEY) === '1';
 
 interface AppHeaderProps {
+  onSetOnboarding: (next: OnboardingFlow | null) => void;
   activeTab: Tab;
   onSelectTab: (tab: Tab) => void;
   onOpenUpdateFlow: () => void;
   onOpenPreferences: () => void;
-
   calendarOpen: boolean;
   onToggleCalendarOpen: () => void;
   hasActiveCalendarFilter: boolean;
@@ -18,6 +23,7 @@ interface AppHeaderProps {
 }
 
 export const AppHeader: React.FC<AppHeaderProps> = ({
+  onSetOnboarding,
   activeTab,
   onSelectTab,
   onOpenUpdateFlow,
@@ -27,6 +33,11 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   hasActiveCalendarFilter,
   onClearCalendarFilter,
 }) => {
+  const handleExitDemo = () => {
+    localStorage.removeItem(DEMO_MODE_KEY);
+    onSetOnboarding({ intent: 'update', step: 'platform' });
+  };
+
   return (
     <header className="bg-black/70 flex-shrink-0">
       <div className="px-2 sm:px-3 py-1 flex flex-col gap-1">
@@ -55,6 +66,17 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
                 layout="header"
                 primaryRightSlot={(
                   <div className="flex items-center gap-2">
+                    {isDemoMode() && (
+                      <button
+                        type="button"
+                        onClick={handleExitDemo}
+                        className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs font-medium focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 h-8 px-2 bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 hover:border-emerald-300 hover:text-emerald-200 hover:bg-emerald-500/30 transition-all duration-200 gap-1"
+                        title="Exit Demo"
+                      >
+                        <ArrowLeft className="w-4 h-4" />
+                        <span>Back</span>
+                      </button>
+                    )}
                     <ThemeToggleButton />
                     <button
                       type="button"
@@ -81,6 +103,17 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             {/* Mobile: keep Update action */}
             <div className="md:hidden">
               <div className="flex items-center gap-2">
+                {isDemoMode() && (
+                  <button
+                    type="button"
+                    onClick={handleExitDemo}
+                    className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs font-medium focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 h-8 px-1.5 bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 hover:border-emerald-300 hover:text-emerald-200 hover:bg-emerald-500/30 transition-all duration-200 gap-1"
+                    title="Exit Demo"
+                  >
+                    <ArrowLeft className="w-3.5 h-3.5" />
+                    <span className="text-[10px]">Back</span>
+                  </button>
+                )}
                 <ThemeToggleButton compact={true} />
                 <button
                   type="button"

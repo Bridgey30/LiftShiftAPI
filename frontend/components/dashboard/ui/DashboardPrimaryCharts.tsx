@@ -23,9 +23,10 @@ interface DashboardPrimaryChartsProps {
   muscleCompQuick: 'all' | '7d' | '30d' | '365d';
   setMuscleCompQuick: (v: 'all' | '7d' | '30d' | '365d') => void;
   weeklySetsDashboard: any;
-  onMuscleClick?: (muscleId: string, viewMode: 'muscle' | 'group' | 'headless', weeklySetsWindow: 'all' | '7d' | '30d' | '365d') => void;
+  onMuscleClick?: (muscleId: string, weeklySetsWindow: 'all' | '7d' | '30d' | '365d') => void;
   bodyMapGender: BodyMapGender;
   effectiveNow: Date;
+  trainingLevel: import('../../../utils/muscle/hypertrophy/muscleParams').TrainingLevel;
   intensityView: 'area' | 'stackedBar';
   setIntensityView: (v: 'area' | 'stackedBar') => void;
   intensityData: any[];
@@ -61,6 +62,7 @@ export const DashboardPrimaryCharts: React.FC<DashboardPrimaryChartsProps> = ({
   onMuscleClick,
   bodyMapGender,
   effectiveNow,
+  trainingLevel,
   intensityView,
   setIntensityView,
   intensityData,
@@ -106,6 +108,7 @@ export const DashboardPrimaryCharts: React.FC<DashboardPrimaryChartsProps> = ({
           bodyMapGender={bodyMapGender}
           windowStart={weeklySetsDashboard.windowStart}
           now={effectiveNow}
+          trainingLevel={trainingLevel}
         />
       </Suspense>
     </div>

@@ -86,7 +86,7 @@ Search for and replace in these files:
 - CONTRIBUTING.md
 - DEPLOYMENT.md
 - QUICKSTART.md
-- .github/workflows/build-deploy.yml
+- .github/workflows/pages-manual-deploy.yml
 
 
 ## 8. First Deployment

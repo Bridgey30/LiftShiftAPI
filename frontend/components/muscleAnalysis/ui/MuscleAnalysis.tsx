@@ -9,8 +9,11 @@ import type { WeeklySetsWindow } from '../../../utils/muscle/analytics';
 import { useMuscleHeatmapData } from '../hooks/useMuscleHeatmapData';
 import { useMuscleTrendData } from '../hooks/useMuscleTrendData';
 import { useMuscleAnalysisHandlers } from '../hooks/useMuscleAnalysisHandlers';
+import { useLifetimeAchievement } from '../hooks/useLifetimeAchievement';
 import { MuscleAnalysisBodyMapPanel } from './MuscleAnalysisBodyMapPanel';
-import { MuscleAnalysisDetailPanel } from './MuscleAnalysisDetailPanel';
+import { MuscleAnalysisGraphPanel } from './MuscleAnalysisGraphPanel';
+import { MuscleAnalysisExerciseListPanel } from './MuscleAnalysisExerciseListPanel';
+import { LifetimeAchievementCard } from './LifetimeAchievementCard';
 import { TooltipData } from '../../ui/Tooltip';
 import { prefetchHistoryData } from '../../../utils/prefetch/prefetchStrategies';
 
@@ -19,7 +22,7 @@ interface MuscleAnalysisProps {
   filterCacheKey: string;
   filtersSlot?: React.ReactNode;
   onExerciseClick?: (exerciseName: string) => void;
-  initialMuscle?: { muscleId: string; viewMode: 'muscle' | 'group' | 'headless' } | null;
+  initialMuscle?: { muscleId: string; viewMode?: 'headless' } | null;
   initialWeeklySetsWindow?: WeeklySetsWindow | null;
   onInitialMuscleConsumed?: () => void;
   stickyHeader?: boolean;
@@ -45,15 +48,11 @@ export const MuscleAnalysis: React.FC<MuscleAnalysisProps> = ({
   const {
     selectedMuscle,
     setSelectedMuscle,
-    viewMode,
     weeklySetsWindow,
     setWeeklySetsWindow,
-    activeQuickFilter,
-    setActiveQuickFilter,
     selectedSvgIdForUrlRef,
     clearSelectionUrl,
     updateSelectionUrl,
-    handleQuickFilterClick,
     clearSelection,
   } = useMuscleSelection({
     initialMuscle,
@@ -70,6 +69,7 @@ export const MuscleAnalysis: React.FC<MuscleAnalysisProps> = ({
     windowStart,
     effectiveNow,
     allTimeWindowStart,
+    lifetimeHeadlessVolumes,
   } = useMuscleVolumeData({
     data,
     weeklySetsWindow,
@@ -103,16 +103,18 @@ export const MuscleAnalysis: React.FC<MuscleAnalysisProps> = ({
     windowStart,
     effectiveNow,
     weeklySetsWindow,
-    viewMode,
     selectedMuscle,
-    activeQuickFilter,
     filterCacheKey,
   });
 
   const {
     weeklySetsSummary,
+    legendMaxSets,
+    trainingLevel,
+    volumeThresholds,
     weeklySetsDelta,
     trendData,
+    legendTrendData,
     windowedSelectionBreakdown,
     contributingExercises,
     totalSets,
@@ -124,13 +126,13 @@ export const MuscleAnalysis: React.FC<MuscleAnalysisProps> = ({
     effectiveNow,
     allTimeWindowStart,
     weeklySetsWindow,
-    viewMode,
     selectedSubjectKeys,
     groupWeeklyRatesBySubject,
     headlessRatesMap,
     muscleVolume,
     windowedGroupVolumes,
     muscleVolumes,
+    filterCacheKey,
   });
   const {
     handleMuscleClick,
@@ -138,18 +140,21 @@ export const MuscleAnalysis: React.FC<MuscleAnalysisProps> = ({
     selectedBodyMapIds,
     hoveredBodyMapIds,
   } = useMuscleAnalysisHandlers({
-    viewMode,
     selectedMuscle,
-    activeQuickFilter,
     setSelectedMuscle,
-    setActiveQuickFilter,
     selectedSvgIdForUrlRef,
     clearSelectionUrl,
     updateSelectionUrl,
     weeklySetsWindow,
-    windowedGroupVolumes,
     headlessRatesMap,
     setHoverTooltip,
+    trainingLevel,
+  });
+
+  const lifetimeAchievementData = useLifetimeAchievement({
+    lifetimeHeadlessVolumes,
+    weeklyHeadlessVolumes: headlessRatesMap,
+    selectedMuscle,
   });
 
   if (isLoading) {
@@ -170,7 +175,7 @@ export const MuscleAnalysis: React.FC<MuscleAnalysisProps> = ({
   }
 
   return (
-    <div className="space-y-1">
+    <div className="space-y-1 flex flex-col">
       <div className="hidden sm:contents">
         <ViewHeader
           leftStats={[{ icon: Activity, value: totalSets, label: 'Total Sets' }]}
@@ -180,51 +185,69 @@ export const MuscleAnalysis: React.FC<MuscleAnalysisProps> = ({
         />
       </div>
 
-      <div className="grid gap-2 grid-cols-1 lg:grid-cols-2">
-        <MuscleAnalysisBodyMapPanel
-          viewMode={viewMode}
-          bodyMapGender={bodyMapGender}
-          activeQuickFilter={activeQuickFilter}
-          onQuickFilterClick={handleQuickFilterClick}
-          weeklySetsChartView={weeklySetsChartView}
-          setWeeklySetsChartView={setWeeklySetsChartView}
-          weeklySetsWindow={weeklySetsWindow}
-          setWeeklySetsWindow={setWeeklySetsWindow}
-          selectedSvgIdForUrlRef={selectedSvgIdForUrlRef}
-          updateSelectionUrl={updateSelectionUrl}
-          muscleVolumes={muscleVolumes}
-          maxVolume={maxVolume}
-          groupedBodyMapVolumes={groupedBodyMapVolumes}
-          maxGroupVolume={maxGroupVolume}
-          selectedMuscle={selectedMuscle}
-          selectedBodyMapIds={selectedBodyMapIds}
-          hoveredBodyMapIds={hoveredBodyMapIds}
-          handleMuscleClick={handleMuscleClick}
-          handleMuscleHover={handleMuscleHover}
-          radarData={radarData}
-          hoverTooltip={hoverTooltip}
-        />
+      {/* Main layout: 3 columns on desktop, stacked on mobile */}
+      <div className="flex flex-col gap-2 lg:grid lg:grid-cols-3 lg:grid-rows-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-2 lg:h-[75vh] lg:min-h-0">
+        {/* Column 1: Body Map (1/3 width, full height) */}
+        <div className="h-[400px] sm:h-[450px] lg:col-start-1 lg:row-start-1 lg:row-span-2 lg:h-full min-h-0">
+          <MuscleAnalysisBodyMapPanel
+            bodyMapGender={bodyMapGender}
+            weeklySetsChartView={weeklySetsChartView}
+            setWeeklySetsChartView={setWeeklySetsChartView}
+            weeklySetsWindow={weeklySetsWindow}
+            setWeeklySetsWindow={setWeeklySetsWindow}
+            selectedSvgIdForUrlRef={selectedSvgIdForUrlRef}
+            updateSelectionUrl={updateSelectionUrl}
+            muscleVolumes={muscleVolumes}
+            maxVolume={maxVolume}
+            volumeThresholds={volumeThresholds}
+            selectedMuscle={selectedMuscle}
+            selectedBodyMapIds={selectedBodyMapIds}
+            hoveredBodyMapIds={hoveredBodyMapIds}
+            handleMuscleClick={handleMuscleClick}
+            handleMuscleHover={handleMuscleHover}
+            radarData={radarData}
+            hoverTooltip={hoverTooltip}
+          />
+        </div>
 
-        <MuscleAnalysisDetailPanel
-          activeQuickFilter={activeQuickFilter}
-          selectedMuscle={selectedMuscle}
-          viewMode={viewMode}
-          weeklySetsWindow={weeklySetsWindow}
-          weeklySetsSummary={weeklySetsSummary}
-          volumeDelta={weeklySetsDelta}
-          trendData={trendData}
-          windowedSelectionBreakdown={windowedSelectionBreakdown}
-          contributingExercises={contributingExercises}
-          assetsMap={assetsMap}
-          exerciseMuscleData={exerciseMuscleData}
-          onExerciseClick={onExerciseClick}
-          clearSelection={() => {
-            setSelectedMuscle(null);
-            setActiveQuickFilter(null);
-            selectedSvgIdForUrlRef.current = null;
-            clearSelectionUrl();
-          }}
-        />
+        {/* Column 2: Weekly Sets Graph */}
+        <div className="h-[300px] sm:h-[350px] lg:col-start-2 lg:row-start-1 lg:h-full min-h-0">
+          <MuscleAnalysisGraphPanel
+            selectedMuscle={selectedMuscle}
+            weeklySetsWindow={weeklySetsWindow}
+            weeklySetsSummary={weeklySetsSummary}
+            legendMaxSets={legendMaxSets}
+            volumeThresholds={volumeThresholds}
+            volumeDelta={weeklySetsDelta}
+            trendData={trendData}
+            legendTrendData={legendTrendData}
+            windowedSelectionBreakdown={windowedSelectionBreakdown}
+            clearSelection={clearSelection}
+          />
+        </div>
+
+        {/* Column 3: Exercise List */}
+        <div className="h-[300px] sm:h-[350px] lg:col-start-3 lg:row-start-1 lg:h-full min-h-0">
+          <MuscleAnalysisExerciseListPanel
+            contributingExercises={contributingExercises}
+            assetsMap={assetsMap}
+            exerciseMuscleData={exerciseMuscleData}
+            totalSetsInWindow={windowedSelectionBreakdown?.totalSetsInWindow ?? 0}
+            volumeThresholds={volumeThresholds}
+            onExerciseClick={onExerciseClick}
+          />
+        </div>
+
+        {/* Bottom row: Lifetime Growth Unlocked (columns 2-3) */}
+        {lifetimeAchievementData && (
+          <div className="h-[300px] lg:h-full lg:col-start-2 lg:col-span-2 lg:row-start-2 min-h-0">
+            <LifetimeAchievementCard
+              data={lifetimeAchievementData}
+              selectedMuscleId={selectedMuscle}
+              onMuscleClick={handleMuscleClick}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

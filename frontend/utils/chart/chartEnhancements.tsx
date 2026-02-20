@@ -5,10 +5,13 @@ import type { WeightUnit } from '../storage/localStorage';
 
 export {
   RECHARTS_XAXIS_PADDING,
+  RECHARTS_YAXIS_MARGIN,
+  formatAxisNumber,
   getRechartsCategoricalTicks,
   getRechartsTickIndexMap,
   getRechartsTickIndices,
   getRechartsXAxisInterval,
+  calculateYAxisDomain,
 } from './rechartsAxis';
 
 

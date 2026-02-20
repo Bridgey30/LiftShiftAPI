@@ -6,13 +6,13 @@ import { trackEvent } from '../../utils/integrations/analytics';
 export interface UseAppNavigationReturn {
   activeTab: Tab;
   highlightedExercise: string | null;
-  initialMuscleForAnalysis: { muscleId: string; viewMode: 'muscle' | 'group' | 'headless' } | null;
+  initialMuscleForAnalysis: { muscleId: string } | null;
   initialWeeklySetsWindow: 'all' | '7d' | '30d' | '365d' | null;
   targetHistoryDate: Date | null;
   mainRef: React.RefObject<HTMLElement | null>;
   navigateToTab: (tab: Tab, kind?: 'top' | 'deep') => void;
   handleExerciseClick: (exerciseName: string) => void;
-  handleMuscleClick: (muscleId: string, viewMode?: 'muscle' | 'group' | 'headless', weeklySetsWindow?: 'all' | '7d' | '30d' | '365d') => void;
+  handleMuscleClick: (muscleId: string, weeklySetsWindow?: 'all' | '7d' | '30d' | '365d') => void;
   handleDayClick: (date: Date) => void;
   handleTargetDateConsumed: () => void;
   handleSelectTab: (tab: Tab) => void;
@@ -26,7 +26,7 @@ export function useAppNavigation(): UseAppNavigationReturn {
   
   const [activeTab, setActiveTab] = useState<Tab>(() => getTabFromPathname(location.pathname));
   const [highlightedExercise, setHighlightedExercise] = useState<string | null>(null);
-  const [initialMuscleForAnalysis, setInitialMuscleForAnalysis] = useState<{ muscleId: string; viewMode: 'muscle' | 'group' | 'headless' } | null>(null);
+  const [initialMuscleForAnalysis, setInitialMuscleForAnalysis] = useState<{ muscleId: string } | null>(null);
   const [initialWeeklySetsWindow, setInitialWeeklySetsWindow] = useState<'all' | '7d' | '30d' | '365d' | null>(null);
   const [targetHistoryDate, setTargetHistoryDate] = useState<Date | null>(null);
   
@@ -109,14 +109,12 @@ export function useAppNavigation(): UseAppNavigationReturn {
 
     if (tabFromUrl === Tab.MUSCLE_ANALYSIS) {
       const muscleId = params.get('muscle');
-      const viewMode = params.get('view');
       const weeklySetsWindow = params.get('window');
 
-      const isValidViewMode = viewMode === 'muscle' || viewMode === 'group' || viewMode === 'headless';
       const isValidWindow = weeklySetsWindow === 'all' || weeklySetsWindow === '7d' || weeklySetsWindow === '30d' || weeklySetsWindow === '365d';
 
-      if (muscleId && isValidViewMode) {
-        setInitialMuscleForAnalysis({ muscleId, viewMode });
+      if (muscleId) {
+        setInitialMuscleForAnalysis({ muscleId });
         setInitialWeeklySetsWindow(isValidWindow ? weeklySetsWindow : 'all');
       } else {
         setInitialMuscleForAnalysis(null);
@@ -182,13 +180,12 @@ export function useAppNavigation(): UseAppNavigationReturn {
     }
   }, [activeTab, navigate]);
 
-  const handleMuscleClick = useCallback((muscleId: string, viewMode: 'muscle' | 'group' | 'headless' = 'headless', weeklySetsWindow: 'all' | '7d' | '30d' | '365d' = 'all') => {
-    trackEvent('muscle_open', { view_mode: viewMode, window: weeklySetsWindow });
-    setInitialMuscleForAnalysis({ muscleId, viewMode });
+  const handleMuscleClick = useCallback((muscleId: string, weeklySetsWindow: 'all' | '7d' | '30d' | '365d' = 'all') => {
+    trackEvent('muscle_open', { window: weeklySetsWindow });
+    setInitialMuscleForAnalysis({ muscleId });
     setInitialWeeklySetsWindow(weeklySetsWindow);
     const params = new URLSearchParams();
     params.set('muscle', muscleId);
-    params.set('view', viewMode);
     params.set('window', weeklySetsWindow);
     pendingUrlNavKindRef.current = 'deep';
     navigate({ pathname: getPathForTab(Tab.MUSCLE_ANALYSIS), search: `?${params.toString()}` });

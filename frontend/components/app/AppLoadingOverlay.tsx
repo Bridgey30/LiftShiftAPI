@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { CheckCircle2, Loader2 } from 'lucide-react';
-import { CsvLoadingAnimation } from '../modals/csvImport/CsvLoadingAnimation';
+import { CsvLoadingAnimation, PuzzleLoadingAnimation } from '../modals/csvImport';
 
 interface AppLoadingOverlayProps {
   open: boolean;
@@ -29,9 +29,8 @@ const LOADING_MESSAGES = [
   'Calculating display data...',
   'Rendering the interface...',
   'Final touches...',
+  'Solving Captcha for you...',
   'Almost ready...',
-  'Just few seconds.',
- 
 ];
 
 const ROW_HEIGHT = 36;
@@ -72,22 +71,29 @@ export const AppLoadingOverlay: React.FC<AppLoadingOverlayProps> = ({
   isCompleting,
 }) => {
   const [baseIndex, setBaseIndex] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
+  const [slideOffset, setSlideOffset] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
     if (!open) {
       setBaseIndex(0);
-      setIsAnimating(false);
+      setSlideOffset(0);
+      setIsTransitioning(false);
       return;
     }
 
     let tickTimeout: number | null = null;
     const advance = () => {
-      setIsAnimating(true);
+      // Enable transition and start sliding up
+      setIsTransitioning(true);
+      setSlideOffset(-ROW_HEIGHT);
+      
+      // After animation completes, update index and reset position instantly (no transition)
       tickTimeout = window.setTimeout(() => {
         const lastWindowStart = Math.max(0, LOADING_MESSAGES.length - VISIBLE_COUNT);
         setBaseIndex((prev) => (prev >= lastWindowStart ? prev : prev + 1));
-        setIsAnimating(false);
+        setIsTransitioning(false);
+        setSlideOffset(0);
       }, SLIDE_MS);
     };
 
@@ -124,10 +130,10 @@ export const AppLoadingOverlay: React.FC<AppLoadingOverlayProps> = ({
           {/* Sliding message list */}
           <div className="relative h-[144px] overflow-hidden">
             <div
-              className="absolute left-0 right-0 top-0 transition-transform ease-out"
+              className="absolute left-0 right-0 top-0"
               style={{
-                transform: isAnimating ? `translateY(-${ROW_HEIGHT}px)` : 'translateY(0px)',
-                transitionDuration: isAnimating ? `${SLIDE_MS}ms` : '0ms',
+                transform: `translateY(${slideOffset}px)`,
+                transition: isTransitioning ? `transform ${SLIDE_MS}ms ease-out` : 'none',
               }}
             >
               {visibleMessages.map((msg) => (
@@ -139,7 +145,11 @@ export const AppLoadingOverlay: React.FC<AppLoadingOverlayProps> = ({
                   {msg.state === 'completed' ? (
                     <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0" />
                   ) : msg.state === 'active' ? (
-                    <Loader2 className="w-5 h-5 text-blue-500 animate-spin flex-shrink-0" />
+                    msg.text.includes('Captcha') ? (
+                      <PuzzleLoadingAnimation size={20} />
+                    ) : (
+                      <Loader2 className="w-5 h-5 text-blue-500 animate-spin flex-shrink-0" />
+                    )
                   ) : (
                     <div className="w-5 h-5 rounded-full border-2 border-slate-700 flex-shrink-0" />
                   )}

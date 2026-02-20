@@ -12,9 +12,10 @@ export interface WindowedWorkoutSets {
 export const getWindowedWorkoutSets = (
   fullData: WorkoutSet[],
   rangeMode: TimeFilterMode,
-  effectiveNow: Date
+  effectiveNow: Date,
+  filterCacheKey: string = ''
 ): WindowedWorkoutSets => {
-  const cacheKey = `windowedWorkoutSets:${rangeMode}:${effectiveNow.getTime()}`;
+  const cacheKey = `windowedWorkoutSets:${filterCacheKey}:${rangeMode}:${effectiveNow.getTime()}`;
   return computationCache.getOrCompute(
     cacheKey,
     fullData,

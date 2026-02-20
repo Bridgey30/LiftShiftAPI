@@ -64,7 +64,7 @@ export const useDashboardVolumeDensity = (args: {
           ? 'all'
           : smartMode
         : rangeMode === 'yearly'
-          ? 'weekly'
+          ? smartMode === 'all' ? 'monthly' : smartMode
           : 'all';
 
     const mode = pickAutoMode(source, baseMode);

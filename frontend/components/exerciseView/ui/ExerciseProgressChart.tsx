@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import {
   AreaChart,
   Area,
@@ -14,11 +14,12 @@ import { ExerciseStats } from '../../../types';
 import { LazyRender } from '../../ui/LazyRender';
 import { ChartSkeleton } from '../../ui/ChartSkeleton';
 import { formatNumber } from '../../../utils/format/formatters';
-import { RECHARTS_XAXIS_PADDING } from '../../../utils/chart/chartEnhancements';
+import { RECHARTS_XAXIS_PADDING, RECHARTS_YAXIS_MARGIN, calculateYAxisDomain, formatAxisNumber } from '../../../utils/chart/chartEnhancements';
 import type { ExerciseSessionEntry } from '../../../utils/analysis/exerciseTrend';
 import type { WeightUnit } from '../../../utils/storage/localStorage';
 import { CustomTooltip } from './ExerciseChartTooltip';
 import { StrengthProgressionValueDot } from './StrengthProgressionValueDot';
+import { getThemeMode } from '../../../utils/storage/localStorage';
 
 interface ExerciseProgressChartProps {
   selectedStats: ExerciseStats;
@@ -55,12 +56,79 @@ export const ExerciseProgressChart: React.FC<ExerciseProgressChartProps> = ({
 }) => {
   if (!selectedStats) return null;
 
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const mode = getThemeMode();
+    return mode !== 'light';
+  });
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const mode = getThemeMode();
+      setIsDarkMode(mode !== 'light');
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
+  const dataKeys = showUnilateral && hasUnilateralChartData
+    ? (isBodyweightLike ? ['leftReps', 'rightReps'] : ['leftOneRepMax', 'rightOneRepMax'])
+    : (isBodyweightLike ? ['reps', 'sets'] : ['oneRepMax', 'weight']);
+  const yAxisDomain = calculateYAxisDomain(chartData, dataKeys);
+
+  // Calculate gradient stops based on strength progression
+  const progressionGradientStops = useMemo(() => {
+    if (chartData.length < 2) return [];
+    
+    const valueKey = isBodyweightLike ? 'reps' : 'oneRepMax';
+    const stops: Array<{ offset: number; color: string }> = [];
+    const plateauThreshold = 0.02; // 2% change threshold for plateau
+    
+    // Zone colors: gaining=green, plateauing=yellow, losing=red
+    const colors = {
+      gaining: '#22c55e',
+      plateauing: '#eab308', 
+      losing: '#ef4444'
+    };
+    
+    // Helper to get progression type
+    const getProgressionType = (current: number, previous: number): keyof typeof colors => {
+      if (previous === 0) return 'plateauing';
+      const change = (current - previous) / previous;
+      if (Math.abs(change) <= plateauThreshold) return 'plateauing';
+      return change > 0 ? 'gaining' : 'losing';
+    };
+    
+    // Add initial stop
+    const firstValue = chartData[0][valueKey];
+    const secondValue = chartData[1][valueKey];
+    const initialType = getProgressionType(secondValue, firstValue);
+    stops.push({ offset: 0, color: colors[initialType] });
+    
+    for (let i = 0; i < chartData.length - 1; i++) {
+      const current = chartData[i][valueKey];
+      const next = chartData[i + 1][valueKey];
+      const type = getProgressionType(next, current);
+      const offset = (i + 1) / (chartData.length - 1);
+      
+      stops.push({ offset, color: colors[type] });
+    }
+    
+    return stops;
+  }, [chartData, isBodyweightLike]);
+
   return (
-    <div className="w-full bg-black/70 border border-slate-700/50 rounded-2xl p-4 sm:p-6 relative flex flex-col h-[400px]">
+    <div className="w-full bg-black/70 border border-slate-700/50 rounded-2xl p-1 sm:p-2 relative flex flex-col h-[400px]">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-4 sm:mb-6 gap-2 shrink-0">
         <div>
           <h3 className="text-base sm:text-lg font-semibold text-white">{isBodyweightLike ? 'Reps Progression' : 'Strength Progression'}</h3>
-          <p className="text-[11px] sm:text-xs text-slate-500">{isBodyweightLike ? 'Top reps vs sets' : 'Estimated 1RM vs Actual Lift Weight'}</p>
+          {isBodyweightLike ? (
+            <p className="text-[11px] sm:text-xs text-slate-500">Top reps vs sets</p>
+          ) : (
+            <p className="text-[11px] sm:text-xs text-slate-500">
+              Estimated <span className="text-blue-400">1RM</span> vs <span className="text-slate-400">Actual Lift Weight</span>
+            </p>
+          )}
         </div>
         <div className="flex items-center gap-3 sm:gap-4 text-[10px] sm:text-xs font-medium">
           <div className="hidden sm:flex items-center gap-2">
@@ -92,11 +160,14 @@ export const ExerciseProgressChart: React.FC<ExerciseProgressChartProps> = ({
             </>
           ) : (
             <>
-              <div className="flex items-center gap-2 text-blue-400">
-                <span className="w-2.5 h-2.5 rounded bg-blue-500/20 border border-blue-500"></span> Est. 1RM
+              <div className="flex items-center gap-2 text-emerald-400">
+                <span className="w-2.5 h-2.5 rounded bg-emerald-500/20 border border-emerald-500"></span> Gaining
               </div>
-              <div className="flex items-center gap-2 text-slate-500">
-                <span className="w-2.5 h-0.5 bg-slate-500 border-t border-dashed border-slate-500"></span> Lift Weight
+              <div className="flex items-center gap-2 text-yellow-400">
+                <span className="w-2.5 h-2.5 rounded bg-yellow-500/20 border border-yellow-500"></span> Plateau
+              </div>
+              <div className="flex items-center gap-2 text-rose-400">
+                <span className="w-2.5 h-2.5 rounded bg-rose-500/20 border border-rose-500"></span> Losing
               </div>
             </>
           )}
@@ -163,12 +234,13 @@ export const ExerciseProgressChart: React.FC<ExerciseProgressChartProps> = ({
               <AreaChart
                 key={`${selectedStats.name}:${viewMode}:${allAggregationMode}:${weightUnit}:${showUnilateral}`}
                 data={chartData}
-                margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                margin={{ top: 10, ...RECHARTS_YAXIS_MARGIN, bottom: 0 }}
               >
                 <defs>
-                  <linearGradient id="color1RM" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                  <linearGradient id="color1RM" x1="0" y1="0" x2="1" y2="0">
+                    {progressionGradientStops.map((stop, idx) => (
+                      <stop key={idx} offset={`${stop.offset * 100}%`} stopColor={stop.color} stopOpacity={isDarkMode ? 0.2 : 0.5} />
+                    ))}
                   </linearGradient>
                   <linearGradient id="colorLeftRM" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.25} />
@@ -194,11 +266,8 @@ export const ExerciseProgressChart: React.FC<ExerciseProgressChartProps> = ({
                   fontSize={10}
                   tickLine={false}
                   axisLine={false}
-                  tickFormatter={(val) =>
-                    isBodyweightLike
-                      ? `${formatNumber(Number(val), { maxDecimals: 0 })}`
-                      : `${formatNumber(Number(val), { maxDecimals: 1 })}${weightUnit}`
-                  }
+                  domain={yAxisDomain}
+                  tickFormatter={(val) => formatAxisNumber(Number(val), isBodyweightLike ? undefined : weightUnit)}
                 />
                 <Tooltip
                   content={<CustomTooltip weightUnit={weightUnit} hasUnilateralData={hasUnilateralChartData} showUnilateral={showUnilateral} />}

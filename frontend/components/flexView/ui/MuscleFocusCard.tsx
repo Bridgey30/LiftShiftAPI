@@ -23,9 +23,11 @@ export const MuscleFocusCard: React.FC<{
   headlessHeatmap: { volumes: Map<string, number>; maxVolume: number };
   theme: CardTheme;
   gender?: BodyMapGender;
-}> = ({ muscleData, headlessHeatmap, theme, gender = 'male' }) => {
+  effectiveNow?: Date;
+}> = ({ muscleData, headlessHeatmap, theme, gender = 'male', effectiveNow }) => {
   const isDark = theme === 'dark';
   const textPrimary = isDark ? 'text-white' : 'text-slate-900';
+  const currentYear = effectiveNow?.getFullYear() ?? new Date().getFullYear();
 
   const [showHeatmap, setShowHeatmap] = useState(true);
 
@@ -52,7 +54,7 @@ export const MuscleFocusCard: React.FC<{
         <div className="w-full flex items-center justify-between mb-5">
           <div className={`${isDark ? 'text-slate-400' : 'text-slate-500'} flex items-center gap-2`}>
             <Target className="w-5 h-5" />
-            <span className="text-xs font-semibold uppercase tracking-widest">Muscle Focus</span>
+            <span className="text-xs font-semibold uppercase tracking-widest">Muscle Focus {currentYear}</span>
           </div>
           <button
             type="button"

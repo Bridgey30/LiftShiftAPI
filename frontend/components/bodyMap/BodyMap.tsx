@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useCallback, useMemo } from 'react';
-import { getVolumeColor, SVG_MUSCLE_GROUPS, CSV_TO_SVG_MUSCLE_MAP } from '../../utils/muscle/mapping';
+import { getVolumeColor, getExerciseMuscleColor, SVG_MUSCLE_GROUPS, CSV_TO_SVG_MUSCLE_MAP } from '../../utils/muscle/mapping';
 import { INTERACTIVE_MUSCLE_IDS } from '../../utils/muscle/mapping';
+import type { MuscleVolumeThresholds } from '../../utils/muscle/hypertrophy/muscleParams';
 import MaleFrontBodyMapMuscle from './muscles/MaleFrontBodyMapMuscle';
 import MaleBackBodyMapMuscle from './muscles/MaleBackBodyMapMuscle';
 import MaleFrontBodyMapGroup from './groups/MaleFrontBodyMapGroup';
@@ -11,7 +12,6 @@ import FemaleFrontBodyMapGroup from './groups/FemaleFrontBodyMapGroup';
 import FemaleBackBodyMapGroup from './groups/FemaleBackBodyMapGroup';
 
 export type BodyMapGender = 'male' | 'female';
-export type BodyMapViewMode = 'muscle' | 'group' | 'headless';
 
 interface BodyMapProps {
   onPartClick: (muscleGroup: string) => void;
@@ -20,12 +20,13 @@ interface BodyMapProps {
   hoveredMuscleIdsOverride?: string[];
   muscleVolumes: Map<string, number>;
   maxVolume?: number;
+  volumeThresholds?: MuscleVolumeThresholds;
+  useExerciseColors?: boolean;
   onPartHover?: (muscleGroup: string | null, e?: MouseEvent) => void;
   compact?: boolean;
   compactFill?: boolean;
   interactive?: boolean;
   gender?: BodyMapGender;
-  viewMode?: BodyMapViewMode;
 }
 
 // Hover and selection highlight colors (theme-driven)
@@ -52,12 +53,13 @@ export const BodyMap: React.FC<BodyMapProps> = ({
   hoveredMuscleIdsOverride,
   muscleVolumes,
   maxVolume = 1,
+  volumeThresholds,
+  useExerciseColors = false,
   onPartHover,
   compact = false,
   compactFill = false,
   interactive = false,
   gender = 'male',
-  viewMode = 'muscle',
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const hoveredMuscleRef = useRef<string | null>(null);
@@ -72,7 +74,9 @@ export const BodyMap: React.FC<BodyMapProps> = ({
       const elements = containerRef.current?.querySelectorAll(`#${muscleId}`);
       elements?.forEach(el => {
         const volume = muscleVolumes.get(muscleId) || 0;
-        const color = getVolumeColor(volume, maxVolume);
+        const color = useExerciseColors 
+          ? getExerciseMuscleColor(volume)
+          : getVolumeColor(volume, volumeThresholds, maxVolume);
         const isSelected = selectedMuscleIds.includes(muscleId);
         const isHovered = hoveredMuscleIdsOverride
           ? hoveredMuscleIdsOverride.includes(muscleId)
@@ -108,7 +112,7 @@ export const BodyMap: React.FC<BodyMapProps> = ({
         (el as HTMLElement).style.cursor = compact && !interactive ? 'default' : 'pointer';
       });
     });
-  }, [muscleVolumes, maxVolume, selectedMuscleIds, hoveredMuscleIdsOverride, interactive]);
+  }, [muscleVolumes, maxVolume, selectedMuscleIds, hoveredMuscleIdsOverride, interactive, useExerciseColors, volumeThresholds]);
 
   const handleClick = useCallback((e: MouseEvent) => {
     const target = e.target as Element;
@@ -156,15 +160,17 @@ export const BodyMap: React.FC<BodyMapProps> = ({
     };
   }, [applyColors, handleClick, handleMouseOver, handleMouseOut, compact, interactive]);
 
-  const svgClass = compact ? (compactFill ? 'h-full w-auto' : 'h-28 w-auto') : 'h-[60vh] md:h-[70vh] w-auto -mb-10 -mt-5 sm:-mb-3';
+  const svgClass = compact 
+    ? (compactFill ? 'h-full w-auto' : 'h-28 w-auto') 
+    : 'h-[45vh] sm:h-[50vh] md:h-[55vh] lg:h-[60vh] xl:h-[65vh] 2xl:max-h-[55vh] w-auto max-h-[500px]';
 
   const FrontSvg = gender === 'female' 
-    ? (viewMode === 'group' || viewMode === 'headless' ? FemaleFrontBodyMapGroup : FemaleFrontBodyMapMuscle)
-    : (viewMode === 'group' || viewMode === 'headless' ? MaleFrontBodyMapGroup : MaleFrontBodyMapMuscle);
+    ? FemaleFrontBodyMapGroup
+    : MaleFrontBodyMapGroup;
   
   const BackSvg = gender === 'female'
-    ? (viewMode === 'group' || viewMode === 'headless' ? FemaleBackBodyMapGroup : FemaleBackBodyMapMuscle)
-    : (viewMode === 'group' || viewMode === 'headless' ? MaleBackBodyMapGroup : MaleBackBodyMapMuscle);
+    ? FemaleBackBodyMapGroup
+    : MaleBackBodyMapGroup;
 
   return (
     <div 

@@ -30,10 +30,10 @@ export const useDashboardIntensityEvolution = (args: {
   const { fullData, rangeMode, allAggregationMode, effectiveNow, filterCacheKey } = args;
 
   const intensityData = useMemo(() => {
-    const { filtered, minTs, maxTs } = getWindowedWorkoutSets(fullData, rangeMode, effectiveNow);
+    const { filtered, minTs, maxTs } = getWindowedWorkoutSets(fullData, rangeMode, effectiveNow, filterCacheKey);
 
     const preferred: 'daily' | 'weekly' | 'monthly' =
-      rangeMode === 'all' ? allAggregationMode : rangeMode === 'yearly' ? 'weekly' : 'daily';
+      rangeMode === 'all' ? allAggregationMode : rangeMode === 'yearly' ? allAggregationMode : 'daily';
 
     const mode: 'daily' | 'weekly' | 'monthly' =
       Number.isFinite(minTs) && Number.isFinite(maxTs) && maxTs > minTs

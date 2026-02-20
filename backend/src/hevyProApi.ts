@@ -18,6 +18,14 @@ const parseErrorBody = async (res: Response): Promise<string> => {
   }
 };
 
+export interface HevyProUserInfoResponse {
+  data: {
+    id: string;
+    name: string;
+    url: string;
+  };
+}
+
 export interface HevyProWorkoutsPageResponse {
   page: number;
   page_count: number;
@@ -47,6 +55,22 @@ export const hevyProGetWorkoutsPage = async (
   }
 
   return (await res.json()) as HevyProWorkoutsPageResponse;
+};
+
+export const hevyProGetUserInfo = async (apiKey: string): Promise<HevyProUserInfoResponse> => {
+  const res = await fetch(`${HEVY_PRO_BASE_URL}/v1/user/info`, {
+    method: 'GET',
+    headers: buildHeaders(apiKey),
+  });
+
+  if (!res.ok) {
+    const msg = await parseErrorBody(res);
+    const err = new Error(msg);
+    (err as any).statusCode = res.status;
+    throw err;
+  }
+
+  return (await res.json()) as HevyProUserInfoResponse;
 };
 
 export const hevyProValidateApiKey = async (apiKey: string): Promise<boolean> => {

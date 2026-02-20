@@ -1,7 +1,7 @@
 import type { Dispatch, SetStateAction } from 'react';
 import type { WorkoutSet } from '../../types';
 import type { DataSourceChoice } from '../../utils/storage/dataSourceStorage';
-import type { OnboardingFlow } from './onboarding/types';
+import type { OnboardingFlow } from '../onboarding/types';
 
 export interface StartupAutoLoadParams {
   parsedData: WorkoutSet[];

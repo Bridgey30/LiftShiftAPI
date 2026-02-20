@@ -1,28 +1,49 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BodyMap } from '../../bodyMap/BodyMap';
 import { ExerciseThumbnail } from '../../common/ExerciseThumbnail';
 import { getExerciseMuscleVolumes, lookupExerciseMuscleData, toHeadlessVolumeMap, type ExerciseMuscleData } from '../../../utils/muscle/mapping';
 import type { ExerciseAsset } from '../../../utils/data/exerciseAssets';
+import type { MuscleVolumeThresholds } from '../../../utils/muscle/hypertrophy/muscleParams';
+import { ChevronDown } from 'lucide-react';
 
 interface MuscleAnalysisExerciseListProps {
   contributingExercises: Array<{ name: string; sets: number; primarySets: number; secondarySets: number }>;
   assetsMap: Map<string, ExerciseAsset> | null;
   exerciseMuscleData: Map<string, ExerciseMuscleData>;
   totalSetsInWindow: number;
+  volumeThresholds: MuscleVolumeThresholds;
   onExerciseClick?: (exerciseName: string) => void;
 }
+
+const INITIAL_DISPLAY_COUNT = 6;
+const LAZY_LOAD_INCREMENT = 3;
+const VISIBLE_COUNT = 3;
 
 export const MuscleAnalysisExerciseList: React.FC<MuscleAnalysisExerciseListProps> = ({
   contributingExercises,
   assetsMap,
   exerciseMuscleData,
   totalSetsInWindow,
+  volumeThresholds,
   onExerciseClick,
 }) => {
+  const [displayCount, setDisplayCount] = useState(INITIAL_DISPLAY_COUNT);
+  const displayedExercises = contributingExercises.slice(0, displayCount);
+  const hasMore = displayCount < contributingExercises.length;
+
+  const handleShowMore = () => {
+    setDisplayCount(prev => Math.min(prev + LAZY_LOAD_INCREMENT, contributingExercises.length));
+  };
+
+  const mobileHeight = Math.min(displayCount, VISIBLE_COUNT) * 64;
+  const desktopHeight = Math.min(displayCount, VISIBLE_COUNT) * 88;
+
   return (
-    <div className="overflow-y-auto flex-1 px-4 mt-2 scroll-smooth">
-      <div className="space-y-2 pb-4">
-        {contributingExercises.map((ex) => {
+    <div className="px-4 mt-2">
+      <div
+        className="space-y-2 overflow-y-auto max-h-[250px]"
+      >
+        {displayedExercises.map((ex) => {
           const asset = assetsMap?.get(ex.name);
           const exData = lookupExerciseMuscleData(ex.name, exerciseMuscleData);
           const { volumes: exVolumes, maxVolume: exMaxVol } = getExerciseMuscleVolumes(exData);
@@ -41,7 +62,7 @@ export const MuscleAnalysisExerciseList: React.FC<MuscleAnalysisExerciseListProp
               key={ex.name}
               onClick={() => onExerciseClick?.(ex.name)}
               type="button"
-              className="group relative w-full text-left rounded-lg bg-black/50 p-2 shadow-sm transition-all focus:outline-none border border-transparent hover:border-slate-600/40"
+              className="group relative w-full text-left rounded-lg bg-black/50 p-2 transition-all focus:outline-none border border-transparent hover:border-slate-600/40"
               title={ex.name}
             >
               <div className="grid grid-cols-[3rem_1fr] sm:grid-cols-[4rem_1fr_5.25rem] items-stretch gap-2">
@@ -68,18 +89,18 @@ export const MuscleAnalysisExerciseList: React.FC<MuscleAnalysisExerciseListProp
                     </div>
                     {isPrimary && (
                       <span
-                        className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/15 text-emerald-200"
+                        className="px-2 py-0.5 rounded-full text-[9px] font-semibold bg-emerald-500/15 text-emerald-200"
                         title={`${primaryRounded} direct set${primaryRounded === 1 ? '' : 's'}`}
                       >
-                        {primaryRounded} direct set{primaryRounded === 1 ? '' : 's'}
+                        {primaryRounded} direct
                       </span>
                     )}
                     {isSecondary && (
                       <span
-                        className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-sky-500/15 text-sky-200"
+                        className="px-2 py-0.5 rounded-full text-[9px] font-semibold bg-sky-500/15 text-sky-200"
                         title={`${secondaryRounded} indirect set${secondaryRounded === 1 ? '' : 's'}`}
                       >
-                        {secondaryRounded} indirect set{secondaryRounded === 1 ? '' : 's'}
+                        {secondaryRounded} indirect 
                       </span>
                     )}
                   </div>
@@ -93,6 +114,8 @@ export const MuscleAnalysisExerciseList: React.FC<MuscleAnalysisExerciseListProp
                         selectedPart={null}
                         muscleVolumes={exHeadlessVolumes}
                         maxVolume={exHeadlessMaxVol}
+                        volumeThresholds={volumeThresholds}
+                        useExerciseColors
                         compact
                         compactFill
                         viewMode="headless"
@@ -108,6 +131,16 @@ export const MuscleAnalysisExerciseList: React.FC<MuscleAnalysisExerciseListProp
           <div className="text-center text-slate-500 py-4">
             No exercises found
           </div>
+        )}
+        {hasMore && (
+          <button
+            onClick={handleShowMore}
+            className="w-full py-2 mb-3 flex items-center justify-center gap-1 text-xs text-slate-400 hover:text-white transition-colors border border-dashed border-slate-700 rounded-lg hover:border-slate-500"
+          >
+            <ChevronDown className="w-3 h-3" />
+            Show {Math.min(LAZY_LOAD_INCREMENT, contributingExercises.length - displayCount)} more
+            <span className="text-slate-600">({contributingExercises.length - displayCount} remaining)</span>
+          </button>
         )}
       </div>
     </div>

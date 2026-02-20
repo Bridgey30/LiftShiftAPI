@@ -2,8 +2,10 @@ import React from 'react';
 import { AlertTriangle } from 'lucide-react';
 import { InsightsPanel, PlateauAlert, RecentPRsPanel } from '../../insights/InsightCards';
 import { ActivityHeatmap } from './ActivityHeatmap';
+import { TrainingTimelineCard } from '../trainingTimeline/TrainingTimelineCard';
 import type { WeightUnit } from '../../../utils/storage/localStorage';
 import type { DailySummary } from '../../../types';
+import type { TimelineProgress } from '../../../utils/training/trainingTimeline';
 
 interface DashboardInsightsSectionProps {
   dashboardInsights: any;
@@ -19,6 +21,7 @@ interface DashboardInsightsSectionProps {
   assetsLowerMap?: Map<string, any> | null;
   dailyData: DailySummary[];
   onAIAnalyze: () => void;
+  timelineProgress: TimelineProgress;
 }
 
 export const DashboardInsightsSection: React.FC<DashboardInsightsSectionProps> = ({
@@ -35,6 +38,7 @@ export const DashboardInsightsSection: React.FC<DashboardInsightsSectionProps> =
   assetsLowerMap,
   dailyData,
   onAIAnalyze,
+  timelineProgress,
 }) => (
   <>
     <InsightsPanel
@@ -44,6 +48,8 @@ export const DashboardInsightsSection: React.FC<DashboardInsightsSectionProps> =
       totalPRs={totalPrs}
       onAIAnalyze={onAIAnalyze}
     />
+
+    <TrainingTimelineCard progress={timelineProgress} />
 
     <RecentPRsPanel prInsights={dashboardInsights.prInsights} weightUnit={weightUnit} now={effectiveNow} onExerciseClick={onExerciseClick} />
 

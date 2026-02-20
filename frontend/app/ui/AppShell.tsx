@@ -5,8 +5,11 @@ import { AppTabContent } from '../../components/app/AppTabContent';
 import type { Tab } from '../navigation/tabs';
 import type { DailySummary, ExerciseStats, WorkoutSet } from '../../types';
 
+import type { OnboardingFlow } from '../onboarding/types';
+
 interface AppShellProps {
   onboardingIntent: 'initial' | 'update' | null;
+  onSetOnboarding: (next: OnboardingFlow | null) => void;
   activeTab: Tab;
   onSelectTab: (tab: Tab) => void;
   onOpenUpdateFlow: () => void;
@@ -56,6 +59,7 @@ interface AppShellProps {
 
 export const AppShell: React.FC<AppShellProps> = ({
   onboardingIntent,
+  onSetOnboarding,
   activeTab,
   onSelectTab,
   onOpenUpdateFlow,
@@ -107,6 +111,7 @@ export const AppShell: React.FC<AppShellProps> = ({
   return (
     <>
       <AppHeader
+        onSetOnboarding={onSetOnboarding}
         activeTab={activeTab}
         onSelectTab={onSelectTab}
         onOpenUpdateFlow={onOpenUpdateFlow}

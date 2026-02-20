@@ -21,6 +21,8 @@ export interface ExerciseChartDataPoint {
   volume?: number;
   isPr?: boolean;
   prTypes?: PrType[];
+  isSilverPr?: boolean;
+  silverPrTypes?: PrType[];
   // For unilateral exercises - separate L/R values
   leftOneRepMax?: number;
   leftWeight?: number;
@@ -84,7 +86,7 @@ export const buildExerciseChartData = (args: {
   }
 
   const preferred: 'daily' | 'weekly' | 'monthly' =
-    viewMode === 'all' ? allAggregationMode : viewMode === 'yearly' ? 'weekly' : 'daily';
+    viewMode === 'all' ? allAggregationMode : viewMode === 'yearly' ? allAggregationMode : 'daily';
 
   const agg: 'daily' | 'weekly' | 'monthly' =
     Number.isFinite(minTs) && Number.isFinite(maxTs) && maxTs > minTs
@@ -93,82 +95,92 @@ export const buildExerciseChartData = (args: {
 
   const buildBucketedSeries = (period: TimePeriod): ExerciseChartDataPoint[] => {
     if (showSeparateSides) {
-      // For unilateral, track L/R separately in buckets
-      const buckets = new Map<
-        string,
-        {
-          ts: number;
-          label: string;
-          leftOneRmMax: number;
-          leftWeightMax: number;
-          leftRepsMax: number;
-          rightOneRmMax: number;
-          rightWeightMax: number;
-          rightRepsMax: number;
-          oneRmMax: number;
-          weightMax: number;
-          repsMax: number;
-          sets: number;
-          prTypes: Set<PrType>;
-        }
-      >();
+    // For unilateral, track L/R separately in buckets
+    const buckets = new Map<
+      string,
+      {
+        ts: number;
+        label: string;
+        leftOneRmMax: number;
+        leftWeightMax: number;
+        leftRepsMax: number;
+        rightOneRmMax: number;
+        rightWeightMax: number;
+        rightRepsMax: number;
+        oneRmMax: number;
+        weightMax: number;
+        repsMax: number;
+        sets: number;
+        prTypes: Set<PrType>;
+        silverPrTypes: Set<PrType>;
+      }
+    >();
 
-      source.forEach((h) => {
-        const { key, timestamp, label } = getDateKey(h.date, period);
-        let b = buckets.get(key);
-        if (!b) {
-          b = {
-            ts: timestamp,
-            label,
-            leftOneRmMax: 0,
-            leftWeightMax: 0,
-            leftRepsMax: 0,
-            rightOneRmMax: 0,
-            rightWeightMax: 0,
-            rightRepsMax: 0,
-            oneRmMax: 0,
-            weightMax: 0,
-            repsMax: 0,
-            sets: 0,
-            prTypes: new Set(),
-          };
-          buckets.set(key, b);
-        }
+    source.forEach((h) => {
+      const { key, timestamp, label } = getDateKey(h.date, period);
+      let b = buckets.get(key);
+      if (!b) {
+        b = {
+          ts: timestamp,
+          label,
+          leftOneRmMax: 0,
+          leftWeightMax: 0,
+          leftRepsMax: 0,
+          rightOneRmMax: 0,
+          rightWeightMax: 0,
+          rightRepsMax: 0,
+          oneRmMax: 0,
+          weightMax: 0,
+          repsMax: 0,
+          sets: 0,
+          prTypes: new Set(),
+          silverPrTypes: new Set(),
+        };
+        buckets.set(key, b);
+      }
 
-        if (h.side === 'left') {
-          b.leftOneRmMax = Math.max(b.leftOneRmMax, h.oneRepMax);
-          b.leftWeightMax = Math.max(b.leftWeightMax, h.weight);
-          b.leftRepsMax = Math.max(b.leftRepsMax, h.maxReps);
-        } else if (h.side === 'right') {
-          b.rightOneRmMax = Math.max(b.rightOneRmMax, h.oneRepMax);
-          b.rightWeightMax = Math.max(b.rightWeightMax, h.weight);
-          b.rightRepsMax = Math.max(b.rightRepsMax, h.maxReps);
-        } else {
-          b.oneRmMax = Math.max(b.oneRmMax, h.oneRepMax);
-          b.weightMax = Math.max(b.weightMax, h.weight);
-          b.repsMax = Math.max(b.repsMax, h.maxReps);
-        }
-        b.sets += h.sets;
+      if (h.side === 'left') {
+        b.leftOneRmMax = Math.max(b.leftOneRmMax, h.oneRepMax);
+        b.leftWeightMax = Math.max(b.leftWeightMax, h.weight);
+        b.leftRepsMax = Math.max(b.leftRepsMax, h.maxReps);
+      } else if (h.side === 'right') {
+        b.rightOneRmMax = Math.max(b.rightOneRmMax, h.oneRepMax);
+        b.rightWeightMax = Math.max(b.rightWeightMax, h.weight);
+        b.rightRepsMax = Math.max(b.rightRepsMax, h.maxReps);
+      } else {
+        b.oneRmMax = Math.max(b.oneRmMax, h.oneRepMax);
+        b.weightMax = Math.max(b.weightMax, h.weight);
+        b.repsMax = Math.max(b.repsMax, h.maxReps);
+      }
+      b.sets += h.sets;
 
-        // Aggregate PR types
-        if (h.prTypes) {
-          h.prTypes.forEach((type) => b!.prTypes.add(type));
-        }
-      });
+      // Aggregate PR types
+      if (h.prTypes) {
+        h.prTypes.forEach((type) => b!.prTypes.add(type));
+      }
+      // Aggregate Silver PR types
+      if (h.silverPrTypes) {
+        h.silverPrTypes.forEach((type) => b!.silverPrTypes.add(type));
+      }
+    });
 
-      return Array.from(buckets.values())
-        .sort((a, b) => a.ts - b.ts)
-        .map((b) => {
-          const prTypes = Array.from(b.prTypes);
-          const isPr = prTypes.length > 0;
+    return Array.from(buckets.values())
+      .sort((a, b) => a.ts - b.ts)
+      .map((b) => {
+        const prTypes = Array.from(b.prTypes);
+        const silverPrTypes = Array.from(b.silverPrTypes);
+        const isPr = prTypes.length > 0;
+        const isSilverPr = !isPr && silverPrTypes.length > 0; // Only silver if no gold
 
-          const point: ExerciseChartDataPoint = {
-            timestamp: b.ts,
-            date: b.label,
-            sets: b.sets,
-            isPr,
-            prTypes,
-          };
+        const point: ExerciseChartDataPoint = {
+          timestamp: b.ts,
+          date: b.label,
+          sets: b.sets,
+          isPr,
+          prTypes,
+          isSilverPr,
+          silverPrTypes,
+        };
 
           if (b.leftOneRmMax > 0) {
             point.leftOneRepMax = convertWeight(Number(b.leftOneRmMax.toFixed(1)), weightUnit);
@@ -203,6 +215,9 @@ export const buildExerciseChartData = (args: {
         // Track which PR types correspond to the max values
         weightPrTypes: Set<PrType>;
         oneRmPrTypes: Set<PrType>;
+        // Track Silver PR types separately
+        silverWeightPrTypes: Set<PrType>;
+        silverOneRmPrTypes: Set<PrType>;
       }
     >();
 
@@ -219,6 +234,8 @@ export const buildExerciseChartData = (args: {
           sets: 0, 
           weightPrTypes: new Set(),
           oneRmPrTypes: new Set(),
+          silverWeightPrTypes: new Set(),
+          silverOneRmPrTypes: new Set(),
         };
         buckets.set(key, b);
       }
@@ -249,6 +266,20 @@ export const buildExerciseChartData = (args: {
           b!.oneRmPrTypes.add('oneRm');
         }
       }
+      
+      // Track Silver PRs separately (only if no gold PR of same type)
+      if (h.silverPrTypes) {
+        if (isNewWeightMax) {
+          h.silverPrTypes.forEach((type) => {
+            if (type === 'weight' || type === 'volume') {
+              b!.silverWeightPrTypes.add(type);
+            }
+          });
+        }
+        if (isNewOneRmMax && h.silverPrTypes.includes('oneRm')) {
+          b!.silverOneRmPrTypes.add('oneRm');
+        }
+      }
     });
 
     return Array.from(buckets.values())
@@ -258,6 +289,11 @@ export const buildExerciseChartData = (args: {
         const allPrTypes = new Set([...b.weightPrTypes, ...b.oneRmPrTypes]);
         const prTypes = Array.from(allPrTypes);
         const isPr = prTypes.length > 0;
+        
+        // Silver PRs only count if there's no gold PR
+        const allSilverPrTypes = new Set([...b.silverWeightPrTypes, ...b.silverOneRmPrTypes]);
+        const silverPrTypes = isPr ? [] : Array.from(allSilverPrTypes);
+        const isSilverPr = !isPr && silverPrTypes.length > 0;
 
         return {
           timestamp: b.ts,
@@ -268,6 +304,8 @@ export const buildExerciseChartData = (args: {
           sets: b.sets,
           isPr,
           prTypes,
+          isSilverPr,
+          silverPrTypes,
           // Also store separately for accurate filtering
           weightPrTypes: Array.from(b.weightPrTypes),
           oneRmPrTypes: Array.from(b.oneRmPrTypes),

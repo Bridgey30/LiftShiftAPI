@@ -62,7 +62,7 @@ export const TopExercisesCard = ({
   const vsPrevLabel = formatVsPrevRollingWindow(windowDays);
 
   return (
-    <div className="bg-black/70 border border-slate-700/50 p-4 sm:p-6 rounded-xl min-h-[360px] flex flex-col transition-all duration-300 min-w-0">
+    <div className="bg-black/70 border border-slate-700/50 px-2 sm:px-3 py-4 sm:py-6 rounded-xl min-h-[360px] flex flex-col transition-all duration-300 min-w-0">
       <TopExercisesHeader
         isMounted={isMounted}
         topExerciseMode={topExerciseMode}

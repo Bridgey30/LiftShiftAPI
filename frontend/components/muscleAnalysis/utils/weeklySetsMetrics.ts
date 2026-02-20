@@ -2,14 +2,11 @@ import { differenceInCalendarDays, subDays } from 'date-fns';
 import type { WorkoutSet } from '../../../types';
 import type { ExerciseAsset } from '../../../utils/data/exerciseAssets';
 import type { WeeklySetsWindow } from '../../../utils/muscle/analytics';
-import {
-  computeDailyMuscleVolumes,
-  computeDailySvgMuscleVolumes,
-} from '../../../utils/muscle/volume';
+import { computeDailySvgMuscleVolumes } from '../../../utils/muscle/volume';
 import { formatDeltaPercentage, getDeltaFormatPreset } from '../../../utils/format/deltaFormat';
-import { getHeadlessIdForDetailedSvgId } from '../../../utils/muscle/mapping';
+import { getHeadlessIdForDetailedSvgId, HEADLESS_MUSCLE_IDS } from '../../../utils/muscle/mapping';
 
-export type MuscleAnalysisViewMode = 'muscle' | 'group' | 'headless';
+export type MuscleAnalysisViewMode = 'headless';
 
 export const aggregateDailyToHeadless = (daily: ReturnType<typeof computeDailySvgMuscleVolumes>) => {
   return daily.map((d) => {
@@ -32,43 +29,21 @@ export const computeWeeklySetsSummary = (args: {
   assetsMap: Map<string, ExerciseAsset> | null;
   windowStart: Date | null;
   selectedSubjectKeys: string[];
-  viewMode: MuscleAnalysisViewMode;
   data: WorkoutSet[];
   effectiveNow: Date;
-  groupWeeklyRatesBySubject: Map<string, number> | null;
 }): number | null => {
   const {
     assetsMap,
     windowStart,
     selectedSubjectKeys,
-    viewMode,
     data,
     effectiveNow,
-    groupWeeklyRatesBySubject,
   } = args;
 
   if (!assetsMap) return null;
   if (!windowStart) return null;
 
-  // In group view, reuse the same windowed weekly-rate totals as the dashboard.
-  if (viewMode === 'group' && groupWeeklyRatesBySubject) {
-    if (selectedSubjectKeys.length > 0) {
-      let sum = 0;
-      for (const k of selectedSubjectKeys) sum += groupWeeklyRatesBySubject.get(k) ?? 0;
-      return Math.round(sum * 10) / 10;
-    }
-
-    let sum = 0;
-    for (const v of groupWeeklyRatesBySubject.values()) sum += v;
-    return Math.round(sum * 10) / 10;
-  }
-
-  const daily =
-    viewMode === 'group'
-      ? computeDailyMuscleVolumes(data, assetsMap, true)
-      : viewMode === 'headless'
-        ? aggregateDailyToHeadless(computeDailySvgMuscleVolumes(data, assetsMap))
-        : computeDailySvgMuscleVolumes(data, assetsMap);
+  const daily = aggregateDailyToHeadless(computeDailySvgMuscleVolumes(data, assetsMap));
 
   const getDaySum = (day: { muscles: ReadonlyMap<string, number> }) => {
     if (selectedSubjectKeys.length > 0) {
@@ -77,9 +52,10 @@ export const computeWeeklySetsSummary = (args: {
       return sum;
     }
 
+    // When no muscle is selected, return average per muscle
     let sum = 0;
     for (const v of day.muscles.values()) sum += v;
-    return sum;
+    return sum / HEADLESS_MUSCLE_IDS.length;
   };
 
   const total = daily.reduce((acc, day) => {
@@ -106,7 +82,6 @@ export const computeWeeklySetsDelta = (args: {
   windowStart: Date | null;
   weeklySetsWindow: WeeklySetsWindow;
   selectedSubjectKeys: string[];
-  viewMode: MuscleAnalysisViewMode;
   data: WorkoutSet[];
   effectiveNow: Date;
   allTimeWindowStart: Date | null;
@@ -116,7 +91,6 @@ export const computeWeeklySetsDelta = (args: {
     windowStart,
     weeklySetsWindow,
     selectedSubjectKeys,
-    viewMode,
     data,
     effectiveNow,
     allTimeWindowStart,
@@ -136,12 +110,7 @@ export const computeWeeklySetsDelta = (args: {
 
   const clampedPreviousStart = allTimeWindowStart && allTimeWindowStart > previousStart ? allTimeWindowStart : previousStart;
 
-  const daily =
-    viewMode === 'group'
-      ? computeDailyMuscleVolumes(data, assetsMap, true)
-      : viewMode === 'headless'
-        ? aggregateDailyToHeadless(computeDailySvgMuscleVolumes(data, assetsMap))
-        : computeDailySvgMuscleVolumes(data, assetsMap);
+  const daily = aggregateDailyToHeadless(computeDailySvgMuscleVolumes(data, assetsMap));
 
   const sumInRange = (start: Date, end: Date) => {
     const total = daily.reduce((acc, day) => {
@@ -152,9 +121,10 @@ export const computeWeeklySetsDelta = (args: {
         return acc + sum;
       }
 
+      // When no muscle is selected, return average per muscle
       let sum = 0;
       for (const v of day.muscles.values()) sum += v;
-      return acc + sum;
+      return acc + sum / HEADLESS_MUSCLE_IDS.length;
     }, 0);
 
     const days = Math.max(1, differenceInCalendarDays(end, start) + 1);

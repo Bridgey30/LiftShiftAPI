@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   Area,
   AreaChart,
@@ -11,7 +11,7 @@ import {
 } from 'recharts';
 import { LazyRender } from '../../ui/LazyRender';
 import { ChartSkeleton } from '../../ui/ChartSkeleton';
-import { getRechartsXAxisInterval, RECHARTS_XAXIS_PADDING } from '../../../utils/chart/chartEnhancements';
+import { getRechartsXAxisInterval, RECHARTS_XAXIS_PADDING, RECHARTS_YAXIS_MARGIN, calculateYAxisDomain, formatAxisNumber } from '../../../utils/chart/chartEnhancements';
 
 interface TopExercisesAreaViewProps {
   topExercisesOverTimeData: any[];
@@ -26,6 +26,10 @@ export const TopExercisesAreaView: React.FC<TopExercisesAreaViewProps> = ({
   pieColors,
   tooltipStyle,
 }) => {
+  const yAxisDomain = useMemo(() => {
+    return calculateYAxisDomain(topExercisesOverTimeData, topExerciseNames);
+  }, [topExercisesOverTimeData, topExerciseNames]);
+
   if (topExercisesOverTimeData.length === 0 || topExerciseNames.length === 0) {
     return (
       <div className="flex items-center justify-center h-[320px] text-slate-500 text-xs border border-dashed border-slate-800 rounded-lg">
@@ -37,7 +41,7 @@ export const TopExercisesAreaView: React.FC<TopExercisesAreaViewProps> = ({
   return (
     <LazyRender className="w-full" placeholder={<ChartSkeleton style={{ height: 320 }} />}>
       <ResponsiveContainer width="100%" height={320}>
-        <AreaChart data={topExercisesOverTimeData} margin={{ top: 10, right: 20, left: -10, bottom: 0 }}>
+        <AreaChart data={topExercisesOverTimeData} margin={{ top: 10, ...RECHARTS_YAXIS_MARGIN, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
           <XAxis
             dataKey="date"
@@ -48,7 +52,7 @@ export const TopExercisesAreaView: React.FC<TopExercisesAreaViewProps> = ({
             padding={RECHARTS_XAXIS_PADDING as any}
             interval={getRechartsXAxisInterval(topExercisesOverTimeData.length)}
           />
-          <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} />
+          <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} domain={yAxisDomain} tickFormatter={(val) => formatAxisNumber(Number(val))} />
           <Tooltip contentStyle={tooltipStyle as any} />
           <Legend wrapperStyle={{ fontSize: '11px', left: '52%', transform: 'translateX(-50%)', position: 'absolute' }} />
           {topExerciseNames.map((exerciseName, idx) => (

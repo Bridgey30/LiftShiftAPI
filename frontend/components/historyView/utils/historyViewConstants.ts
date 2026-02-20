@@ -2,9 +2,11 @@ import { format } from 'date-fns';
 import { parseHevyDateString } from '../../../utils/date/parseHevyDateString';
 import type { Session } from './historySessions';
 
-export const ITEMS_PER_PAGE = 3;
+export const ITEMS_PER_PAGE = 2;
 
-export const isSameCalendarDay = (a: Date, b: Date) => format(a, 'yyyy-MM-dd') === format(b, 'yyyy-MM-dd');
+export const getDateKey = (date: Date): string => format(date, 'yyyy-MM-dd');
+
+export const isSameCalendarDay = (a: Date, b: Date) => getDateKey(a) === getDateKey(b);
 
 export const formatRestDuration = (ms: number) => {
   if (!Number.isFinite(ms) || ms <= 0) return null;

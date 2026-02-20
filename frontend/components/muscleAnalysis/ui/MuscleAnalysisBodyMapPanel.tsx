@@ -12,25 +12,21 @@ import {
 } from 'recharts';
 import { Tooltip as HoverTooltip, type TooltipData } from '../../ui/Tooltip';
 import { CHART_TOOLTIP_STYLE, RADAR_TICK_FILL } from '../../../utils/ui/uiConstants';
-import { QUICK_FILTER_LABELS } from '../../../utils/muscle/mapping';
+import { getVolumeZoneColor } from '../../../utils/muscle/hypertrophy/muscleParams';
 import type { WeeklySetsWindow } from '../../../utils/muscle/analytics';
-import type { QuickFilterCategory } from '../hooks/useMuscleSelection';
+import type { MuscleVolumeThresholds } from '../../../utils/muscle/hypertrophy/muscleParams';
 
 interface MuscleAnalysisBodyMapPanelProps {
-  viewMode: 'muscle' | 'group' | 'headless';
   bodyMapGender: BodyMapGender;
-  activeQuickFilter: QuickFilterCategory | null;
-  onQuickFilterClick: (value: QuickFilterCategory) => void;
   weeklySetsChartView: 'heatmap' | 'radar';
   setWeeklySetsChartView: (value: 'heatmap' | 'radar') => void;
   weeklySetsWindow: WeeklySetsWindow;
   setWeeklySetsWindow: (value: WeeklySetsWindow) => void;
   selectedSvgIdForUrlRef: React.MutableRefObject<string | null>;
-  updateSelectionUrl: (payload: { svgId: string; mode: 'muscle' | 'group' | 'headless'; window: WeeklySetsWindow }) => void;
+  updateSelectionUrl: (payload: { svgId: string; mode: 'headless'; window: WeeklySetsWindow }) => void;
   muscleVolumes: Map<string, number>;
   maxVolume: number;
-  groupedBodyMapVolumes: Map<string, number>;
-  maxGroupVolume: number;
+  volumeThresholds: MuscleVolumeThresholds;
   selectedMuscle: string | null;
   selectedBodyMapIds?: string[];
   hoveredBodyMapIds?: string[];
@@ -41,9 +37,7 @@ interface MuscleAnalysisBodyMapPanelProps {
 }
 
 export const MuscleAnalysisBodyMapPanel: React.FC<MuscleAnalysisBodyMapPanelProps> = ({
-  viewMode,
   bodyMapGender,
-  activeQuickFilter,
   weeklySetsChartView,
   setWeeklySetsChartView,
   weeklySetsWindow,
@@ -52,36 +46,31 @@ export const MuscleAnalysisBodyMapPanel: React.FC<MuscleAnalysisBodyMapPanelProp
   updateSelectionUrl,
   muscleVolumes,
   maxVolume,
-  groupedBodyMapVolumes,
-  maxGroupVolume,
+  volumeThresholds,
   selectedMuscle,
   selectedBodyMapIds,
   hoveredBodyMapIds,
-  onQuickFilterClick,
   handleMuscleClick,
   handleMuscleHover,
   radarData,
   hoverTooltip,
 }) => {
-  return (
-    <div className="bg-black/70 rounded-xl border border-slate-700/50 p-4 relative flex flex-col min-h-0">
-      <div className="absolute top-3 left-3 right-3 z-10 flex items-center justify-between gap-2">
-        <div className="flex items-center gap-1 bg-black/70 rounded-lg p-1 shadow-lg">
-          {(['PUS', 'PUL', 'LEG'] as const).map((filter) => (
-            <button
-              key={filter}
-              onClick={() => onQuickFilterClick(filter)}
-              title={QUICK_FILTER_LABELS[filter]}
-              className={`px-1 py-0.5 rounded text-[9px] font-bold transition-all ${activeQuickFilter === filter
-                ? 'bg-red-600 text-white'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-                }`}
-            >
-              {filter}
-            </button>
-          ))}
-        </div>
+  const handleClick = (muscleId: string) => {
+    handleMuscleClick(muscleId);
+    // Scroll to graph on mobile/tablet (< 1024px)
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+      setTimeout(() => {
+        const target = document.getElementById('all-muscles-graph');
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 50);
+    }
+  };
 
+  return (
+    <div className="bg-black/70 rounded-xl border border-slate-700/50 p-4 relative flex flex-col h-full overflow-hidden">
+      <div className="absolute top-3 left-3 right-3 z-10 flex items-center justify-end gap-2">
         <div className="bg-black/70 p-0.5 rounded-lg inline-flex gap-0.5 border border-slate-700/50 shrink-0">
           <button
             onClick={() => setWeeklySetsChartView('heatmap')}
@@ -109,7 +98,7 @@ export const MuscleAnalysisBodyMapPanel: React.FC<MuscleAnalysisBodyMapPanelProp
                 setWeeklySetsWindow(w);
                 const svgId = selectedSvgIdForUrlRef.current;
                 if (!svgId) return;
-                updateSelectionUrl({ svgId, mode: viewMode, window: w });
+                updateSelectionUrl({ svgId, window: w });
               }}
               className={`px-1.5 py-0.5 rounded text-[9px] font-medium transition-all ${weeklySetsWindow === w
                 ? 'bg-red-600 text-white'
@@ -124,7 +113,7 @@ export const MuscleAnalysisBodyMapPanel: React.FC<MuscleAnalysisBodyMapPanelProp
       </div>
 
       {weeklySetsChartView === 'radar' ? (
-        <div className="flex-1 flex flex-col items-center justify-center min-h-0 pt-10">
+        <div className="flex-1 flex flex-col items-center justify-center h-full pt-10">
           {radarData.some((d) => (d.value ?? 0) > 0) ? (
             <div className="w-full min-h-[280px] flex items-center justify-center">
               <ResponsiveContainer width="100%" height={280}>
@@ -172,49 +161,56 @@ export const MuscleAnalysisBodyMapPanel: React.FC<MuscleAnalysisBodyMapPanelProp
           )}
         </div>
       ) : (
-        <div className="flex-1 flex flex-col min-h-0 pt-10">
-          <div className="sm:transform sm:scale-[0.8] sm:origin-middle">
+        <div className="flex-1 flex flex-col h-full pt-10">
+          <div className="flex-1 h-full flex items-center justify-center pb-8 scale-[0.9]">
             <BodyMap
-              onPartClick={handleMuscleClick}
+              onPartClick={handleClick}
               selectedPart={selectedMuscle}
               selectedMuscleIdsOverride={selectedBodyMapIds}
               hoveredMuscleIdsOverride={hoveredBodyMapIds}
-              muscleVolumes={viewMode === 'group' ? groupedBodyMapVolumes : muscleVolumes}
-              maxVolume={viewMode === 'group' ? maxGroupVolume : maxVolume}
+              muscleVolumes={muscleVolumes}
+              maxVolume={maxVolume}
+              volumeThresholds={volumeThresholds}
               onPartHover={handleMuscleHover}
               gender={bodyMapGender}
-              viewMode={viewMode}
+              viewMode="headless"
             />
           </div>
 
-          <div className="sm:hidden mb-10 text-center text-[11px] font-semibold text-slate-600">
+          <div className="sm:hidden mb-6 text-center text-[11px] font-semibold text-slate-600">
             Tap to see more details
           </div>
-
-          <div className="hidden sm:block text-center text-[11px] text-slate-500 mt-2 mb-8">
-            Hover over muscles to preview, click to view exercises
-          </div>
-
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10">
-            <div className="flex items-center gap-3 text-xs text-slate-400 bg-slate-950/75 rounded-lg px-3 py-1.5">
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-2 rounded" style={{ backgroundColor: '#ffffff' }}></div>
-                <span>None</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-2 rounded" style={{ backgroundColor: 'hsl(var(--heatmap-hue), 75%, 75%)' }}></div>
-                <span>Low</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-2 rounded" style={{ backgroundColor: 'hsl(var(--heatmap-hue), 75%, 50%)' }}></div>
-                <span>Med</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-2 rounded" style={{ backgroundColor: 'hsl(var(--heatmap-hue), 75%, 25%)' }}></div>
-                <span>High</span>
-              </div>
+          <div className="mt-auto flex flex-col items-center justify-center gap-2 pb-1 w-full">
+            <div className="hidden sm:block text-center text-[11px] text-slate-500">
+              Hover over muscles to preview, click to view exercises
+            </div>
+            <div className="flex items-center gap-3 text-xs text-slate-400 bg-slate-950/75 rounded-lg px-3 py-1.5 max-w-full">
+              {(() => {
+                const thresholds = volumeThresholds;
+                return (
+                  <>
+                    <div className="flex items-center gap-1">
+                      <div className="w-3 h-2 rounded" style={{ backgroundColor: '#ffffff' }}></div>
+                      <span>None</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <div className="w-3 h-2 rounded" style={{ backgroundColor: getVolumeZoneColor(thresholds.mv, thresholds) }}></div>
+                      <span>Activate</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <div className="w-3 h-2 rounded" style={{ backgroundColor: getVolumeZoneColor(thresholds.mev, thresholds) }}></div>
+                      <span>Stimulate</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <div className="w-3 h-2 rounded" style={{ backgroundColor: getVolumeZoneColor(thresholds.maxv, thresholds) }}></div>
+                      <span>Overdrive</span>
+                    </div>
+                  </>
+                );
+              })()}
             </div>
           </div>
+          
         </div>
       )}
 

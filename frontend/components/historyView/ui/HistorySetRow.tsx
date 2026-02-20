@@ -56,6 +56,10 @@ export const HistorySetRow: React.FC<HistorySetRowProps> = ({
     isPrRow = true;
     rowStatusClass = 'border-yellow-500/30';
     dotClass = 'bg-yellow-500 border-yellow-400 shadow-[0_0_10px_rgba(234,179,8,0.5)]';
+  } else if (set.isSilverPr) {
+    isPrRow = true;
+    rowStatusClass = 'border-slate-500/30';
+    dotClass = 'bg-slate-500 border-slate-400 shadow-[0_0_10px_rgba(100,116,139,0.5)]';
   } else if (insight?.status === 'danger') {
     rowStatusClass = 'bg-rose-500/5 border-rose-500/20';
     dotClass = 'bg-rose-500 border-rose-400 shadow-[0_0_8px_rgba(244,63,94,0.4)]';
@@ -67,11 +71,15 @@ export const HistorySetRow: React.FC<HistorySetRowProps> = ({
     dotClass = 'bg-orange-500 border-orange-400';
   }
 
-  const prShimmerStyle: React.CSSProperties = isPrRow ? {
+  const prShimmerStyle: React.CSSProperties = isPrRow ? (set.isPr ? {
     background: 'linear-gradient(90deg, transparent 0%, rgba(234,179,8,0.08) 25%, rgba(234,179,8,0.15) 50%, rgba(234,179,8,0.08) 75%, transparent 100%)',
     backgroundSize: '200% 100%',
     animation: 'prRowShimmer 3s ease-in-out infinite',
-  } : {};
+  } : {
+    background: 'linear-gradient(90deg, transparent 0%, rgba(100,116,139,0.08) 25%, rgba(100,116,139,0.15) 50%, rgba(100,116,139,0.08) 75%, transparent 100%)',
+    backgroundSize: '200% 100%',
+    animation: 'prRowShimmer 3s ease-in-out infinite',
+  }) : {};
 
   return (
     <div
@@ -104,13 +112,14 @@ export const HistorySetRow: React.FC<HistorySetRowProps> = ({
         </div>
 
         <div className="flex items-center gap-1 sm:gap-2 flex-none pl-2">
-          {(set.isPr || (volPrEvent && setIndex === volPrAnchorIndex)) && (
-            <span className="flex items-center gap-1 px-1 py-0.5 bg-amber-200/70 text-yellow-300 dark:bg-yellow-500/10 dark:text-yellow-400 rounded text-[7px] sm:text-[9px] font-bold uppercase tracking-wider border border-amber-300/80 dark:border-yellow-500/20 animate-pulse whitespace-nowrap leading-none">
-              {/* Show badge for each PR type */}
-              {set.prTypes?.map((prType: PrType, idx: number) => {
-                const isLast = idx === (set.prTypes?.length || 0) - 1;
+          {(set.isPr || set.isSilverPr || (volPrEvent && setIndex === volPrAnchorIndex)) && (
+            <span className={`flex items-center gap-1 px-1 py-0.5 rounded text-[7px] sm:text-[9px] font-bold uppercase tracking-wider border animate-pulse whitespace-nowrap leading-none ${set.isPr ? 'bg-amber-200/70 text-yellow-300 dark:bg-yellow-500/10 dark:text-yellow-400 border-amber-300/80 dark:border-yellow-500/20' : 'bg-slate-200/70 text-slate-600 dark:bg-slate-500/10 dark:text-slate-400 border-slate-300/80 dark:border-slate-500/20'}`}>
+              {/* Show badge for each PR type (Gold or Silver) */}
+              {(set.isPr ? set.prTypes : set.silverPrTypes)?.map((prType: PrType, idx: number) => {
+                const types = set.isPr ? set.prTypes : set.silverPrTypes;
+                const isLast = idx === (types?.length || 0) - 1;
                 const Icon = prType === 'weight' ? Trophy : prType === 'oneRm' ? Award : BarChart3;
-                const label = prType === 'weight' ? 'PR' : prType === 'oneRm' ? '1RM PR' : 'Vol PR';
+                const label = prType === 'weight' ? (set.isPr ? 'PR' : 'Lst 2 mo PR') : prType === 'oneRm' ? (set.isPr ? '1RM PR' : 'Lst 2 mo 1RM') : (set.isPr ? 'Vol PR' : '2-Mo Vol');
 
                 return (
                   <span key={prType} className="inline-flex items-center leading-none">
@@ -118,7 +127,7 @@ export const HistorySetRow: React.FC<HistorySetRowProps> = ({
                     <Icon className="w-2.5 h-2.5 sm:w-3 sm:h-3 flex-none mr-0.5" />
                     <span>{label}</span>
                     {prType === 'weight' && prDelta > 0 && (
-                      <span className="ml-0.5 text-[5px] sm:text-[8px] font-extrabold text-yellow-500 leading-none">
+                      <span className={`ml-0.5 text-[5px] sm:text-[8px] font-extrabold leading-none ${set.isPr ? 'text-yellow-500' : 'text-slate-500'}`}>
                         {formatSignedNumber(convertWeight(prDelta, weightUnit), { maxDecimals: 2 })}{weightUnit}
                       </span>
                     )}

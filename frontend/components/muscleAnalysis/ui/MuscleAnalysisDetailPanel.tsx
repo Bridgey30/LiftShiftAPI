@@ -6,16 +6,16 @@ import { ChartSkeleton } from '../../ui/ChartSkeleton';
 import { CHART_TOOLTIP_STYLE } from '../../../utils/ui/uiConstants';
 import { formatNumber } from '../../../utils/format/formatters';
 import { getRechartsXAxisInterval, RECHARTS_XAXIS_PADDING } from '../../../utils/chart/chartEnhancements';
-import { QUICK_FILTER_LABELS, HEADLESS_MUSCLE_NAMES } from '../../../utils/muscle/mapping';
+import { HEADLESS_MUSCLE_NAMES } from '../../../utils/muscle/mapping';
 import { SVG_MUSCLE_NAMES } from '../../../utils/muscle/mapping';
 import type { WeeklySetsWindow } from '../../../utils/muscle/analytics';
-import type { QuickFilterCategory } from '../hooks/useMuscleSelection';
 import type { ExerciseAsset } from '../../../utils/data/exerciseAssets';
 import type { ExerciseMuscleData } from '../../../utils/muscle/mapping';
 import { MuscleAnalysisExerciseList } from './MuscleAnalysisExerciseList';
+import { LifetimeAchievementCard } from './LifetimeAchievementCard';
+import type { LifetimeAchievementData } from '../hooks/useLifetimeAchievement';
 
 interface MuscleAnalysisDetailPanelProps {
-  activeQuickFilter: QuickFilterCategory | null;
   selectedMuscle: string | null;
   viewMode: 'muscle' | 'group' | 'headless';
   weeklySetsWindow: WeeklySetsWindow;
@@ -28,10 +28,11 @@ interface MuscleAnalysisDetailPanelProps {
   exerciseMuscleData: Map<string, ExerciseMuscleData>;
   onExerciseClick?: (exerciseName: string) => void;
   clearSelection: () => void;
+  lifetimeAchievement: LifetimeAchievementData | null;
+  onMuscleClick?: (muscleId: string) => void;
 }
 
 export const MuscleAnalysisDetailPanel: React.FC<MuscleAnalysisDetailPanelProps> = ({
-  activeQuickFilter,
   selectedMuscle,
   viewMode,
   weeklySetsWindow,
@@ -44,29 +45,29 @@ export const MuscleAnalysisDetailPanel: React.FC<MuscleAnalysisDetailPanelProps>
   exerciseMuscleData,
   onExerciseClick,
   clearSelection,
+  lifetimeAchievement,
+  onMuscleClick,
 }) => {
-  const title = activeQuickFilter
-    ? QUICK_FILTER_LABELS[activeQuickFilter]
-    : selectedMuscle
-      ? (viewMode === 'group'
-        ? selectedMuscle
-        : viewMode === 'headless'
-          ? ((HEADLESS_MUSCLE_NAMES as any)[selectedMuscle] ?? selectedMuscle)
-          : SVG_MUSCLE_NAMES[selectedMuscle])
-      : (viewMode === 'group' ? 'All Groups' : viewMode === 'headless' ? 'All Muscles' : 'All Muscles');
+  const title = selectedMuscle
+    ? (viewMode === 'group'
+      ? selectedMuscle
+      : viewMode === 'headless'
+        ? ((HEADLESS_MUSCLE_NAMES as any)[selectedMuscle] ?? selectedMuscle)
+        : SVG_MUSCLE_NAMES[selectedMuscle])
+    : (viewMode === 'group' ? 'All Groups' : viewMode === 'headless' ? 'All Muscles' : 'All Muscles');
 
   const totalSetsInWindow = windowedSelectionBreakdown?.totalSetsInWindow ?? 0;
 
   return (
-    <div className="bg-black/70 rounded-xl border border-slate-700/50 overflow-hidden flex flex-col h-[70vh] lg:h-0 lg:min-h-full">
-      <div className="bg-black/70 border-b border-slate-800/50 p-3 flex items-center justify-between">
+    <div data-muscle-detail-panel className="bg-black/70 rounded-xl border border-slate-700/50 overflow-hidden flex flex-col">
+      <div className="bg-black/70  p-3 flex items-center justify-between">
         <div className="flex items-center gap-2 min-w-0 flex-wrap">
           <h2 className="text-lg font-bold text-white truncate">{title}</h2>
           <span
             className="text-red-400 text-sm font-semibold whitespace-nowrap"
-            title={activeQuickFilter || selectedMuscle ? 'sets in current filter' : ''}
+            title={selectedMuscle ? 'sets in current filter' : ''}
           >
-            {activeQuickFilter || selectedMuscle
+            {selectedMuscle
               ? `${Math.round(totalSetsInWindow * 10) / 10} sets`
               : null}
           </span>
@@ -86,7 +87,7 @@ export const MuscleAnalysisDetailPanel: React.FC<MuscleAnalysisDetailPanelProps>
             </span>
           )}
         </div>
-        {(selectedMuscle || activeQuickFilter) && (
+        {selectedMuscle && (
           <button
             onClick={clearSelection}
             className="p-1.5 hover:bg-black/60 rounded-lg transition-colors"
@@ -122,6 +123,16 @@ export const MuscleAnalysisDetailPanel: React.FC<MuscleAnalysisDetailPanelProps>
                       axisLine={false}
                       padding={RECHARTS_XAXIS_PADDING as any}
                       interval={getRechartsXAxisInterval(trendData.length, 7)}
+                      tickFormatter={(value) => {
+                        if (!value || typeof value !== 'string') return value;
+                        if (value.includes('-')) {
+                          const date = new Date(value);
+                          if (!isNaN(date.getTime())) {
+                            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                          }
+                        }
+                        return value;
+                      }}
                     />
                     <YAxis hide />
                     <RechartsTooltip
@@ -153,13 +164,26 @@ export const MuscleAnalysisDetailPanel: React.FC<MuscleAnalysisDetailPanelProps>
 
       {windowedSelectionBreakdown && (
         <div className="border-t border-slate-800/30 flex-1 flex flex-col min-h-0">
-          <MuscleAnalysisExerciseList
-            contributingExercises={contributingExercises}
-            assetsMap={assetsMap}
-            exerciseMuscleData={exerciseMuscleData}
-            totalSetsInWindow={totalSetsInWindow}
-            onExerciseClick={onExerciseClick}
-          />
+          <div className={`flex-1 flex flex-col min-h-0 ${lifetimeAchievement ? 'min-h-[120px] lg:min-h-0 lg:max-h-[35%]' : ''}`}>
+            <MuscleAnalysisExerciseList
+              contributingExercises={contributingExercises}
+              assetsMap={assetsMap}
+              exerciseMuscleData={exerciseMuscleData}
+              totalSetsInWindow={totalSetsInWindow}
+              onExerciseClick={onExerciseClick}
+            />
+          </div>
+          {lifetimeAchievement && (
+            <div className="border-t border-slate-800/30 p-3 flex-shrink-0">
+              <LifetimeAchievementCard data={lifetimeAchievement} selectedMuscleId={selectedMuscle} onMuscleClick={onMuscleClick} />
+            </div>
+          )}
+        </div>
+      )}
+
+      {!windowedSelectionBreakdown && lifetimeAchievement && (
+        <div className="border-t border-slate-800/30 p-3 flex-1">
+          <LifetimeAchievementCard data={lifetimeAchievement} selectedMuscleId={selectedMuscle} onMuscleClick={onMuscleClick} />
         </div>
       )}
     </div>

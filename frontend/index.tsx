@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import { BrowserRouter } from 'react-router';
+import { HashRouter } from 'react-router';
 import { initGA } from './utils/integrations/ga';
 import { ThemeProvider } from './components/theme/ThemeProvider';
 import './tailwind.css';
@@ -23,10 +23,10 @@ const getRouterBasename = (): string => {
 const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
-    <BrowserRouter basename={getRouterBasename()}>
+    <HashRouter basename={getRouterBasename()}>
       <ThemeProvider>
         <App />
       </ThemeProvider>
-    </BrowserRouter>
+    </HashRouter>
   </React.StrictMode>
 );

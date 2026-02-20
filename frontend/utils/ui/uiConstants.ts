@@ -225,3 +225,31 @@ export const calculateCenteredTooltipPosition = (
 
   return style;
 };
+
+export const calculateMouseTooltipPosition = (
+  clientX: number,
+  clientY: number,
+  maxWidth: number = TOOLTIP_CONFIG.WIDTH
+): React.CSSProperties => {
+  const gap = 8;
+  const tooltipHeight = 100; // approximate, will adjust
+  
+  // Position above the mouse
+  let left = clientX;
+  let top = clientY - tooltipHeight - gap;
+  
+  // Keep tooltip within viewport horizontally
+  const minLeft = 10;
+  const maxLeft = window.innerWidth - maxWidth - 10;
+  left = Math.min(maxLeft, Math.max(minLeft, left - maxWidth / 2));
+  
+  // If too close to top, show below instead
+  if (top < 10) {
+    top = clientY + gap;
+  }
+
+  return {
+    left: `${left}px`,
+    top: `${top}px`,
+  };
+};

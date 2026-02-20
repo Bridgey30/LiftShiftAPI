@@ -25,7 +25,7 @@ import {
 } from '../insights/ChartBits';
 import { LazyRender } from '../../ui/LazyRender';
 import { ChartSkeleton } from '../../ui/ChartSkeleton';
-import { getRechartsCategoricalTicks, getRechartsTickIndexMap, RECHARTS_XAXIS_PADDING, ValueDot } from '../../../utils/chart/chartEnhancements';
+import { getRechartsCategoricalTicks, getRechartsTickIndexMap, RECHARTS_XAXIS_PADDING, RECHARTS_YAXIS_MARGIN, ValueDot, calculateYAxisDomain, formatAxisNumber } from '../../../utils/chart/chartEnhancements';
 import { formatVsPrevRollingWindow, getRollingWindowDaysForMode } from '../../../utils/date/dateUtils';
 
 type PrTrendView = 'area' | 'bar';
@@ -60,6 +60,10 @@ export const PrTrendCard = ({
     return prsData;
   }, [prsData]);
 
+  const yAxisDomain = useMemo(() => {
+    return calculateYAxisDomain(chartData, ['count']);
+  }, [chartData]);
+
   const xTicks = useMemo(() => {
     return getRechartsCategoricalTicks(chartData, (row: any) => row?.dateFormatted);
   }, [chartData]);
@@ -69,7 +73,7 @@ export const PrTrendCard = ({
   }, [chartData.length]);
 
   return (
-    <div className="bg-black/70 border border-slate-700/50 p-4 sm:p-6 rounded-xl min-h-[400px] sm:min-h-[480px] flex flex-col transition-all duration-300">
+    <div className="bg-black/70 border border-slate-700/50 px-2 sm:px-3 py-4 sm:py-6 rounded-xl min-h-[400px] sm:min-h-[480px] flex flex-col transition-all duration-300">
       <div className={`flex flex-row justify-between items-center mb-3 gap-3 transition-opacity duration-700 ${isMounted ? 'opacity-100' : 'opacity-0'}`}>
         <h3 className="text-sm sm:text-lg font-semibold text-white flex items-center gap-2 transition-opacity duration-200 hover:opacity-90">
           <Trophy className="w-5 h-5 text-yellow-500 transition-opacity duration-200 hover:opacity-80" />
@@ -148,7 +152,7 @@ export const PrTrendCard = ({
       <div className={`flex-1 w-full min-h-[250px] sm:min-h-[300px] transition-all duration-700 delay-100 ${isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
         <LazyRender className="h-full w-full" placeholder={<ChartSkeleton className="h-full min-h-[250px] sm:min-h-[300px]" />}>
           <ResponsiveContainer width="100%" height={300} minWidth={0}>
-            <ComposedChart key={view} data={chartData} margin={{ left: -20, right: 10, top: 10, bottom: 0 }}>
+            <ComposedChart key={view} data={chartData} margin={{ top: 10, ...RECHARTS_YAXIS_MARGIN, bottom: 0 }}>
               <defs>
                 <linearGradient id="gPRs" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#eab308" stopOpacity={0.4} />
@@ -166,7 +170,7 @@ export const PrTrendCard = ({
                 interval={0}
                 ticks={xTicks as any}
               />
-              <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} allowDecimals={false} />
+              <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} allowDecimals={false} domain={yAxisDomain} tickFormatter={(val) => formatAxisNumber(Number(val))} />
               <Tooltip
                 contentStyle={tooltipStyle as any}
                 cursor={view === 'bar' ? ({ fill: 'rgb(var(--overlay-rgb) / 0.12)' } as any) : ({ stroke: 'rgb(var(--border-rgb) / 0.35)' } as any)}

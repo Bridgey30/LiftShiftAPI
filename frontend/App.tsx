@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect, useLayoutEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { WorkoutSet } from './types';
 import { Tab } from './app/navigation';
@@ -23,11 +23,100 @@ import { useAppDerivedData } from './app/state';
 import { useCalendarSelectionHandlers } from './app/state';
 import { useUpdateFlowHandler } from './app/auth';
 
+const CHUNK_RELOAD_KEY = 'liftshift_chunk_reload_once';
+
+const CHUNK_LOAD_ERROR_PATTERNS = [
+  'dynamically imported module',
+  'failed to fetch dynamically imported module',
+  'importing a module script failed',
+  'disallowed mime type',
+];
+
+const isChunkLoadError = (value: unknown): boolean => {
+  const msg =
+    typeof value === 'string'
+      ? value
+      : value instanceof Error
+        ? value.message
+        : typeof (value as any)?.message === 'string'
+          ? (value as any).message
+          : '';
+
+  if (!msg) return false;
+  const lower = msg.toLowerCase();
+  return CHUNK_LOAD_ERROR_PATTERNS.some((pattern) => lower.includes(pattern));
+};
+
+const tryRecoverFromChunkLoadError = (): void => {
+  try {
+    if (sessionStorage.getItem(CHUNK_RELOAD_KEY) === '1') return;
+    sessionStorage.setItem(CHUNK_RELOAD_KEY, '1');
+    window.location.reload();
+  } catch {
+    window.location.reload();
+  }
+};
+
 const App: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const onVitePreloadError = (event: Event) => {
+      const payload = (event as any)?.payload;
+      if (!isChunkLoadError(payload)) return;
+      event.preventDefault();
+      tryRecoverFromChunkLoadError();
+    };
+
+    const onUnhandledRejection = (event: PromiseRejectionEvent) => {
+      if (!isChunkLoadError(event.reason)) return;
+      event.preventDefault();
+      tryRecoverFromChunkLoadError();
+    };
+
+    window.addEventListener('vite:preloadError', onVitePreloadError as EventListener);
+    window.addEventListener('unhandledrejection', onUnhandledRejection);
+
+    return () => {
+      window.removeEventListener('vite:preloadError', onVitePreloadError as EventListener);
+      window.removeEventListener('unhandledrejection', onUnhandledRejection);
+    };
+  }, []);
+
+  useLayoutEffect(() => {
+    try {
+      const rawSearch = window.location.search || '';
+      if (!rawSearch.includes('p=')) return;
+
+      const params = new URLSearchParams(rawSearch);
+      const p = params.get('p');
+      if (!p) return;
+
+      const q = params.get('q');
+      const h = params.get('h');
+
+      params.delete('p');
+      params.delete('q');
+      params.delete('h');
+
+      const rest = params.toString();
+      const nextSearch = (q ? decodeURIComponent(q) : '') || (rest ? `?${rest}` : '');
+      const nextHash = h ? decodeURIComponent(h) : '';
+      const nextPath = decodeURIComponent(p);
+
+      const current = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+      const desired = `${nextPath}${nextSearch}${nextHash}`;
+      if (current === desired) return;
+
+      navigate({ pathname: nextPath, search: nextSearch, hash: nextHash }, { replace: true });
+    } catch {
+      // ignore
+    }
+  }, [navigate]);
+
   const [parsedData, setParsedData] = useState<WorkoutSet[]>([]);
+  const [hasHydratedData, setHasHydratedData] = useState(false);
   const [onboarding, setOnboarding] = useState<OnboardingFlow | null>(() => {
     return getSetupComplete() ? null : { intent: 'initial', step: 'platform' };
   });
@@ -45,8 +134,6 @@ const App: React.FC = () => {
     setDateMode,
     exerciseTrendMode,
     setExerciseTrendMode,
-    heatmapTheme,
-    setHeatmapTheme,
   } = useAppPreferences();
 
   const {
@@ -115,7 +202,10 @@ const App: React.FC = () => {
     clearCsvImportError,
   } = useAppAuth({
     weightUnit,
-    setParsedData,
+    setParsedData: (data) => {
+      setParsedData(data);
+      if (data.length > 0) setHasHydratedData(true);
+    },
     setDataSource,
     setOnboarding,
     setSelectedMonth,
@@ -131,7 +221,10 @@ const App: React.FC = () => {
     parsedData,
     setOnboarding,
     setDataSource,
-    setParsedData,
+    setParsedData: (data) => {
+      setParsedData(data);
+      if (data.length > 0) setHasHydratedData(true);
+    },
     setHevyLoginError: clearHevyLoginError,
     setLyfatLoginError: clearLyfatLoginError,
     setCsvImportError: clearCsvImportError,
@@ -191,6 +284,8 @@ const App: React.FC = () => {
     setCalendarOpen,
   });
 
+  const showColdStartOverlay = onboarding?.intent !== 'initial' && parsedData.length === 0 && !hasHydratedData;
+
   return (
     <div
       className="flex flex-col min-h-[100svh] h-[100dvh] overscroll-none bg-transparent text-[color:var(--app-fg)] font-sans"
@@ -198,6 +293,7 @@ const App: React.FC = () => {
     >
       <AppShell
         onboardingIntent={onboarding?.intent ?? null}
+        onSetOnboarding={setOnboarding}
         activeTab={activeTab}
         onSelectTab={handleSelectTab}
         onOpenUpdateFlow={handleOpenUpdateFlow}
@@ -254,8 +350,6 @@ const App: React.FC = () => {
         onBodyMapGenderChange={setBodyMapGender}
         themeMode={mode}
         onThemeModeChange={setMode}
-        heatmapTheme={heatmapTheme}
-        onHeatmapThemeChange={setHeatmapTheme}
         dateMode={dateMode}
         onDateModeChange={setDateMode}
         exerciseTrendMode={exerciseTrendMode}
@@ -287,7 +381,7 @@ const App: React.FC = () => {
         onLyfatSyncSaved={handleLyfatSyncSaved}
       />
 
-      <AppLoadingOverlay open={isAnalyzing} isCompleting={isCompleting} />
+      <AppLoadingOverlay open={isAnalyzing || showColdStartOverlay} isCompleting={isCompleting} />
     </div>
   );
 };

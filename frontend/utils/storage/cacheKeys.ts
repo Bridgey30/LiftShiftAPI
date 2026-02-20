@@ -71,10 +71,16 @@ export const dashboardCacheKeys = {
 export const muscleCacheKeys = {
   // Shares dashboardCacheKeys.weeklySets - intentional for cache sharing
   weeklySets: dashboardCacheKeys.weeklySets,
-  
+
   muscleSeries: dashboardCacheKeys.muscleSeries,
-  
+
   muscleTrendInsight: dashboardCacheKeys.muscleTrendInsight,
+
+  trendData: (filterKey: string, window: WeeklySetsWindow, viewMode: string, selectedKeysHash: string) =>
+    `muscleTrendData:${VERSION}:${filterKey}:${window}:${viewMode}:${selectedKeysHash}`,
+
+  exerciseBreakdown: (filterKey: string, windowStart: number | null, viewMode: string, selectedKeysHash: string) =>
+    `exerciseBreakdown:${VERSION}:${filterKey}:${windowStart ?? 'all'}:${viewMode}:${selectedKeysHash}`,
 };
 
 /**

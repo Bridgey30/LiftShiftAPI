@@ -1,12 +1,11 @@
 import React from 'react';
 import { Settings, X } from 'lucide-react';
-import { WeightUnit, DateMode, ThemeMode, ExerciseTrendMode, HeatmapTheme } from '../../../utils/storage/localStorage';
+import { WeightUnit, DateMode, ThemeMode, ExerciseTrendMode } from '../../../utils/storage/localStorage';
 import { BodyMapGender } from '../../bodyMap/BodyMap';
 import type { DataAgeInfo } from '../../../hooks/app';
 import {
   BodyMapGenderSection,
   DateModeSection,
-  HeatmapThemeSection,
   ThemeSection,
   TrendModeSection,
   WeightUnitSection,
@@ -21,8 +20,6 @@ interface UserPreferencesModalProps {
   onBodyMapGenderChange: (gender: BodyMapGender) => void;
   themeMode: ThemeMode;
   onThemeModeChange: (mode: ThemeMode) => void;
-  heatmapTheme: HeatmapTheme;
-  onHeatmapThemeChange: (theme: HeatmapTheme) => void;
   dateMode: DateMode;
   onDateModeChange: (mode: DateMode) => void;
   exerciseTrendMode: ExerciseTrendMode;
@@ -39,8 +36,6 @@ export const UserPreferencesModal: React.FC<UserPreferencesModalProps> = ({
   onBodyMapGenderChange,
   themeMode,
   onThemeModeChange,
-  heatmapTheme,
-  onHeatmapThemeChange,
   dateMode,
   onDateModeChange,
   exerciseTrendMode,
@@ -85,7 +80,6 @@ export const UserPreferencesModal: React.FC<UserPreferencesModalProps> = ({
                 <WeightUnitSection weightUnit={weightUnit} onWeightUnitChange={onWeightUnitChange} />
                 <BodyMapGenderSection bodyMapGender={bodyMapGender} onBodyMapGenderChange={onBodyMapGenderChange} />
               </div>
-              <HeatmapThemeSection heatmapTheme={heatmapTheme} onHeatmapThemeChange={onHeatmapThemeChange} />
               <DateModeSection dateMode={dateMode} onDateModeChange={onDateModeChange} dataAgeInfo={dataAgeInfo} />
               <TrendModeSection
                 exerciseTrendMode={exerciseTrendMode}

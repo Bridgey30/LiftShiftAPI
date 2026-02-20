@@ -1,10 +1,11 @@
-import { WorkoutSet } from '../types';
 import { WeightUnit } from '../../utils/storage/localStorage';
+import type { WorkoutSet } from '../../types';
 import type { DataSourceChoice } from '../../utils/storage/dataSourceStorage';
 import type { OnboardingFlow } from '../../app/onboarding/types';
 
 export interface AppAuthHandlersDeps {
   weightUnit: WeightUnit;
+  isAnalyzing: boolean;
   setParsedData: (data: WorkoutSet[]) => void;
   setDataSource: (source: DataSourceChoice | null) => void;
   setOnboarding: (flow: OnboardingFlow | null) => void;
