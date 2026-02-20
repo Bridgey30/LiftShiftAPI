@@ -4,7 +4,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
-RUN npm run build
+ENV VITE_BACKEND_URL=""
+RUN NODE_OPTIONS="--max-old-space-size=4096" npm run build
 
 # Build backend
 FROM node:20-slim AS backend-build
@@ -20,8 +21,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends nginx superviso
 
 # Copy frontend build
 COPY --from=frontend-build /app/dist/client /usr/share/nginx/html
-ENV VITE_BACKEND_URL=""
-RUN npm run build
 
 # Copy backend
 WORKDIR /app/backend
