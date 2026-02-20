@@ -104,6 +104,5 @@ export const parseError = async (res: Response): Promise<string> => {
 
 export const buildBackendUrl = (path: string): string => {
   const base = getBackendBaseUrl();
-  if (!base && !(import.meta as any).env?.DEV) throw new Error('Missing VITE_BACKEND_URL (backend API).');
   return base ? `${base}${path}` : path;
 };
