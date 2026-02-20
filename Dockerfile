@@ -31,7 +31,7 @@ RUN npm install --omit=dev
 # Nginx config
 RUN echo 'server { \
   listen 80; \
-  location /api { proxy_pass http://localhost:5050; } \
+  location /api { proxy_pass http://localhost:5000; } \
   location / { root /usr/share/nginx/html; try_files $uri $uri/ /index.html; } \
 }' > /etc/nginx/sites-available/default
 
