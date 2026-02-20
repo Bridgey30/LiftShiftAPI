@@ -1,10 +1,10 @@
-# Build frontend
 FROM node:20-slim AS frontend-build
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
-ENV VITE_BACKEND_URL=""
+ARG VITE_BACKEND_URL=""
+ENV VITE_BACKEND_URL=$VITE_BACKEND_URL
 RUN NODE_OPTIONS="--max-old-space-size=4096" npm run build
 
 # Build backend
