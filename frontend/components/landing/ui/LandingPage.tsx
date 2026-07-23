@@ -6,6 +6,7 @@ import { useTheme } from '../../theme/ThemeProvider';
 import { Navigation } from '../../layout/Navigation';
 import PlatformDock from './PlatformDock';
 import { ReviewsCarousel } from './ReviewsCarousel';
+import { HeroIllustration } from './HeroIllustration';
 import LightRays from '../lightRays/LightRays';
 import { Flame, CalendarDays, Trophy, BarChart3, Activity } from 'lucide-react';
 import { FANCY_FONT } from '../../../utils/ui/uiConstants';
@@ -194,6 +195,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onSelectPlatform, onTr
               </div>
             </div>
           </section>
+
+          {/* ========== HERO ILLUSTRATION ========== */}
+          <HeroIllustration />
 
           {/* ========== REVIEWS SECTION ========== */}
           <section id="reviews" className="relative z-10 py-0 sm:py-0">
