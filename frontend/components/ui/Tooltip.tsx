@@ -9,7 +9,7 @@ export interface TooltipData {
   title: string;
   titleColor?: string;
   body?: string;
-  bodySections?: Array<{ text: string; color: string }>;
+  bodySections?: Array<{ text: string; color?: string }>;
   footer?: string;
   status: AnalysisStatus | 'default';
   metrics?: Array<{ label: string; value: string }>;
@@ -41,13 +41,16 @@ export const Tooltip: React.FC<TooltipProps> = ({ data }) => {
         className={`border rounded-xl p-3 ${theme} inline-block w-fit`}
         style={{ maxWidth: TOOLTIP_CONFIG.WIDTH, backgroundColor: 'rgb(var(--mw-tooltip-rgb) / var(--mw-tooltip-alpha))' }}
       >
-        <div className="flex items-center gap-2 mb-1 pb-1 border-b border-white/10">
+        <div className="flex items-center gap-2 mb-2 pb-1 border-b border-white/10">
           <span className="font-bold uppercase text-[10px] tracking-wider" style={titleColor ? { color: titleColor } : undefined}>{title}</span>
         </div>
         {bodySections ? (
-          <div className="text-xs leading-relaxed whitespace-pre-line break-words">
+          <div className="text-xs leading-relaxed whitespace-pre-line break-words space-y-1">
             {bodySections.map((s, i) => (
-              <div key={i} style={{ color: s.color }}>{s.text}</div>
+              <div
+                key={i}
+                dangerouslySetInnerHTML={{ __html: s.text }}
+              />
             ))}
           </div>
         ) : body ? (
@@ -76,7 +79,6 @@ export const useTooltip = () => {
 
   const showTooltip = React.useCallback(
     (e: React.MouseEvent, data: Omit<TooltipData, 'rect' | 'mouseX' | 'mouseY'>) => {
-      // Use mouse position for positioning
       setTooltip({ ...data, mouseX: e.clientX, mouseY: e.clientY });
     },
     []
