@@ -96,9 +96,10 @@ export const buildExerciseProgressionProfile = (
   }
 
   const baseStep = COMMENTARY_CONFIG.progression.weightJumpRounding;
+  const standardJump = weightUnit === 'lbs' ? 5 : 2.5;
   const preferredJump = observedJumps.length > 0
     ? Math.max(baseStep, roundToStep(median(observedJumps), baseStep))
-    : baseStep;
+    : standardJump;
 
   return {
     availableWeights,
