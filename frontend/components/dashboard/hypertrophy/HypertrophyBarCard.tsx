@@ -139,12 +139,14 @@ export const HypertrophyBarCard: React.FC<HypertrophyBarCardProps> = ({
     const progMax = Math.round(FACTOR_WEIGHTS.progressiveOverload * 100);
     const freqMax = Math.round(FACTOR_WEIGHTS.frequency * 100);
 
+    const span = (c: string, t: string) => `<span style="color:${c}">${t}</span>`;
+
     showTooltip(e, {
       title: m.muscleName,
       bodySections: [
-        { text: `Volume: ${volW}/${volMax} → ${raw.weeklySets.toFixed(1)} sets/week`, color: volColor(volW) },
-        { text: `Progress: ${progW}/${progMax} → ${trendLabel} trend`, color: progColor(progW) },
-        { text: `Frequency: ${freqW}/${freqMax} → ${raw.daysPerWeek.toFixed(1)} days/week`, color: freqColor(freqW) },
+        { text: `${span(FACTOR_COLORS.volumeScore, 'Volume:')} ${span(volColor(volW), `${volW}/${volMax} — ${raw.weeklySets.toFixed(1)} sets/week`)}`, color: '' },
+        { text: `${span(FACTOR_COLORS.progressiveOverload, 'Progress:')} ${span(progColor(progW), `${progW}/${progMax} — ${trendLabel} trend`)}`, color: '' },
+        { text: `${span(FACTOR_COLORS.frequency, 'Frequency:')} ${span(freqColor(freqW), `${freqW}/${freqMax} — ${raw.daysPerWeek.toFixed(1)} days/week`)}`, color: '' },
       ],
       status: m.score.totalScore >= 60 ? 'success' : m.score.totalScore >= 40 ? 'info' : 'warning',
     });

@@ -87,9 +87,9 @@ export const FACTOR_WEIGHTS = {
 
 /** Color coding for each factor */
 export const FACTOR_COLORS = {
-  volumeScore: '#22c55e',      // Green - most important
-  progressiveOverload: '#3b82f6', // Blue - progression
-  frequency: '#f59e0b',       // Amber - frequency
+  volumeScore: '#3b82f6',      // Blue - most important
+  progressiveOverload: '#a78bfa', // Violet - progression
+  frequency: '#22d3ee',       // Cyan - frequency
 } as const;
 
 /** Factor labels for display */
