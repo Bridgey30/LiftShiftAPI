@@ -1,0 +1,1 @@
+export { InjuryRiskCard } from './InjuryRiskCard';
