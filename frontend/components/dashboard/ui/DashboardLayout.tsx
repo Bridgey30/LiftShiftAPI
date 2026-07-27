@@ -4,6 +4,7 @@ import type { DailySummary, ExerciseStats, WorkoutSet } from '../../../types';
 import type { WeightUnit, TimeFilterMode } from '../../../utils/storage/localStorage';
 import type { TimelineProgress } from '../../../utils/training/trainingTimeline';
 import type { DashboardSummaryResult } from '../../../utils/analysis/dashboardSummary/dashboardSummary';
+import type { InjuryRiskResult } from '../../../utils/analysis/injury/injuryRisk';
 import { DashboardHeaderBar } from './DashboardHeaderBar';
 import { DashboardInsightsSection } from './DashboardInsightsSection';
 import { DashboardPrimaryCharts } from './DashboardPrimaryCharts';
@@ -80,6 +81,7 @@ interface DashboardLayoutProps {
   hypertrophyData30d?: any[];
   hypertrophyPeriod: '7d' | '30d';
   setHypertrophyPeriod: (v: '7d' | '30d') => void;
+  injuryRiskData: InjuryRiskResult[];
 }
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = (props) => {
@@ -154,6 +156,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = (props) => {
     hypertrophyData30d,
     hypertrophyPeriod,
     setHypertrophyPeriod,
+    injuryRiskData,
   } = props;
 
   return (
@@ -228,6 +231,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = (props) => {
           hypertrophyData30d={hypertrophyData30d}
           hypertrophyPeriod={hypertrophyPeriod}
           setHypertrophyPeriod={setHypertrophyPeriod}
+          injuryRiskData={injuryRiskData}
         />
       </div>
 

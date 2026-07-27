@@ -19,6 +19,7 @@ import { useDashboardVolumeDensity } from '../hooks/useDashboardVolumeDensity';
 import { useDashboardWeeklySetsDashboard } from '../hooks/useDashboardWeeklySetsDashboard';
 import { DashboardLayout } from './DashboardLayout';
 import { useDashboardPlateaus } from '../hooks/useDashboardPlateaus';
+import { useDashboardInjuryRisk } from '../hooks/useDashboardInjuryRisk';
 import { useWeeklyRhythm } from '../hooks/useWeeklyRhythm';
 import { useTrainingLevel } from '../../../hooks/app/useTrainingLevel';
 import { useTrainingTimeline } from '../../../hooks/app/useTrainingTimeline';
@@ -199,6 +200,14 @@ export const Dashboard: React.FC<DashboardProps> = ({
     fullData: filteredData,
     exerciseStats,
     weightUnit,
+    effectiveNow,
+    filterCacheKey,
+  });
+
+  const { injuryRiskData } = useDashboardInjuryRisk({
+    fullData: filteredData,
+    assetsMap,
+    assetsLowerMap,
     effectiveNow,
     filterCacheKey,
   });
@@ -431,6 +440,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
       hypertrophyData30d={hypertrophyData30d}
       hypertrophyPeriod={hypertrophyPeriod}
       setHypertrophyPeriod={setHypertrophyPeriod}
+      injuryRiskData={injuryRiskData}
     />
   );
 };

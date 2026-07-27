@@ -6,6 +6,7 @@ import type { DailySummary, ExerciseStats, WorkoutSet } from '../../../types';
 import type { WeightUnit, TimeFilterMode } from '../../../utils/storage/localStorage';
 import type { TrainingLevel } from '../../../utils/muscle/hypertrophy/muscleParams';
 import { DashboardAIAnalysisCard } from './DashboardAIAnalysisCard';
+import type { InjuryRiskResult } from '../../../utils/analysis/injury/injuryRisk';
 
 const WeeklySetsCard = React.lazy(() => import('../weeklySets/WeeklySetsCard').then((m) => ({ default: m.WeeklySetsCard })));
 const MuscleTrendCard = React.lazy(() => import('../muscleTrend/MuscleTrendCard').then((m) => ({ default: m.MuscleTrendCard })));
@@ -14,6 +15,7 @@ const IntensityEvolutionCard = React.lazy(() => import('../intensityEvolution/In
 const HypertrophyScatterCard = React.lazy(() => import('../hypertrophy/HypertrophyScatterCard').then((m) => ({ default: m.HypertrophyScatterCard })));
 const HypertrophyBarCard = React.lazy(() => import('../hypertrophy/HypertrophyBarCard').then((m) => ({ default: m.HypertrophyBarCard })));
 const VolumeDensityCard = React.lazy(() => import('../volumeDensity/VolumeDensityCard').then((m) => ({ default: m.VolumeDensityCard })));
+const InjuryRiskCard = React.lazy(() => import('../injuryRisk/InjuryRiskCard').then((m) => ({ default: m.InjuryRiskCard })));
 
 interface DashboardPrimaryChartsProps {
   fullData: WorkoutSet[];
@@ -59,6 +61,7 @@ interface DashboardPrimaryChartsProps {
   trendKeys: string[];
   muscleTrendInsight: any;
   muscleVsLabel: string;
+  injuryRiskData: InjuryRiskResult[];
 }
 
 export const DashboardPrimaryCharts: React.FC<DashboardPrimaryChartsProps> = ({
@@ -105,6 +108,7 @@ export const DashboardPrimaryCharts: React.FC<DashboardPrimaryChartsProps> = ({
   trendKeys,
   muscleTrendInsight,
   muscleVsLabel,
+  injuryRiskData,
 }) => {
   const scatterHypertrophyData = useMemo(() =>
     hypertrophyData.filter(m => m.score.raw.weeklySets >= 1.0 && m.score.raw.daysPerWeek >= 1.0),
@@ -227,6 +231,14 @@ export const DashboardPrimaryCharts: React.FC<DashboardPrimaryChartsProps> = ({
         />
       </Suspense>
     </LazyRender>
+
+    {injuryRiskData.length > 0 && (
+      <LazyRender className="min-w-0" placeholder={<ChartSkeleton className="min-h-[400px] sm:min-h-[480px]" />}>
+        <Suspense fallback={<ChartSkeleton className="min-h-[400px] sm:min-h-[480px]" />}>
+          <InjuryRiskCard injuryRiskData={injuryRiskData} />
+        </Suspense>
+      </LazyRender>
+    )}
   </>
   );
 };
