@@ -200,6 +200,14 @@ export const DashboardPrimaryCharts: React.FC<DashboardPrimaryChartsProps> = ({
       </LazyRender>
     </div>
 
+    {injuryRiskData.length > 0 && (
+      <LazyRender className="min-w-0" placeholder={<ChartSkeleton className="min-h-[400px] sm:min-h-[480px]" />}>
+        <Suspense fallback={<ChartSkeleton className="min-h-[400px] sm:min-h-[480px]" />}>
+          <InjuryRiskCard injuryRiskData={injuryRiskData} />
+        </Suspense>
+      </LazyRender>
+    )}
+
     <LazyRender className="min-w-0" placeholder={<ChartSkeleton className="min-h-[400px] sm:min-h-[480px]" />}>
       <Suspense fallback={<ChartSkeleton className="min-h-[400px] sm:min-h-[480px]" />}>
         <IntensityEvolutionCard
@@ -231,14 +239,6 @@ export const DashboardPrimaryCharts: React.FC<DashboardPrimaryChartsProps> = ({
         />
       </Suspense>
     </LazyRender>
-
-    {injuryRiskData.length > 0 && (
-      <LazyRender className="min-w-0" placeholder={<ChartSkeleton className="min-h-[400px] sm:min-h-[480px]" />}>
-        <Suspense fallback={<ChartSkeleton className="min-h-[400px] sm:min-h-[480px]" />}>
-          <InjuryRiskCard injuryRiskData={injuryRiskData} />
-        </Suspense>
-      </LazyRender>
-    )}
   </>
   );
 };
