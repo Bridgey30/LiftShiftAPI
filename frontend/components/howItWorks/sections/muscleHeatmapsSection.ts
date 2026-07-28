@@ -8,7 +8,7 @@ export const MUSCLE_HEATMAPS_SECTION: HowItWorksSection = {
     {
       type: 'p',
       text:
-        'The muscle heatmap shows which muscle groups you\'re training — and how much. It turns raw exercise logs into a visual answer to questions like "Am I training back as much as chest?" and "Which muscles am I neglecting?"',
+        'The muscle heatmap shows which muscle groups you\'re training, and how much. It turns raw exercise logs into a visual answer to questions like "Am I training back as much as chest?" and "Which muscles am I neglecting?"',
     },
   ],
   children: [
@@ -44,7 +44,7 @@ export const MUSCLE_HEATMAPS_SECTION: HowItWorksSection = {
         {
           type: 'p',
           text:
-            'The body map is fully interactive. Hover any muscle to see your weekly set rate, volume zone, and estimated progress percentage. Click any muscle to drill into a detailed view showing exactly which exercises contribute to that muscle — with primary and secondary sets broken out separately.',
+            'The body map is fully interactive. Hover any muscle to see your weekly set rate, volume zone, and estimated progress percentage. Click any muscle to drill into a detailed view showing exactly which exercises contribute to that muscle, with primary and secondary sets broken out separately.',
         },
         {
           type: 'p',
@@ -61,7 +61,7 @@ export const MUSCLE_HEATMAPS_SECTION: HowItWorksSection = {
         {
           type: 'p',
           text:
-            'Weekly volume is calculated using rolling 7-day windows — not calendar weeks. This matches how your body actually recovers and adapts. Starting on any given day, it sums the last 7 days of volume per muscle, giving you a realistic picture of current training stress.',
+            'Weekly volume is calculated using rolling 7-day windows, not calendar weeks. This matches how your body actually recovers and adapts. Starting on any given day, it sums the last 7 days of volume per muscle, giving you a realistic picture of current training stress.',
         },
         {
           type: 'p',
@@ -107,7 +107,7 @@ export const MUSCLE_HEATMAPS_SECTION: HowItWorksSection = {
         {
           type: 'p',
           text:
-            'Each muscle gets a 0-100 hypertrophy score based on three factors: volume (50% weight — how close you are to optimal weekly sets), progressive overload (40% — your 1RM trend), and frequency (10% — how many days per week you train that muscle).',
+            'Each muscle gets a 0-100 hypertrophy score based on three factors: volume (50% weight, how close you are to optimal weekly sets), progressive overload (40%, your 1RM trend), and frequency (10%, how many days per week you train that muscle).',
         },
         {
           type: 'p',

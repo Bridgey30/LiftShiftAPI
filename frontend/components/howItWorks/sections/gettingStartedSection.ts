@@ -7,7 +7,7 @@ export const GETTING_STARTED_SECTION: HowItWorksSection = {
     {
       type: 'p',
       text:
-        'LiftShift turns your workout log into clear, useful answers: which muscles are growing, what\'s stuck, what\'s improving, and what to do next. Connect Hevy, Strong, or Lyfta in seconds. No account needed. Everything runs in your browser.',
+        'LiftShift turns your workout log into answers about your training: which muscles are growing, what\'s stuck, what\'s improving, and what to do next. Connect Hevy, Strong, or Lyfta in seconds. No account needed. Everything runs in your browser.',
     },
     {
       type: 'ul',
@@ -22,7 +22,7 @@ export const GETTING_STARTED_SECTION: HowItWorksSection = {
       tone: 'note',
       title: 'No account, no upload',
       text:
-        'All analytics run locally in your browser. When you use login or API-key syncing, LiftShift uses your credentials only to retrieve workout data — analysis is still done on your device.',
+        'All analytics run locally in your browser. When you use login or API-key syncing, LiftShift uses your credentials only to retrieve workout data. Analysis is still done on your device.',
     },
   ],
   cta: {

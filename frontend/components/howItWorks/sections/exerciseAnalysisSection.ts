@@ -51,7 +51,7 @@ export const EXERCISE_ANALYSIS_SECTION: HowItWorksSection = {
         {
           type: 'p',
           text:
-            'Training data is noisy — one great day doesn\'t mean you\'re progressing, and one bad day doesn\'t mean you\'re regressing. LiftShift can smooth trend lines using an exponential moving average so you see the bigger picture.',
+            'Training data is noisy. One great day doesn\'t mean you\'re progressing, and one bad day doesn\'t mean you\'re regressing. LiftShift can smooth trend lines using an exponential moving average so you see the bigger picture.',
         },
         {
           type: 'p',
@@ -74,13 +74,13 @@ export const EXERCISE_ANALYSIS_SECTION: HowItWorksSection = {
     },
     {
       id: 'exercise-deep-dive',
-      title: 'Exercise deep dive view',
-      sidebarTitle: 'Deep dive view',
+      title: 'Exercise detail view',
+      sidebarTitle: 'Detail view',
       nodes: [
         {
           type: 'p',
           text:
-            'Click any exercise to open the deep dive view, which shows:',
+            'Click any exercise to open the detail view, which shows:',
         },
         {
           type: 'ul',
@@ -97,7 +97,7 @@ export const EXERCISE_ANALYSIS_SECTION: HowItWorksSection = {
           tone: 'note',
           title: 'Calendar filter works here too',
           text:
-            'The exercise deep dive respects your active calendar filter. If you select a specific date range, the exercise analysis recalculates for only those sessions. Compare your bench press in 2024 vs 2025 by changing the range.',
+            'The exercise detail view respects your active calendar filter. If you select a specific date range, the exercise analysis recalculates for only those sessions. Compare your bench press in 2024 vs 2025 by changing the range.',
         },
       ],
     },

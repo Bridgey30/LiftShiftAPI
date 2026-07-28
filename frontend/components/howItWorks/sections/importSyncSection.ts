@@ -14,9 +14,9 @@ export const IMPORT_SYNC_SECTION: HowItWorksSection = {
   cta: {
     text: 'Ready to import? Pick your platform:',
     links: [
-      { label: 'Hevy — Login or API key', hrefPath: '/?platform=hevy' },
-      { label: 'Lyfta — API key', hrefPath: '/?platform=lyfta' },
-      { label: 'Strong — CSV upload', hrefPath: '/?platform=strong' },
+      { label: 'Hevy (Login or API key)', hrefPath: '/?platform=hevy' },
+      { label: 'Lyfta (API key)', hrefPath: '/?platform=lyfta' },
+      { label: 'Strong (CSV upload)', hrefPath: '/?platform=strong' },
       { label: 'Other CSV', hrefPath: '/?platform=other' },
     ],
   },
@@ -29,7 +29,7 @@ export const IMPORT_SYNC_SECTION: HowItWorksSection = {
         {
           type: 'p',
           text:
-            'Log in with your Hevy credentials. LiftShift uses your own backend to retrieve a short-lived auth token, pulls your workouts, and converts them into a standard set format used across the app.',
+            'Log in with your Hevy credentials. LiftShift uses your own backend to retrieve a short-lived auth token, pulls your full workout history, and converts every session into a standard set format used across the app.',
         },
         {
           type: 'callout',
@@ -72,7 +72,7 @@ export const IMPORT_SYNC_SECTION: HowItWorksSection = {
         {
           type: 'p',
           text:
-            'CSV import is the most universal option. LiftShift detects column meanings (exercise name, weight, reps, date, set type), supports different date formats, and converts units when needed.',
+            'CSV import is the most universal option. LiftShift detects column meanings (exercise name, weight, reps, date, set type), supports ISO 8601, US, and European date formats, and converts units when needed.',
         },
         {
           type: 'callout',

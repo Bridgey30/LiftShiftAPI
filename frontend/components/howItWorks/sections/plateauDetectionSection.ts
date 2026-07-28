@@ -8,7 +8,7 @@ export const PLATEAU_DETECTION_SECTION: HowItWorksSection = {
     {
       type: 'p',
       text:
-        'LiftShift doesn\'t just tell you you\'re stuck — it tells you exactly what to try next. Plateau detection compares your recent sessions to previous ones and categorizes the stall, then generates a specific, actionable suggestion.',
+        'LiftShift doesn\'t just tell you you\'re stuck. It tells you exactly what to try next. Plateau detection compares your recent sessions to previous ones and categorizes the stall, then generates a specific, actionable suggestion.',
     },
   ],
   children: [
@@ -42,8 +42,8 @@ export const PLATEAU_DETECTION_SECTION: HowItWorksSection = {
         {
           type: 'ul',
           items: [
-            'Static plateau: Both weight AND reps are frozen across multiple sessions (within 0.5 kg and 1 rep). This is a true stall — your comfort zone is showing. Suggestions are more aggressive.',
-            'General plateau: The trend is flat but weight or reps are still varying. You\'re not necessarily stuck — you may just need a small nudge.',
+            'Static plateau: Both weight AND reps are frozen across multiple sessions (within 0.5 kg and 1 rep). This is a true stall. Your comfort zone is showing. Suggestions are more aggressive.',
+            'General plateau: The trend is flat but weight or reps are still varying. You\'re not necessarily stuck. You may just need a small nudge.',
           ],
         },
       ],

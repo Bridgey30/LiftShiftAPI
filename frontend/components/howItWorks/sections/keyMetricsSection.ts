@@ -8,7 +8,7 @@ export const KEY_METRICS_SECTION: HowItWorksSection = {
     {
       type: 'p',
       text:
-        'These are the main numbers and labels you will see across the dashboard. Use them together — one metric alone can be misleading.',
+        'These are the main numbers and labels you will see across the dashboard. Use them together. One metric alone can be misleading.',
     },
   ],
   children: [
@@ -80,7 +80,7 @@ export const KEY_METRICS_SECTION: HowItWorksSection = {
         {
           type: 'p',
           text:
-            'LiftShift estimates your one-rep max using the Epley formula: weight x (1 + reps/30). It is an estimate — not a max-out test. Accuracy decreases at very high rep ranges (15+). Use it to compare strength across sessions even when you change rep ranges.',
+            'LiftShift estimates your one-rep max using the Epley formula: weight x (1 + reps/30). It is an estimate, not a max-out test. Accuracy decreases at very high rep ranges (15+). Use it to compare strength across sessions even when you change rep ranges.',
         },
       ],
     },
@@ -104,7 +104,7 @@ export const KEY_METRICS_SECTION: HowItWorksSection = {
         {
           type: 'p',
           text:
-            'The dashboard shows what percentage of your total weekly volume goes to your top 3 most-trained muscles. Under 55% is green (well-distributed). Over 70% is a warning that your volume is too concentrated — great for specialization phases, but worth checking for balance.',
+            'The dashboard shows what percentage of your total weekly volume goes to your top 3 most-trained muscles. Under 55% is green (well-distributed). Over 70% is a warning that your volume is too concentrated, great for specialization phases but worth checking for balance.',
         },
       ],
     },

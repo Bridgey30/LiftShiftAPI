@@ -8,7 +8,7 @@ export const LIFETIME_PROGRESS_SECTION: HowItWorksSection = {
     {
       type: 'p',
       text:
-        'Every muscle in your body has a training journey. Lifetime Progress tracks that journey across 9 tiers — from Seedling to Legend — giving you a sense of how deep your training history goes for each muscle group.',
+        'Every muscle in your body has a training journey. Lifetime Progress tracks that journey across 9 tiers, from Seedling to Legend, showing how deep your training history goes for each muscle group.',
     },
   ],
   children: [
@@ -73,14 +73,14 @@ export const LIFETIME_PROGRESS_SECTION: HowItWorksSection = {
         {
           type: 'p',
           text:
-            'Use Lifetime Progress as a consistency motivator. It gamifies showing up. The per-muscle breakdown highlights imbalances in your training history — maybe your chest has 10x the sets of your back. The time-to-next-tier estimate gives you a tangible goal for muscles you\'ve been neglecting.',
+            'Use Lifetime Progress as a consistency motivator. The per-muscle breakdown highlights imbalances in your training history. Maybe your chest has 10x the sets of your back. The time-to-next-tier estimate gives you a tangible goal for muscles you\'ve been neglecting.',
         },
         {
           type: 'callout',
           tone: 'note',
           title: 'Not genetic potential',
           text:
-            'Lifetime Progress measures cumulative work, not your genetic ceiling. A higher tier means more total volume invested in that muscle — it doesn\'t predict your maximum possible development.',
+            'Lifetime Progress measures cumulative work, not your genetic ceiling. A higher tier means more total volume invested in that muscle. It doesn\'t predict your maximum possible development.',
         },
       ],
     },

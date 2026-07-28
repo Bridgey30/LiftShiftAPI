@@ -8,7 +8,7 @@ export const FLEX_CARDS_SECTION: HowItWorksSection = {
     {
       type: 'p',
       text:
-        'The Flex View is a carousel of 8 beautifully designed cards showing your training highlights. They\'re built to be shareable — each card is a self-contained summary with the LiftShift watermark.',
+        'The Flex View is a carousel of 8 cards showing your training highlights. They\'re designed to be shareable, each card a self-contained summary with the LiftShift watermark.',
     },
   ],
   children: [
@@ -17,7 +17,7 @@ export const FLEX_CARDS_SECTION: HowItWorksSection = {
       title: 'Summary card',
       sidebarTitle: 'Summary',
       nodes: [
-        { type: 'p', text: 'Total workouts, training hours, total volume lifted, sets, and reps — all as large count-up numbers.' },
+        { type: 'p', text: 'Total workouts, training hours, total volume lifted, sets, and reps, all shown as large count-up numbers.' },
       ],
     },
     {
@@ -25,7 +25,7 @@ export const FLEX_CARDS_SECTION: HowItWorksSection = {
       title: 'Volume comparison card',
       sidebarTitle: 'Volume comparison',
       nodes: [
-        { type: 'p', text: 'Your total volume compared to real-world objects — e.g. "That\'s like lifting 3.5 gorillas." Uses a database of 33 comparison items from a dozen eggs (0.08 kg) to an oil tanker (200 million kg). The algorithm picks the comparison that divides most cleanly into your total.' },
+        { type: 'p', text: 'Your total volume compared to real-world objects. For example: "That\'s like lifting 3.5 gorillas." Uses a database of 33 comparison items from a dozen eggs (0.08 kg) to an oil tanker (200 million kg). The algorithm picks the comparison that divides most cleanly into your total.' },
       ],
     },
     {

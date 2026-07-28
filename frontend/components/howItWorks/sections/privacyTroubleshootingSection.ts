@@ -13,7 +13,7 @@ export const PRIVACY_STORAGE_SECTION: HowItWorksSection = {
     {
       type: 'ul',
       items: [
-        'Analytics are computed locally in your browser — charts, summaries, trends, and per-exercise history.',
+        'Analytics are computed locally in your browser. This includes charts, summaries, trends, and per-exercise history.',
         'Workout data is cached in your browser\'s local storage (compressed with LZ-string) so the dashboard loads instantly on return visits.',
         'Preferences like weight units, body map gender, and theme are stored locally.',
         'You can clear your data at any time from the app preferences or by clearing your browser storage.',
@@ -25,7 +25,7 @@ export const PRIVACY_STORAGE_SECTION: HowItWorksSection = {
       tone: 'warning',
       title: 'Third-party data sources',
       text:
-        'If you use an API sync (Hevy, Lyfta), that third-party service has its own privacy and security model. LiftShift\'s privacy guarantee covers what LiftShift itself stores — which is nothing on any server.',
+        'If you use an API sync (Hevy, Lyfta), that third-party service has its own privacy and security model. LiftShift\'s privacy guarantee covers what LiftShift itself stores, which is nothing on any server.',
     },
   ],
 };

@@ -32,7 +32,7 @@ export const PR_TRACKING_SECTION: HowItWorksSection = {
         {
           type: 'p',
           text:
-            'For assisted exercises (where lower weight is better), the comparison logic is inverted — less assistance is better.',
+            'For assisted exercises (where lower weight is better), the comparison logic is inverted. Less assistance is better.',
         },
       ],
     },
@@ -61,7 +61,7 @@ export const PR_TRACKING_SECTION: HowItWorksSection = {
         {
           type: 'p',
           text:
-            'If you later re-hit the PR level in two or more sessions, the premature flag is removed — the PR is validated. This prevents false positives and ensures the label only appears when the jump was genuinely unsustainable.',
+            'If you later re-hit the PR level in two or more sessions, the premature flag is removed and the PR is validated. This prevents false positives and ensures the label only appears when the jump was genuinely unsustainable.',
         },
         {
           type: 'callout',

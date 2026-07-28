@@ -8,7 +8,7 @@ export const SET_BY_SET_SECTION: HowItWorksSection = {
     {
       type: 'p',
       text:
-        'Open any past workout and LiftShift analyzes every single set — comparing each to the one before it — and gives you plain-English feedback. Beginners learn how to progress faster. Experienced lifters spot patterns they\'d miss.',
+        'Open any past workout and LiftShift analyzes every single set, comparing each to the one before it, and gives you plain-English feedback. Beginners learn how to progress faster. Experienced lifters spot patterns they\'d miss.',
     },
   ],
   children: [
@@ -74,7 +74,7 @@ export const SET_BY_SET_SECTION: HowItWorksSection = {
         {
           type: 'p',
           text:
-            'When LiftShift analyzes the overall quality of your sets for an exercise in a workout, it also tells you whether to stay at your current top weight, increase it, or reduce it — with specific numbers. For example: "At 80 kg, you hit at least 8 reps. Keep this load until you can repeat 10+ reps, then move to 82.5 kg."',
+            'When LiftShift analyzes the overall quality of your sets for an exercise in a workout, it also tells you whether to stay at your current top weight, increase it, or reduce it, with specific numbers. For example: "At 80 kg, you hit at least 8 reps. Keep this load until you can repeat 10+ reps, then move to 82.5 kg."',
         },
       ],
     },

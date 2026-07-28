@@ -20,7 +20,7 @@ export const ACTIVITY_CONSISTENCY_SECTION: HowItWorksSection = {
         {
           type: 'p',
           text:
-            'The activity heatmap shows your entire year\'s training at a glance — each day as a colored square. Darker green = more volume that day. The two most recent months show larger cells with workout date numbers or a dumbbell icon. Today gets a blue ring highlight. Your peak volume day gets an amber ring.',
+            'The activity heatmap shows your entire year\'s training at a glance, with each day shown as a colored square. Darker green = more volume that day. The two most recent months show larger cells with workout date numbers or a dumbbell icon. Today gets a blue ring highlight. Your peak volume day gets an amber ring.',
         },
         {
           type: 'p',

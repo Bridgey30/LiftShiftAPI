@@ -8,7 +8,7 @@ export const DATA_NORMALIZATION_SECTION: HowItWorksSection = {
     {
       type: 'p',
       text:
-        'After import, LiftShift cleans and standardizes your workouts so every chart is consistent — even if data came from different apps.',
+        'After import, LiftShift cleans and standardizes your workouts so every chart is consistent, even if data came from different apps.',
     },
     {
       type: 'ul',

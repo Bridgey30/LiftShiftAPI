@@ -8,7 +8,7 @@ export const CALENDAR_FILTERING_SECTION: HowItWorksSection = {
     {
       type: 'p',
       text:
-        'This is one of LiftShift\'s most powerful features. Pick any date range — a single day, a week, a month, a year, or multiple custom ranges — and every chart, every metric, every insight recalculates for just that window.',
+        'Pick any date range (single day, week, month, year, or multiple custom ranges) and every chart, every metric, every insight recalculates for just that window.',
     },
   ],
   children: [
@@ -26,7 +26,7 @@ export const CALENDAR_FILTERING_SECTION: HowItWorksSection = {
           type: 'ul',
           items: [
             'All workout data outside the range is hidden. Only sets within your selection are used.',
-            'Every derived metric recalculates: daily summaries, exercise stats, volume trends, PRs, muscle heatmaps, streaks, deltas — everything.',
+            'Every derived metric recalculates: daily summaries, exercise stats, volume trends, PRs, muscle heatmaps, streaks, deltas. Everything.',
             'The "effective now" date changes to the latest date in your filtered data, so streak calculations and time-window comparisons use the correct endpoint.',
             'The filter cache key changes, so all memoized computations refresh instantly.',
           ],
