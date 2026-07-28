@@ -1,24 +1,23 @@
-<table align="center">
-  <tr>
-    <td align="center" style="padding-right: 20px;">
-      <img src="frontend/public/UI/logo.svg" alt="LiftShift Logo" width="200" height="200" />
-    </td>
-    <td align="center">
-      <a href="https://www.star-history.com/#aree6/LiftShift&type=date&legend=top-left&theme=dark">
-        <img src="https://api.star-history.com/svg?repos=aree6/LiftShift&type=date&legend=top-left&theme=dark" alt="Star History Chart" width="500" />
-      </a>
-    </td>
-  </tr>
-</table>
+<div align="center">
+  <img src="frontend/public/UI/logo.svg" alt="LiftShift Logo" width="200" height="200" />
+  
+  # LiftShift
 
+  Free and open source workout analytics.
 
+  [**Website**](https://liftshift.app) · [**How it works**](https://liftshift.app/how-it-works) · [**Features**](https://liftshift.app/features) · [**License**](LICENSE)
+</div>
 
-## Official Website
+---
 
-https://liftshift.app
+LiftShift takes your workout logs from Hevy, Strong, or Lyfta and shows you what they actually mean. Which muscles are you neglecting? Is your bench press actually getting stronger, or just wobbling around the same weight? What should you try next session? Your logging app won't answer those questions. LiftShift does.
 
+Everything runs locally in your browser. No account needed. Sync your data through the app's API or upload a CSV, and the analysis happens on your device.
 
-## UI Screenshots
+---
+
+## Screenshots
+
 <div align="center">
   <img src="./frontend/public/images/misc/1.avif" alt="UI Screenshot 1" />
 </div>
@@ -43,27 +42,43 @@ https://liftshift.app
   <img src="./frontend/public/images/misc/6.avif" alt="UI Screenshot 6" />
 </div>
 
+---
 
-## Official Deployment
+## Features
 
-LiftShift has one canonical hosted instance:
+**Muscle heatmaps:** an interactive body map that shows which muscles you train and how much. Click any muscle to see the exact exercises that built it. Tracks weekly volume, volume zones (MEV/MRV thresholds that scale with your training age), and a 0-100 hypertrophy score per muscle. Supports male and female silhouettes.
 
-- **Canonical domain:** https://liftshift.app
+**PR tracking:** three types of personal records. All-time bests, 2-month bests (for experienced lifters who rarely hit true PRs), and premature PRs (big jumps you couldn't sustain). Also tracks PR droughts and your PR hit rate per week.
 
-Deployments on any other domain are **unofficial**. Unofficial deployments may be modified and may not follow the same security practices. Do not assume an unofficial deployment is trustworthy with any credentials.
+**Plateau detection:** every exercise gets a status, like Getting stronger, Plateauing, or Taking a dip, with a confidence level based on how many sessions you've logged. When you stall, LiftShift tells you what to try: add a rep, bump the weight, deload, or switch up the rep scheme. Distinguishes between static plateaus (weight and reps both frozen) and general plateaus (flat trend but still varying).
 
+**Set-by-set feedback:** open any past workout and LiftShift analyzes each set across 19 scenarios. Things like normal fatigue, weight jumps that were too aggressive, smart back-off sets, and AMRAP pushes. Each set gets a badge and a plain-English suggestion for next session. It also tells you whether to stay at your current top weight, increase it, or reduce it.
 
-## Attribution Requirement
+**Calendar filtering:** pick any date range, from a single day to the full year, and every chart, metric, and calculation updates to just that window. Compare training blocks without exporting and reimporting.
 
-Public deployments must include visible attribution to the upstream project.
+**Multi-app merge:** switched from Strong to Hevy? Use both? LiftShift normalizes exercise names across sources and merges everything into one dataset. Duplicate sets are detected and skipped.
 
-Minimum acceptable attribution:
+**AI export:** export your structured training data in a format built for AI tools. Pick from 8 analysis modules (junk volume audit, structural balance, joint health check, unilateral balance, and more), choose a timeframe, and paste into ChatGPT, Claude, or whatever you use.
 
-- **Link to official site:** https://liftshift.app
-- **Source link:** a publicly accessible link to the Corresponding Source for the exact version running
+**Consistency tracking:** a GitHub-style heatmap of your entire training year, plus a streak counter, consistency score with an 8-week trend, and average workouts per week.
 
-Attribution must be reasonably discoverable during normal use (for example: footer, About modal, or Settings). Removing, hiding, or obscuring attribution is treated as non-compliance.
+**Lifetime Progress:** a per-muscle journey from Seedling to Legend across 9 tiers based on cumulative sets. Shows estimated time to your next milestone. Kind of gamified, mostly a motivator to not skip leg day for six months.
 
+**Flex cards:** 8 shareable cards showing your training highlights. Volume comparisons (your total lifted vs real-world objects), PR totals, best month, streak length, top exercises, and a yearly heatmap.
+
+---
+
+## Supported apps
+
+| App | Import method |
+|-----|--------------|
+| **Hevy** | Login sync, Hevy Pro API key, or CSV |
+| **Strong** | CSV upload |
+| **Lyfta** | API key or CSV |
+| **Motra** | Excel or CSV upload |
+| **Other** | Generic CSV (auto-detects columns) |
+
+More details at [liftshift.app/supported-apps](https://liftshift.app/supported-apps).
 
 ---
 
@@ -76,29 +91,33 @@ Attribution must be reasonably discoverable during normal use (for example: foot
   <img src="./frontend/public/images/steps/Step4.avif" alt="Get real-time feedback and filter data" width="200" />
 </div>
 
+1. Pick your platform (Hevy, Strong, Lyfta, or CSV upload).
+2. Choose body map gender and weight unit (kg or lbs).
+3. Connect your data (log in, enter an API key, or upload a file).
+4. Explore Dashboard, Exercises, History, Muscle Analysis, and Flex.
 
-1. **Select your platform** (Hevy / Strong)  
-2. **Hevy**: Choose your **body type** + **weight unit**, then **Continue** to login/sync (email+password or Pro API key), or import CSV. / **Strong**: Choose body type + unit, then import CSV  
-3. **Explore** your analytics across Dashboard, Exercises, and History tabs  
-4. **Get insights** with real-time feedback and flexible filtering  
+**Strong CSV users:** LiftShift handles semicolon-delimited files, quoted fields, and unit-suffixed headers like `Weight (kg)`.
 
- Strong CSV imports support common export variants, including:
- - Semicolon-delimited (`;`) files with quoted fields
- - Unit-suffixed headers like `Weight (kg)` and `Distance (meters)`
+---
+
+## Local Development
+
+```bash
+git clone https://github.com/aree6/LiftShift.git
+cd LiftShift
+npm install
+npm run dev
+```
+
+Requires Node.js >= 22. See [CONTRIBUTING.md](CONTRIBUTING.md) for setup details and coding standards.
+
+**Tech stack:** React 19, TypeScript, Vite, Tailwind CSS, Recharts on the frontend. Node.js + Express + Puppeteer on the backend proxy. All analytics run client-side. The backend only proxies API calls to Hevy and Lyfta.
 
 ---
 
 ## Troubleshooting
 
-If you see this error:
-
-> "We detected a Hevy workout CSV, but couldn't parse the workout dates. This usually happens when the Hevy export language isn't English. Please switch Hevy app language to English, export again, and re-upload."
-
-Do the following:
-
-1. Switch your Hevy app language to **English**
-2. Export your workout CSV again
-3. Re-upload it to LiftShift
+If LiftShift says it "couldn't parse workout dates," your source app is probably using a non-English locale. Switch the Hevy app language to English, export again, and re-upload.
 
 <div align="center">
   <img src="./frontend/public/images/steps/step5.avif" alt="Set Hevy export language to English" width="260" />
@@ -106,57 +125,22 @@ Do the following:
 
 ---
 
-## Features
+## License, Attribution & Security
 
-- **Dashboard Analytics** - Volume trends, workout distribution, key metrics
-- **Exercise Tracking** - Personal records, 1RM estimates, performance trends
-- **Trend Confidence** - Trend insights include confidence and short evidence notes to reduce noisy recommendations
-- **History Visualization** - Detailed workout logs with date filtering
-- **Set-by-Set Feedback** - Real-time feedback on your performance (including rolling, fatigue-aware expected rep ranges)
-- **Session Goal Detection** - Detects whether a session was Strength/Hypertrophy/Endurance/Mixed based on rep-zone distribution
-- **Local Storage** - Data saved in your browser
-- **Theme Modes** - Day (light), Medium dark, Midnight dark, Pure black, and Texture
+LiftShift is licensed under **AGPL-3.0** ([LICENSE](LICENSE)). The official deployment is at [liftshift.app](https://liftshift.app). Any deployment on another domain is unofficial and may not follow the same security practices. Don't enter your credentials into an unofficial deployment.
 
-## PR Definitions
-
-- **PR**: Best-ever **weight** for an exercise (shown with **absolute** change).
-- **Volume PR**: Best-ever **single-set volume** for an exercise (`weight × reps`, across all history; shown with **percent** change).
-
----
-
-## Local Development
-
-This is intended for local development and contributor workflows. It is not a production deployment guide.
-
-```bash
-git clone https://github.com/aree6/LiftShift.git
-cd LiftShift
-npm install
-npm run dev
-
-```
+If you deploy LiftShift publicly, you need visible attribution: a link to [liftshift.app](https://liftshift.app) and a link to the source for the version you're running. Removing or hiding attribution is a license violation.
 
 ---
 
 ## Maintainer
 
-- **GitHub repo**: https://github.com/aree6/LiftShift
-- **GitHub profile**: https://github.com/aree6
-- **Email**: mohammadar336@gmail.com
+**GitHub:** [aree6](https://github.com/aree6) · [LiftShift repo](https://github.com/aree6/LiftShift)  
+**Email:** mohammadar336@gmail.com
 
 ---
 
 ## Support
 
-If you find this project helpful, you can support it here:
-
-- **Buy Me a Coffee**: https://www.buymeacoffee.com/aree6
-- **Ko-fi**: https://ko-fi.com/aree6
-
----
-
-## Security Notice
-
-- The only official deployment is https://liftshift.app.
-- Any other domain is unofficial. Do not enter credentials into an unofficial deployment.
-- LiftShift stores sync credentials locally in your browser (auth tokens, API keys, and login inputs). Passwords are encrypted at rest when the browser supports WebCrypto + IndexedDB.
+- [Buy Me a Coffee](https://www.buymeacoffee.com/aree6)
+- [Ko-fi](https://ko-fi.com/aree6)
