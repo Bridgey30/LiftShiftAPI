@@ -225,7 +225,7 @@ export const ExerciseView: React.FC<ExerciseViewProps> = ({
   }, [chartData.length]);
 
   return (
-    <div className="flex flex-col gap-2 w-full text-slate-200">
+    <div className="flex flex-col gap-1 w-full text-slate-200">
       <ExerciseViewHeader
         filtersSlot={filtersSlot}
         stickyHeader={stickyHeader}

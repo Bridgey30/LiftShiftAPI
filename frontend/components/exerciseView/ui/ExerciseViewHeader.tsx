@@ -110,7 +110,7 @@ export const ExerciseViewHeader: React.FC<ExerciseViewHeaderProps> = ({
       </div>
 
       <div className="hidden sm:contents">
-        <div className={`${stickyHeader ? 'sticky top-0 z-30' : ''} bg-black/20 p-2 sm:p-3 rounded-xl mt-1`}>
+        <div className={`${stickyHeader ? 'sticky top-0 z-30' : ''} bg-black/20 px-2 sm:px-3 rounded-xl mt-1`}>
           {headerCenterSlot}
         </div>
       </div>
