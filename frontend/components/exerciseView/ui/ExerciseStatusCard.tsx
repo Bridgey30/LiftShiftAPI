@@ -71,11 +71,11 @@ export const ExerciseStatusCard: React.FC<ExerciseStatusCardProps> = ({
               })()} />
               {currentCore?.prematurePr ? (
                 <span
-                  className="hidden sm:inline-flex items-center gap-1.5 px-2 py-1 rounded-md border text-[10px] font-bold whitespace-nowrap bg-orange-500/10 text-orange-400 border-orange-500/20"
+                  className="hidden sm:inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border text-[10px] font-semibold whitespace-nowrap bg-orange-500/10 text-orange-400 border-orange-500/25"
                   title={selectedPrematurePrTooltip ?? undefined}
                   aria-label="Premature PR"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-current opacity-80" />
                   Premature PR
                 </span>
               ) : null}
@@ -99,7 +99,7 @@ export const ExerciseStatusCard: React.FC<ExerciseStatusCardProps> = ({
                   <span
                     key={i}
                     title={getTrendEvidenceTitle(currentStatus, t)}
-                    className={`inline-flex items-center px-2 py-0.5 rounded-md border max-w-full ${badgeBgColor} ${badgeBorderColor} ${badgeTextColor} ${isStrengthLike ? 'font-bold' : 'font-mono'} text-[10px] whitespace-normal break-words`}
+                    className={`inline-flex items-center px-2 py-0.5 rounded-full border max-w-full ${badgeBgColor} ${badgeBorderColor} ${badgeTextColor} ${isStrengthLike ? 'font-semibold' : 'font-mono'} text-[10px] whitespace-normal break-words`}
                   >
                     {renderEvidenceWithColoredSigns(t)}
                   </span>
@@ -107,11 +107,11 @@ export const ExerciseStatusCard: React.FC<ExerciseStatusCardProps> = ({
               })}
               {currentCore?.prematurePr ? (
                 <span
-                  className="sm:hidden inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md border text-[10px] font-bold whitespace-nowrap bg-orange-500/10 text-orange-400 border-orange-500/20"
+                  className="sm:hidden inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border text-[10px] font-semibold whitespace-nowrap bg-orange-500/10 text-orange-400 border-orange-500/25"
                   title={selectedPrematurePrTooltip ?? undefined}
                   aria-label="Premature PR"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-current opacity-80" />
                   Premature PR
                 </span>
               ) : null}
@@ -120,7 +120,7 @@ export const ExerciseStatusCard: React.FC<ExerciseStatusCardProps> = ({
 
           {currentStatus.subtext && (
             <div className="mt-2">
-              <div className={`relative inline-flex flex-col w-fit max-w-full rounded-md border px-2 py-1.5 ${currentStatus.borderColor} overflow-hidden`}>
+              <div className={`relative inline-flex flex-col w-fit max-w-full rounded-lg border px-2.5 py-1.5 ${currentStatus.borderColor} overflow-hidden`}>
                 <div className="absolute inset-0 bg-black/20" />
                 <div className={`absolute inset-0 ${currentStatus.bgColor}`} />
                 <div className="relative z-10">

@@ -12,12 +12,14 @@ export const DeltaBadge: React.FC<{ delta: number; suffix?: string; invert?: boo
 
   const isPositive = invert ? delta < 0 : delta > 0;
   const Icon = isPositive ? TrendingUp : TrendingDown;
-  const colorClass = isPositive ? 'text-emerald-400 bg-emerald-500/10' : 'text-rose-400 bg-rose-500/10';
+  const colorClass = isPositive
+    ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20'
+    : 'text-rose-400 bg-rose-500/10 border-rose-500/20';
   const text = formatSignedNumber(delta, { maxDecimals: 2 });
 
   return (
     <span
-      className={`inline-flex items-center gap-0.5 px-1 py-0.5 rounded text-[9px] font-bold ${colorClass} ${
+      className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full border text-[9px] font-bold ${colorClass} ${
         size === 'compact' ? 'scale-90 origin-left' : ''
       }`}
     >
@@ -36,18 +38,18 @@ export const ConfidenceBadge: React.FC<{ confidence?: 'low' | 'medium' | 'high';
       case 'high':
         return {
           label: 'High confidence',
-          cls: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+          cls: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25',
         };
       case 'medium':
         return {
           label: 'Medium confidence',
-          cls: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+          cls: 'bg-blue-500/10 text-blue-400 border-blue-500/25',
         };
       case 'low':
       default:
         return {
           label: 'Low confidence',
-          cls: 'bg-slate-700/20 text-slate-400 border-slate-700/30',
+          cls: 'bg-slate-700/15 text-slate-400 border-slate-600/25',
         };
     }
   })();
@@ -56,11 +58,11 @@ export const ConfidenceBadge: React.FC<{ confidence?: 'low' | 'medium' | 'high';
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-md border text-[10px] font-bold whitespace-nowrap ${meta.cls}`}
+      className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border text-[10px] font-semibold whitespace-nowrap ${meta.cls}`}
       title={tooltip}
       aria-label={meta.label}
     >
-      <span className="w-1.5 h-1.5 rounded-full bg-current" />
+      <span className="w-1.5 h-1.5 rounded-full bg-current opacity-80" />
       {meta.label}
     </span>
   );

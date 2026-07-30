@@ -79,21 +79,21 @@ export const ExerciseListRow: React.FC<ExerciseListRowProps> = ({
 
       <div className="flex items-center gap-1.5 shrink-0">
         {isEligible ? (
-          <div className={`px-1 sm:px-1.5 py-0.5 sm:py-1 rounded-md ${status.bgColor} ${isSelected ? 'animate-in zoom-in-50 duration-200' : ''} flex items-center gap-1 sm:gap-1.5`}>
-            <RowStatusIcon className={`w-2.5 h-2.5 sm:w-3 sm:h-3 ${status.color}`} />
-            <span className={`text-[9px] sm:text-[10px] font-bold ${status.color}`}>{displayLabel}</span>
+          <div className={`px-2 py-0.5 rounded-full ${status.bgColor} border ${status.borderColor} ${isSelected ? 'animate-in zoom-in-50 duration-200' : ''} flex items-center gap-1`}>
+            <RowStatusIcon className={`w-2.5 h-2.5 ${status.color}`} />
+            <span className={`text-[9px] sm:text-[10px] font-semibold ${status.color}`}>{displayLabel}</span>
             {status.diffPct !== undefined && (
-              <span className={`text-[9px] font-bold sm:text-[10px] font-mono ${status.diffPct > 0 ? 'text-emerald-400' : status.diffPct < 0 ? 'text-rose-400' : 'text-slate-400'}`}>
+              <span className={`text-[9px] font-semibold font-mono ${status.diffPct > 0 ? 'text-emerald-400' : status.diffPct < 0 ? 'text-rose-400' : 'text-slate-400'}`}>
                 @ {status.diffPct > 0 ? '+' : ''}{status.diffPct.toFixed(1)}%
               </span>
             )}
           </div>
         ) : (
-          <div className={`px-1.5 py-1 rounded-md bg-slate-700/20 border border-slate-700/30 ${isSelected ? 'animate-in zoom-in-50 duration-200' : ''} flex items-center gap-1`}>
+          <div className={`px-2 py-0.5 rounded-full bg-slate-700/15 border border-slate-600/20 ${isSelected ? 'animate-in zoom-in-50 duration-200' : ''} flex items-center gap-1`}>
             {IneligibleStatusIcon ? (
-              <IneligibleStatusIcon className="w-3 h-3 text-slate-400" />
+              <IneligibleStatusIcon className="w-2.5 h-2.5 text-slate-400" />
             ) : null}
-            <span className="text-[10px] font-bold text-slate-400">{displayLabel}</span>
+            <span className="text-[10px] font-semibold text-slate-400">{displayLabel}</span>
           </div>
         )}
       </div>

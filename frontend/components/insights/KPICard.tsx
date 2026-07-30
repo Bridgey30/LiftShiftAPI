@@ -47,9 +47,9 @@ const DeltaBadge: React.FC<{ delta: DeltaResult; suffix?: string; showPercent?: 
 
   if (safeDirection === 'same') {
     return (
-      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400">
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400">
         <Activity className="w-3 h-3" />
-        <span className="text-[10px] font-bold">
+        <span className="text-[10px] font-semibold">
           Stable
           {showPercent && delta.deltaPercent !== 0 ? ` (${delta.deltaPercent}%)` : ''}
         </span>
@@ -60,13 +60,13 @@ const DeltaBadge: React.FC<{ delta: DeltaResult; suffix?: string; showPercent?: 
 
   const isUp = safeDirection === 'up';
   const colorClass = isUp ? 'text-emerald-400' : 'text-rose-400';
-  const bgClass = isUp ? 'bg-emerald-500/10' : 'bg-rose-500/10';
+  const bgClass = isUp ? 'bg-emerald-500/10 border-emerald-500/20' : 'bg-rose-500/10 border-rose-500/20';
   const Icon = isUp ? TrendingUp : TrendingDown;
 
   return (
-    <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded ${bgClass} ${colorClass}`}>
+    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border ${bgClass} ${colorClass}`}>
       <Icon className="w-3 h-3" />
-      <span className="text-[10px] font-bold">
+      <span className="text-[10px] font-semibold">
         {safeFormattedPercent}
         {suffix}
       </span>

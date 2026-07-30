@@ -19,23 +19,23 @@ const PRStatusBadge: React.FC<{ prInsights: PRInsights }> = ({ prInsights }) => 
 
   if (daysSinceLastPR < 0) {
     return (
-      <span className="text-[10px] text-slate-500">Chase your first PR</span>
+      <span className="text-[10px] text-slate-500 font-medium">Chase your first PR</span>
     );
   }
 
   if (prDrought) {
     return (
-      <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-amber-500/10">
+      <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20">
         <AlertTriangle className="w-3 h-3 text-amber-400 flex-shrink-0" />
-        <span className="text-[10px] font-bold text-amber-400 whitespace-nowrap">{daysSinceLastPR}d drought</span>
+        <span className="text-[10px] font-semibold text-amber-400 whitespace-nowrap">{daysSinceLastPR}d drought</span>
       </div>
     );
   }
 
   return (
-    <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-emerald-500/10">
+    <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
       <Trophy className="w-3 h-3 text-emerald-400 flex-shrink-0" />
-      <span className="text-[10px] font-bold text-emerald-400 whitespace-nowrap">
+      <span className="text-[10px] font-semibold text-emerald-400 whitespace-nowrap">
         {daysSinceLastPR === 0 ? 'PR today!' : `${daysSinceLastPR}d ago`}
       </span>
     </div>
