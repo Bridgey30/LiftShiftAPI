@@ -52,12 +52,12 @@ export const ExerciseOverviewCard: React.FC<ExerciseOverviewCardProps> = ({
         <div className="flex-1 flex flex-col items-center justify-center min-w-0 text-center">
           {selectedExerciseMuscleInfo.primaryTargets.length > 0 && (
             <div>
-              <div className="text-[10px] uppercase tracking-wide text-slate-700">Primary</div>
+              <div className="text-[10px] uppercase tracking-wide text-slate-700 font-semibold">Primary</div>
               <div className="flex flex-wrap gap-1 mt-1">
                 {selectedExerciseMuscleInfo.primaryTargets.map((t) => (
                   <span
                     key={`primary-${t.label}`}
-                    className="px-2 py-0.5 rounded-md text-[10px] font-semibold border border-slate-900/10"
+                    className="px-2 py-0.5 rounded-full text-[10px] font-semibold border border-slate-900/10"
                     style={{
                       backgroundColor: getExerciseMuscleColor(t.sets),
                       color: getTargetTextColor(t.sets, 1),
@@ -72,12 +72,12 @@ export const ExerciseOverviewCard: React.FC<ExerciseOverviewCardProps> = ({
 
           {selectedExerciseMuscleInfo.secondaryTargets.length > 0 && (
             <div>
-              <div className="text-[10px] uppercase tracking-wide text-slate-700">Secondary</div>
+              <div className="text-[10px] uppercase tracking-wide text-slate-700 font-semibold">Secondary</div>
               <div className="flex flex-wrap gap-1 mt-1">
                 {selectedExerciseMuscleInfo.secondaryTargets.map((t) => (
                   <span
                     key={`secondary-${t.label}`}
-                    className="px-2 py-0.5 rounded-md text-[10px] font-semibold border border-slate-900/10"
+                    className="px-2 py-0.5 rounded-full text-[10px] font-semibold border border-slate-900/10"
                     style={{
                       backgroundColor: getExerciseMuscleColor(t.sets),
                       color: '#1e293b',

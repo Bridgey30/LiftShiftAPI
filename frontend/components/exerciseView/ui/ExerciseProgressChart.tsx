@@ -169,14 +169,14 @@ export const ExerciseProgressChart: React.FC<ExerciseProgressChartProps> = ({
               </>
             ) : (
               <>
-                 <div className="flex items-center gap-1 text-emerald-400/70">
-                   <span className="w-2 h-2 rounded bg-emerald-500/20 border border-emerald-400/70"></span> {positiveLabel}
+                 <div className="flex items-center gap-1.5 text-emerald-400/80">
+                   <span className="w-2 h-2 rounded-full bg-emerald-500/20 border border-emerald-400/60"></span> <span className="text-[10px] font-semibold">{positiveLabel}</span>
                  </div>
-                <div className="flex items-center gap-1 text-yellow-400/70">
-                  <span className="w-2 h-2 rounded bg-yellow-500/20 border border-yellow-400/70"></span> Plateauing
+                <div className="flex items-center gap-1.5 text-yellow-400/80">
+                  <span className="w-2 h-2 rounded-full bg-yellow-500/20 border border-yellow-400/60"></span> <span className="text-[10px] font-semibold">Plateauing</span>
                 </div>
-                 <div className="flex items-center gap-1 text-rose-400/70">
-                   <span className="w-2 h-2 rounded bg-rose-500/20 border border-rose-400/70"></span> {negativeLabel}
+                 <div className="flex items-center gap-1.5 text-rose-400/80">
+                   <span className="w-2 h-2 rounded-full bg-rose-500/20 border border-rose-400/60"></span> <span className="text-[10px] font-semibold">{negativeLabel}</span>
                  </div>
               </>
             )}
@@ -209,31 +209,31 @@ export const ExerciseProgressChart: React.FC<ExerciseProgressChartProps> = ({
           {isBodyweightLike ? (
             <>
               <div className="flex items-center gap-2 text-blue-400">
-                <span className="w-2.5 h-2.5 rounded bg-blue-500/20 border border-blue-500"></span> Top reps
+                <span className="w-2.5 h-2.5 rounded-full bg-blue-500/20 border border-blue-500/60"></span> <span className="text-[10px] font-semibold">Top reps</span>
               </div>
               <div className="flex items-center gap-2 text-slate-500">
-                <span className="w-2.5 h-0.5 bg-slate-500 border-t border-dashed border-slate-500"></span> Sets
+                <span className="w-2.5 h-0.5 bg-slate-500 border-t border-dashed border-slate-500"></span> <span className="text-[10px] font-semibold">Sets</span>
               </div>
             </>
           ) : showUnilateral && hasUnilateralChartData ? (
             <>
               <div className="flex items-center gap-2 text-cyan-400">
-                <span className="w-2.5 h-2.5 rounded bg-cyan-500/20 border border-cyan-500"></span> Left
+                <span className="w-2.5 h-2.5 rounded-full bg-cyan-500/20 border border-cyan-500/60"></span> <span className="text-[10px] font-semibold">Left</span>
               </div>
               <div className="flex items-center gap-2 text-violet-400">
-                <span className="w-2.5 h-2.5 rounded bg-violet-500/20 border border-violet-500"></span> Right
+                <span className="w-2.5 h-2.5 rounded-full bg-violet-500/20 border border-violet-500/60"></span> <span className="text-[10px] font-semibold">Right</span>
               </div>
             </>
           ) : (
             <>
                <div className="flex items-center gap-2 text-emerald-400">
-                 <span className="w-2.5 h-2.5 rounded bg-emerald-500/20 border border-emerald-500"></span> {positiveLabel}
+                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/20 border border-emerald-500/60"></span> <span className="text-[10px] font-semibold">{positiveLabel}</span>
                </div>
               <div className="flex items-center gap-2 text-yellow-400">
-                <span className="w-2.5 h-2.5 rounded bg-yellow-500/20 border border-yellow-500"></span> Plateauing
+                <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/20 border border-yellow-500/60"></span> <span className="text-[10px] font-semibold">Plateauing</span>
               </div>
                <div className="flex items-center gap-2 text-rose-400">
-                 <span className="w-2.5 h-2.5 rounded bg-rose-500/20 border border-rose-500"></span> {negativeLabel}
+                 <span className="w-2.5 h-2.5 rounded-full bg-rose-500/20 border border-rose-500/60"></span> <span className="text-[10px] font-semibold">{negativeLabel}</span>
                </div>
             </>
           )}
