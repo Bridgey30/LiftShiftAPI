@@ -102,7 +102,7 @@ export const PersonalRecordsCard: React.FC<{
 
   return (
     <FlexCard theme={theme} className="min-h-[500px] flex flex-col">
-      <div className="relative z-[1] pt-6 px-6 pb-12 flex flex-col items-center text-center flex-1">
+      <div className="relative z-[1] pt-6 px-6 pb-14 flex flex-col items-center text-center flex-1">
         <h2 className={`text-xl sm:text-2xl font-bold ${textPrimary} mb-4`} style={FANCY_FONT}>
           In total you had
         </h2>

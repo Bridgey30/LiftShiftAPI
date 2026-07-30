@@ -17,7 +17,7 @@ export const StreakCard: React.FC<{
 
   return (
     <FlexCard theme={theme} className="min-h-[500px] flex flex-col">
-      <div className="relative z-[1] pt-6 px-6 pb-16 flex flex-col items-center text-center flex-1 justify-center">
+      <div className="relative z-[1] pt-6 px-6 pb-14 flex flex-col items-center text-center flex-1 justify-center">
         <h2 className={`text-2xl sm:text-3xl font-bold ${textPrimary} mb-12`} style={FANCY_FONT}>
           Your Longest Streak
         </h2>
@@ -65,7 +65,7 @@ export const StreakCard: React.FC<{
           </div>
         </div>
 
-        <div className={`text-3xl sm:text-4xl font-bold ${textPrimary} mb-3`} style={FANCY_FONT}>
+        <div className={`text-xl sm:text-2xl font-semibold ${textPrimary} mb-3`} style={FANCY_FONT}>
           weeks
         </div>
 

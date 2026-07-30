@@ -90,7 +90,7 @@ export const VolumeComparisonCard: React.FC<{
         </button>
       )}
 
-      <div className="relative z-[1] pt-5 px-5 pb-12 sm:pt-6 sm:px-6 sm:pb-14 flex flex-col items-center text-center h-full">
+      <div className="relative z-[1] pt-6 px-6 pb-14 flex flex-col items-center text-center h-full">
         <div className="w-full flex flex-col items-center">
           <div className={`flex items-center gap-2 mb-1.5 ${textMuted}`}>
             <Sparkles className="w-4 h-4" />
