@@ -139,7 +139,7 @@ export const DashboardSummaryCard: React.FC<DashboardSummaryCardProps> = ({
         </div>
         <div className="min-w-0 flex-1">
           <div className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 mb-1">Overview</div>
-          <p className={`text-sm sm:text-[15px] leading-6 text-slate-200 ${!isExpanded && isLongText ? 'line-clamp-2' : ''}`}>
+          <p className={`text-sm sm:text-[15px] leading-normal text-slate-200 ${!isExpanded && isLongText ? 'line-clamp-2' : ''}`}>
             {hasSegments ? (
               <SegmentRenderer
                 segments={summary.segments}

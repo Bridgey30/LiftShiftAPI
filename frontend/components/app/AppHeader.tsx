@@ -150,7 +150,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
 
           <button
             onClick={() => onSelectTab(Tab.EXERCISES)}
-            className={`w-full flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 rounded-lg whitespace-nowrap focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 border transition-all duration-200 cursor-pointer ${activeTab === Tab.EXERCISES ? 'bg-black/40 border-slate-600/60 text-white shadow-sm' : 'bg-transparent border-black/70 text-slate-400 hover:border-white hover:text-white hover:bg-white/5'}`}
+            className={`w-full flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 px-2 sm:px-3 py-2 rounded-md whitespace-nowrap focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 border transition-all duration-200 cursor-pointer ${activeTab === Tab.EXERCISES ? 'bg-black/40 border-slate-600/60 text-white shadow-sm' : 'bg-transparent border-black/70 text-slate-400 hover:border-white hover:text-white hover:bg-white/5'}`}
           >
             <svg
               className="w-5 h-5"
