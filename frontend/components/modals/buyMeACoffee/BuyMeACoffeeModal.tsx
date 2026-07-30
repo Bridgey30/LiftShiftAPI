@@ -42,7 +42,7 @@ export const BuyMeACoffeeModal: React.FC<BuyMeACoffeeModalProps> = ({ isOpen, on
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm overflow-y-auto overscroll-contain">
-      <div className="min-h-full w-full px-3 sm:px-4 py-3 sm:py-6 flex items-center justify-center">
+      <div className="min-h-full w-full px-3 sm:px-6 py-8 flex items-center justify-center">
         <div className="w-full max-w-lg mx-auto">
           <div className="relative bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg">
             <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">

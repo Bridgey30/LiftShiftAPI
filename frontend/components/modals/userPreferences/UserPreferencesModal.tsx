@@ -64,9 +64,9 @@ export const UserPreferencesModal: React.FC<UserPreferencesModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm overflow-y-auto overscroll-contain">
-      <div className="min-h-full w-full px-3 sm:px-4 py-3 sm:py-6 flex items-center justify-center">
+      <div className="min-h-full w-full px-3 sm:px-6 py-8 flex items-center justify-center">
         <div className="w-full max-w-2xl mx-auto">
-          <div className="relative bg-slate-950 border border-slate-700/50 rounded-xl p-4 sm:p-5 overflow-hidden backdrop-blur-md shadow-lg">
+          <div className="relative bg-slate-950 border border-slate-700/50 rounded-2xl p-5 sm:p-6 overflow-hidden backdrop-blur-md shadow-lg">
             {!isLightTheme ? (
               <img
                 src={resolveDarkBgByMode(themeMode, darkBgChoice)}
@@ -143,7 +143,7 @@ export const UserPreferencesModal: React.FC<UserPreferencesModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="w-full py-2 rounded-lg bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 text-sm font-medium hover:bg-emerald-500/30 transition-all"
+                className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 bg-transparent border border-emerald-500/40 text-slate-200 hover:border-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 transition-all duration-200 flex-1 sm:flex-none min-w-[140px] sm:min-w-0 cursor-pointer w-full"
               >
                 Done
               </button>
