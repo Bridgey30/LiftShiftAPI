@@ -15,3 +15,16 @@ input[type="reset"],
 input[type="button"] {
   cursor: pointer;
 }
+
+h1, h2, h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+a {
+  text-underline-position: from-font;
+  text-decoration-thickness: from-font;
+}
