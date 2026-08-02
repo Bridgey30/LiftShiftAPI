@@ -1,5 +1,3 @@
-export type MuscleAnalysisViewMode = 'headless';
-
 export const resolveSelectedSubjectKeys = (args: {
   selectedMuscle: string | null;
 }): string[] => {

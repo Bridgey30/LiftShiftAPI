@@ -6,8 +6,8 @@ import {
   type WeeklySetsDashboardResult,
   type WeeklySetsWindow,
 } from '../../../utils/muscle/analytics';
-import { toHeadlessVolumeMap } from '../../../utils/muscle/mapping';
-import { MUSCLE_GROUP_ORDER, SVG_TO_MUSCLE_GROUP, getHeadlessRadarSeries } from '../../../utils/muscle/mapping';
+import { toMuscleVolumeMap } from '../../../utils/muscle/mapping';
+import { MUSCLE_GROUP_ORDER, SVG_TO_MUSCLE_GROUP, getMuscleRadarSeries } from '../../../utils/muscle/mapping';
 import type { NormalizedMuscleGroup } from '../../../utils/muscle/analytics';
 import { resolveSelectedSubjectKeys } from '../utils/selectedSubjectKeys';
 import type { ExerciseAsset } from '../../../utils/data/exerciseAssets';
@@ -83,9 +83,9 @@ export const useMuscleHeatmapData = ({
     if (!assetsMap || !windowStart) return { volumes: new Map<string, number>(), maxVolume: 1 };
 
     const heatmap = weeklySetsDashboardMuscles?.heatmap ?? { volumes: new Map<string, number>(), maxVolume: 1 };
-    const headlessVolumes = toHeadlessVolumeMap(heatmap.volumes);
-    const headlessMaxVolume = Math.max(1, ...(Array.from(headlessVolumes.values()) as number[]));
-    return { volumes: headlessVolumes, maxVolume: headlessMaxVolume };
+    const muscleVolumeMap = toMuscleVolumeMap(heatmap.volumes);
+    const muscleMaxVolume = Math.max(1, ...(Array.from(muscleVolumeMap.values()) as number[]));
+    return { volumes: muscleVolumeMap, maxVolume: muscleMaxVolume };
   }, [assetsMap, windowStart, weeklySetsDashboardMuscles]);
 
   const muscleVolumes = useMemo(() => windowedHeatmapData.volumes, [windowedHeatmapData]);
@@ -135,12 +135,12 @@ export const useMuscleHeatmapData = ({
     return weeklySetsDashboardGroups?.weeklyRatesBySubject ?? null;
   }, [assetsMap, windowStart, weeklySetsDashboardGroups]);
 
-  const headlessRatesMap = useMemo(() => {
+  const muscleRatesMap = useMemo(() => {
     if (!assetsMap || !windowStart) return new Map<string, number>();
     return weeklySetsDashboardMuscles?.weeklyRatesBySubject ?? new Map<string, number>();
   }, [assetsMap, windowStart, weeklySetsDashboardMuscles]);
 
-  const radarData = useMemo(() => getHeadlessRadarSeries(headlessRatesMap), [headlessRatesMap]);
+  const radarData = useMemo(() => getMuscleRadarSeries(muscleRatesMap), [muscleRatesMap]);
 
   return {
     weeklySetsDashboardMuscles,
@@ -153,7 +153,7 @@ export const useMuscleHeatmapData = ({
     maxGroupVolume,
     selectedSubjectKeys,
     groupWeeklyRatesBySubject,
-    headlessRatesMap,
+    muscleRatesMap,
     radarData,
   };
 };

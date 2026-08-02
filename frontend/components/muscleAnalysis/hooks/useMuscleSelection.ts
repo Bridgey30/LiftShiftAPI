@@ -1,17 +1,14 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import {
-  getHeadlessIdForDetailedSvgId,
-  HEADLESS_MUSCLE_NAMES,
-  type HeadlessMuscleId,
+  getMuscleIdForDetailedSvgId,
+  MUSCLE_NAMES,
+  type MuscleId,
 } from '../../../utils/muscle/mapping';
 import { WeeklySetsWindow } from '../../../utils/muscle/analytics';
 
-export type ViewMode = 'headless';
-
 export interface InitialMuscleSelection {
   muscleId: string;
-  viewMode?: ViewMode;
 }
 
 export interface UseMuscleSelectionProps {
@@ -24,12 +21,11 @@ export interface UseMuscleSelectionProps {
 export interface UseMuscleSelectionReturn {
   selectedMuscle: string | null;
   setSelectedMuscle: React.Dispatch<React.SetStateAction<string | null>>;
-  viewMode: ViewMode;
   weeklySetsWindow: WeeklySetsWindow;
   setWeeklySetsWindow: React.Dispatch<React.SetStateAction<WeeklySetsWindow>>;
   selectedSvgIdForUrlRef: React.MutableRefObject<string | null>;
   clearSelectionUrl: () => void;
-  updateSelectionUrl: (opts: { svgId: string; mode: ViewMode; window: WeeklySetsWindow }) => void;
+  updateSelectionUrl: (opts: { svgId: string; window: WeeklySetsWindow }) => void;
   clearSelection: () => void;
 }
 
@@ -45,7 +41,6 @@ export function useMuscleSelection({
   const location = useLocation();
 
   const [selectedMuscle, setSelectedMuscle] = useState<string | null>(null);
-  const viewMode: ViewMode = 'headless';
   const [weeklySetsWindow, setWeeklySetsWindow] = useState<WeeklySetsWindow>('30d');
 
   // Track the selected SVG id for URL round-tripping
@@ -69,14 +64,14 @@ export function useMuscleSelection({
   useEffect(() => {
     if (initialMuscle && !isLoading) {
       selectedSvgIdForUrlRef.current = initialMuscle.muscleId;
-      // For headless mode, URL can contain either a headless id (preferred) or a detailed svg id.
-      const headless = (HEADLESS_MUSCLE_NAMES as any)[initialMuscle.muscleId]
-        ? (initialMuscle.muscleId as HeadlessMuscleId)
-        : getHeadlessIdForDetailedSvgId(initialMuscle.muscleId);
-      if (headless) {
-        setSelectedMuscle(headless);
-        // Ensure we keep URL round-trippable with a stable headless id.
-        selectedSvgIdForUrlRef.current = headless;
+      // URL can contain either a muscle ID (preferred) or a detailed svg id.
+      const muscleId = (MUSCLE_NAMES as any)[initialMuscle.muscleId]
+        ? (initialMuscle.muscleId as MuscleId)
+        : getMuscleIdForDetailedSvgId(initialMuscle.muscleId);
+      if (muscleId) {
+        setSelectedMuscle(muscleId);
+        // Ensure we keep URL round-trippable with a stable muscle id.
+        selectedSvgIdForUrlRef.current = muscleId;
       }
       onInitialMuscleConsumed?.();
     }
@@ -98,7 +93,6 @@ export function useMuscleSelection({
   return {
     selectedMuscle,
     setSelectedMuscle,
-    viewMode,
     weeklySetsWindow,
     setWeeklySetsWindow,
     selectedSvgIdForUrlRef,

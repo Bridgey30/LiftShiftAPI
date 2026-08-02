@@ -4,22 +4,21 @@ import type { ExerciseAsset } from '../../../utils/data/exerciseAssets';
 import type { WeeklySetsWindow } from '../../../utils/muscle/analytics';
 import { computeDailySvgMuscleVolumes } from '../../../utils/muscle/volume';
 import { formatDeltaPercentage, getDeltaFormatPreset } from '../../../utils/format/deltaFormat';
-import { getHeadlessIdForDetailedSvgId, HEADLESS_MUSCLE_IDS } from '../../../utils/muscle/mapping';
+import { getMuscleIdForDetailedSvgId, MUSCLE_IDS } from '../../../utils/muscle/mapping';
 
-export type MuscleAnalysisViewMode = 'headless';
 
-export const aggregateDailyToHeadless = (daily: ReturnType<typeof computeDailySvgMuscleVolumes>) => {
+export const aggregateDailyToMuscle = (daily: ReturnType<typeof computeDailySvgMuscleVolumes>) => {
   return daily.map((d) => {
     const muscles = new Map<string, number>();
     for (const [k, v] of d.muscles.entries()) {
-      const headless = getHeadlessIdForDetailedSvgId(k);
-      if (!headless) continue;
+      const muscleId = getMuscleIdForDetailedSvgId(k);
+      if (!muscleId) continue;
       // computeDailySvgMuscleVolumes can assign the same set contribution to multiple detailed
-      // SVG parts for a single anatomical muscle (e.g. Chest -> both pec parts). In headless
+      // SVG parts for a single anatomical muscle (e.g. Chest -> both pec parts). In muscle
       // mode we want the per-muscle intensity, so we take MAX across detailed parts.
-      const prev = muscles.get(headless) ?? 0;
+      const prev = muscles.get(muscleId) ?? 0;
       const next = v ?? 0;
-      if (next > prev) muscles.set(headless, next);
+      if (next > prev) muscles.set(muscleId, next);
     }
     return { ...d, muscles };
   });
@@ -43,7 +42,7 @@ export const computeWeeklySetsSummary = (args: {
   if (!assetsMap) return null;
   if (!windowStart) return null;
 
-  const daily = aggregateDailyToHeadless(computeDailySvgMuscleVolumes(data, assetsMap));
+  const daily = aggregateDailyToMuscle(computeDailySvgMuscleVolumes(data, assetsMap));
 
   const getDaySum = (day: { muscles: ReadonlyMap<string, number> }) => {
     if (selectedSubjectKeys.length > 0) {
@@ -55,7 +54,7 @@ export const computeWeeklySetsSummary = (args: {
     // When no muscle is selected, return average per muscle
     let sum = 0;
     for (const v of day.muscles.values()) sum += v;
-    return sum / HEADLESS_MUSCLE_IDS.length;
+    return sum / MUSCLE_IDS.length;
   };
 
   const total = daily.reduce((acc, day) => {
@@ -110,7 +109,7 @@ export const computeWeeklySetsDelta = (args: {
 
   const clampedPreviousStart = allTimeWindowStart && allTimeWindowStart > previousStart ? allTimeWindowStart : previousStart;
 
-  const daily = aggregateDailyToHeadless(computeDailySvgMuscleVolumes(data, assetsMap));
+  const daily = aggregateDailyToMuscle(computeDailySvgMuscleVolumes(data, assetsMap));
 
   const sumInRange = (start: Date, end: Date) => {
     const total = daily.reduce((acc, day) => {
@@ -124,7 +123,7 @@ export const computeWeeklySetsDelta = (args: {
       // When no muscle is selected, return average per muscle
       let sum = 0;
       for (const v of day.muscles.values()) sum += v;
-      return acc + sum / HEADLESS_MUSCLE_IDS.length;
+      return acc + sum / MUSCLE_IDS.length;
     }, 0);
 
     const days = Math.max(1, differenceInCalendarDays(end, start) + 1);

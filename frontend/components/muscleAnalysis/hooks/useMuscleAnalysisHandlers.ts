@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
-  getHeadlessIdForDetailedSvgId,
-  HEADLESS_MUSCLE_NAMES,
+  getMuscleIdForDetailedSvgId,
+  MUSCLE_NAMES,
 } from '../../../utils/muscle/mapping';
 import { getRelatedMuscleIds } from '../../bodyMap/BodyMap';
 import { getVolumeThresholds, getVolumeZone } from '../../../utils/muscle/hypertrophy';
@@ -15,9 +15,9 @@ interface UseMuscleAnalysisHandlersParams {
   setSelectedMuscle: React.Dispatch<React.SetStateAction<string | null>>;
   selectedSvgIdForUrlRef: React.MutableRefObject<string | null>;
   clearSelectionUrl: () => void;
-  updateSelectionUrl: (payload: { svgId: string; mode?: 'headless'; window: WeeklySetsWindow }) => void;
+  updateSelectionUrl: (payload: { svgId: string; window: WeeklySetsWindow }) => void;
   weeklySetsWindow: WeeklySetsWindow;
-  headlessRatesMap: Map<string, number>;
+  muscleRatesMap: Map<string, number>;
   setHoverTooltip: (value: TooltipData | null) => void;
   trainingLevel: TrainingLevel;
   /** Pre-computed hypertrophy score results per muscle */
@@ -31,7 +31,7 @@ export const useMuscleAnalysisHandlers = ({
   clearSelectionUrl,
   updateSelectionUrl,
   weeklySetsWindow,
-  headlessRatesMap,
+  muscleRatesMap,
   setHoverTooltip,
   trainingLevel,
   hypertrophyScoreMap,
@@ -42,9 +42,9 @@ export const useMuscleAnalysisHandlers = ({
   const volumeThresholds = useMemo(() => getVolumeThresholds(trainingLevel), [trainingLevel]);
 
   const buildTooltip = useCallback((muscleId: string, rect: DOMRect): TooltipData => {
-    const headlessId = getHeadlessIdForDetailedSvgId(muscleId) ?? muscleId;
-    const rate = headlessRatesMap.get(headlessId) || 0;
-    const hScoreData = hypertrophyScoreMap.get(headlessId);
+    const mappedMuscleId = getMuscleIdForDetailedSvgId(muscleId) ?? muscleId;
+    const rate = muscleRatesMap.get(mappedMuscleId) || 0;
+    const hScoreData = hypertrophyScoreMap.get(mappedMuscleId);
 
     if (hScoreData) {
       const volW = Math.round(hScoreData.volumeScore * FACTOR_WEIGHTS.volumeScore);
@@ -56,7 +56,7 @@ export const useMuscleAnalysisHandlers = ({
       const raw = hScoreData.raw;
       const trendSign = raw.oneRMTrend > 0 ? '+' : '';
 
-      const displayName = (HEADLESS_MUSCLE_NAMES as any)[headlessId] ?? muscleId;
+      const displayName = (MUSCLE_NAMES as any)[mappedMuscleId] ?? muscleId;
       return {
         rect,
         title: `${displayName} : ${hScoreData.totalScore}%`,
@@ -72,11 +72,11 @@ export const useMuscleAnalysisHandlers = ({
     const zone = getVolumeZone(rate, volumeThresholds);
     return {
       rect,
-      title: (HEADLESS_MUSCLE_NAMES as any)[headlessId] ?? muscleId,
+      title: (MUSCLE_NAMES as any)[mappedMuscleId] ?? muscleId,
       body: `${rate.toFixed(1)} sets/wk — ${zone.label}\n${zone.explanation}`,
       status: rate > 0 ? 'success' : 'default',
     };
-  }, [headlessRatesMap, hypertrophyScoreMap, volumeThresholds]);
+  }, [muscleRatesMap, hypertrophyScoreMap, volumeThresholds]);
 
   const handleMuscleClick = useCallback((muscleId: string) => {
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;

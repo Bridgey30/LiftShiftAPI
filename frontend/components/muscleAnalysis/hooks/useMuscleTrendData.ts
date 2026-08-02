@@ -4,7 +4,7 @@ import type { WorkoutSet, ExerciseStats } from '../../../types';
 import { computeWeeklySetsDelta } from '../utils/weeklySetsMetrics';
 import type { WeeklySetsWindow } from '../../../utils/muscle/analytics';
 import { computeDailySvgMuscleVolumes, computeWindowedExerciseBreakdown } from '../../../utils/muscle/volume';
-import { HEADLESS_ID_TO_DETAILED_SVG_IDS, HEADLESS_MUSCLE_IDS } from '../../../utils/muscle/mapping';
+import { MUSCLE_ID_TO_DETAILED_SVG_IDS, MUSCLE_IDS } from '../../../utils/muscle/mapping';
 import { getWeeklyVolumeSetWeight } from '../../../utils/analysis/classification';
 import type { NormalizedMuscleGroup } from '../../../utils/muscle/analytics';
 import type { ExerciseAsset } from '../../../utils/data/exerciseAssets';
@@ -24,7 +24,7 @@ interface UseMuscleTrendDataParams {
   weeklySetsWindow: WeeklySetsWindow;
   selectedSubjectKeys: string[];
   groupWeeklyRatesBySubject: Map<string, number> | null;
-  headlessRatesMap: Map<string, number>;
+  muscleRatesMap: Map<string, number>;
   muscleVolume: Map<string, { sets: number }>;
   windowedGroupVolumes: Map<NormalizedMuscleGroup, number>;
   muscleVolumes: Map<string, number>;
@@ -43,7 +43,7 @@ export const useMuscleTrendData = ({
   weeklySetsWindow,
   selectedSubjectKeys,
   groupWeeklyRatesBySubject,
-  headlessRatesMap,
+  muscleRatesMap,
   muscleVolumes,
   filterCacheKey,
   secondarySetMultiplier,
@@ -60,34 +60,34 @@ export const useMuscleTrendData = ({
   // For legend: Get MAX weekly sets across all muscles (for this filter)
   const legendMaxSets = useMemo(() => {
     let max = 0;
-    for (const v of headlessRatesMap.values()) {
+    for (const v of muscleRatesMap.values()) {
       if (v > max) max = v;
     }
     return Math.round(max * 10) / 10;
-  }, [headlessRatesMap]);
+  }, [muscleRatesMap]);
 
-  // Derive weekly sets summary from headlessRatesMap (single source of truth)
+  // Derive weekly sets summary from muscleRatesMap (single source of truth)
   // This ensures consistency with body map hover values
   const weeklySetsSummary = useMemo(() => {
     if (selectedSubjectKeys.length > 0) {
       // Sum up the selected muscle(s) values
       let sum = 0;
       for (const k of selectedSubjectKeys) {
-        sum += headlessRatesMap.get(k) ?? 0;
+        sum += muscleRatesMap.get(k) ?? 0;
       }
       return Math.round(sum * 10) / 10;
     }
     
     // When no muscle is selected, return average sets per muscle
-    if (headlessRatesMap.size === 0) return 0;
+    if (muscleRatesMap.size === 0) return 0;
     let sum = 0;
     let count = 0;
-    for (const v of headlessRatesMap.values()) {
+    for (const v of muscleRatesMap.values()) {
       sum += v;
       count++;
     }
     return count > 0 ? Math.round((sum / count) * 10) / 10 : 0;
-  }, [headlessRatesMap, selectedSubjectKeys]);
+  }, [muscleRatesMap, selectedSubjectKeys]);
 
   const weeklySetsDelta = useMemo(() => {
     return computeWeeklySetsDelta({
@@ -109,7 +109,7 @@ export const useMuscleTrendData = ({
     const cacheKey = muscleCacheKeys.trendDataWithMultiplier(
       filterCacheKey,
       weeklySetsWindow,
-      'headless',
+      'muscle',
       selectedKeysHash,
       secondarySetMultiplier
     );
@@ -129,14 +129,14 @@ export const useMuscleTrendData = ({
 
         // Helper to get sum for a day
         const getDaySum = (day: { muscles: ReadonlyMap<string, number> }) => {
-          // For headless mode, aggregate detailed SVG parts to headless muscles using MAX
-          const headlessTotals = new Map<string, number>();
+          // For muscle mode, aggregate detailed SVG parts into muscle IDs using MAX
+          const muscleTotals = new Map<string, number>();
           for (const [k, v] of day.muscles.entries()) {
-            // Find which headless muscle this SVG id belongs to
-            for (const [headlessId, detailedIds] of Object.entries(HEADLESS_ID_TO_DETAILED_SVG_IDS)) {
+            // Find which muscle this SVG id belongs to
+            for (const [muscleId, detailedIds] of Object.entries(MUSCLE_ID_TO_DETAILED_SVG_IDS)) {
               if ((detailedIds as readonly string[]).includes(k)) {
-                const current = headlessTotals.get(headlessId) ?? 0;
-                if (v > current) headlessTotals.set(headlessId, v);
+                const current = muscleTotals.get(muscleId) ?? 0;
+                if (v > current) muscleTotals.set(muscleId, v);
                 break;
               }
             }
@@ -144,14 +144,14 @@ export const useMuscleTrendData = ({
           
           if (keys.length > 0) {
             let sum = 0;
-            for (const k of keys) sum += headlessTotals.get(k) ?? 0;
+            for (const k of keys) sum += muscleTotals.get(k) ?? 0;
             return sum;
           }
           
           // When no muscle is selected, return average per muscle
           let sum = 0;
-          for (const v of headlessTotals.values()) sum += v;
-          return sum / HEADLESS_MUSCLE_IDS.length;
+          for (const v of muscleTotals.values()) sum += v;
+          return sum / MUSCLE_IDS.length;
         };
 
         // Build data points showing cumulative average weekly rate at each training day
@@ -184,7 +184,7 @@ export const useMuscleTrendData = ({
     const cacheKey = muscleCacheKeys.trendDataWithMultiplier(
       filterCacheKey,
       weeklySetsWindow,
-      'headless',
+      'muscle',
       'all',
       secondarySetMultiplier
     );
@@ -198,18 +198,18 @@ export const useMuscleTrendData = ({
         if (windowedDaily.length === 0) return [];
 
         const getDayMax = (day: { muscles: ReadonlyMap<string, number> }) => {
-          const headlessTotals = new Map<string, number>();
+          const muscleTotals = new Map<string, number>();
           for (const [k, v] of day.muscles.entries()) {
-            for (const [headlessId, detailedIds] of Object.entries(HEADLESS_ID_TO_DETAILED_SVG_IDS)) {
+            for (const [muscleId, detailedIds] of Object.entries(MUSCLE_ID_TO_DETAILED_SVG_IDS)) {
               if ((detailedIds as readonly string[]).includes(k)) {
-                const current = headlessTotals.get(headlessId) ?? 0;
-                if (v > current) headlessTotals.set(headlessId, v);
+                const current = muscleTotals.get(muscleId) ?? 0;
+                if (v > current) muscleTotals.set(muscleId, v);
                 break;
               }
             }
           }
           let max = 0;
-          for (const v of headlessTotals.values()) {
+          for (const v of muscleTotals.values()) {
             if (v > max) max = v;
           }
           return max;
@@ -239,7 +239,7 @@ export const useMuscleTrendData = ({
     const cacheKey = muscleCacheKeys.exerciseBreakdownWithMultiplier(
       filterCacheKey,
       breakdownStart.getTime(),
-      'headless',
+      'muscle',
       selectedKeysHash,
       secondarySetMultiplier
     );
@@ -248,7 +248,7 @@ export const useMuscleTrendData = ({
       cacheKey,
       data,
       () => {
-        const selectedForBreakdown = selectedSubjectKeys.flatMap((h) => (HEADLESS_ID_TO_DETAILED_SVG_IDS as any)[h] ?? []);
+        const selectedForBreakdown = selectedSubjectKeys.flatMap((h) => (MUSCLE_ID_TO_DETAILED_SVG_IDS as any)[h] ?? []);
 
         return computeWindowedExerciseBreakdown({
           data,
