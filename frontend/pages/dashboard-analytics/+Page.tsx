@@ -72,11 +72,11 @@ const sections = [
     content: (
       <>
         <p className="text-slate-300 leading-relaxed mb-4">
-          LiftShift tracks three kinds of PRs per exercise:
+          LiftShift tracks seven kinds of PRs per exercise:
         </p>
         <ul className="list-disc list-inside space-y-1 text-slate-300 leading-relaxed mb-4">
-          <li><strong>Gold PRs</strong> — True all-time bests for weight, 1RM estimate, and volume.</li>
-          <li><strong>Silver PRs</strong> — Best in the last 2 months. Important for experienced lifters who rarely hit true all-time PRs.</li>
+          <li><strong>Gold PRs</strong> — True all-time bests for weight, 1RM estimate, set volume, session volume, reps, weighted reps, and distance.</li>
+          <li><strong>Silver PRs</strong> — Best in the last 1 month. Important for experienced lifters who rarely hit true all-time PRs.</li>
           <li><strong>Premature PRs</strong> — A big spike that wasn&rsquo;t sustained in follow-up sessions. Flagged so you know it wasn&rsquo;t a real breakthrough yet.</li>
         </ul>
         <p className="text-slate-300 leading-relaxed mb-4">

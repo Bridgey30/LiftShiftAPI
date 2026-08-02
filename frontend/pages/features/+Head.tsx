@@ -33,7 +33,7 @@ const FEATURES_SCHEMA = JSON.stringify({
       '@type': 'ListItem',
       position: 4,
       name: 'Smart PR Tracking',
-      description: 'All-time bests, 2-month bests, premature PR detection, and drought alerts.',
+      description: 'All-time bests, 1-month bests, premature PR detection, and drought alerts.',
     },
     {
       '@type': 'ListItem',

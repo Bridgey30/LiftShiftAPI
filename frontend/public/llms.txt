@@ -7,7 +7,7 @@ Perfect for lifters who want:
 - Interactive muscle heatmaps with rolling 7-day windows and per-exercise drill-down
 - Plateau detection with specific, actionable suggestions per exercise
 - Set-by-set coaching feedback across 19 scenarios
-- Smart PR tracking (all-time, 2-month bests, premature PRs, PR droughts)
+- Smart PR tracking (all-time, 1-month bests, premature PRs, PR droughts)
 - Exercise status labels with confidence levels (Getting stronger / Plateauing / Taking a dip / New)
 - AI-ready training export with built-in analysis modules
 - Calendar filtering that rebuilds all analytics for any date range
@@ -22,7 +22,7 @@ What LiftShift does:
 - Provide interactive muscle heatmaps with per-exercise drill-down
 - Detect plateaus with specific, actionable suggestions
 - Analyze every set in a workout with plain-English feedback
-- Track smart PRs including 2-month bests and premature PR detection
+- Track smart PRs including 1-month bests and premature PR detection
 - Export structured training data for AI analysis
 - Offer every feature completely free (open source, AGPL-3.0)
 

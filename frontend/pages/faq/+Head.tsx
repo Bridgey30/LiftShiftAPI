@@ -14,7 +14,7 @@ const SCHEMA = JSON.stringify({
     { '@type': 'Question', 'name': 'Which apps are supported?', 'acceptedAnswer': { '@type': 'Answer', 'text': 'Hevy (API sync or CSV), Strong (CSV), and Lyfta (CSV). You can also combine data from multiple apps into one dashboard.' } },
     { '@type': 'Question', 'name': 'How does plateau detection work?', 'acceptedAnswer': { '@type': 'Answer', 'text': 'LiftShift compares your recent sessions to previous ones. If your strength is roughly flat, you get a plateauing label with a concrete suggestion.' } },
     { '@type': 'Question', 'name': 'Can I export data for AI analysis?', 'acceptedAnswer': { '@type': 'Answer', 'text': 'Yes. Pick a timeframe, optionally select analysis modules, and LiftShift generates a structured prompt + data. Paste into any AI tool.' } },
-    { '@type': 'Question', 'name': 'What PRs does LiftShift track?', 'acceptedAnswer': { '@type': 'Answer', 'text': 'All-time bests (Gold), 2-month bests (Silver), premature PRs (unsustainable jumps), and PR droughts.' } },
+    { '@type': 'Question', 'name': 'What PRs does LiftShift track?', 'acceptedAnswer': { '@type': 'Answer', 'text': 'All-time bests (Gold), 1-month bests (Silver), premature PRs (unsustainable jumps), and PR droughts.' } },
     { '@type': 'Question', 'name': 'Is LiftShift a coaching app?', 'acceptedAnswer': { '@type': 'Answer', 'text': 'No. It is analytics for your training logs. It gives feedback based on your data but does not generate training programs or provide medical advice.' } },
   ],
 });

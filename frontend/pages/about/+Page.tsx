@@ -26,7 +26,7 @@ function Page() {
             <li>Builds interactive muscle heatmaps with per-exercise drill-down, volume zone scoring, and muscle balance analysis.</li>
             <li>Detects plateaus and gives specific, actionable next-session suggestions.</li>
             <li>Analyzes every set in a workout with plain-English feedback across 19 scenarios.</li>
-            <li>Tracks three kinds of PRs: all-time bests, 2-month bests, and premature PRs.</li>
+            <li>Tracks seven kinds of PRs (weight, 1RM, set volume, session volume, reps, weighted reps, distance) with all-time and 1-month tiers, plus premature PR detection.</li>
             <li>Exports structured training data for AI analysis with built-in analysis modules.</li>
             <li>Combines data from multiple apps into one unified dashboard.</li>
             <li>Processes everything locally in your browser &mdash; no server-side storage.</li>

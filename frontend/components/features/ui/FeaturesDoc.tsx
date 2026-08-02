@@ -20,7 +20,7 @@ const featureGroups = [
     image: '/images/misc/plateau.avif',
     alt: 'LiftShift exercise status labels: Getting stronger, Plateauing, or Taking a dip',
     items: [
-      'Smart PR tracking, all-time bests, 2-month bests, premature PR detection, and PR drought alerts.',
+      'Smart PR tracking, all-time bests, 1-month bests, premature PR detection, and PR drought alerts.',
       'Exercise status labels, Getting stronger, Plateauing, or Taking a dip, with confidence levels.',
       'Plateau detection with specific, actionable suggestions for what to change next session.',
     ],

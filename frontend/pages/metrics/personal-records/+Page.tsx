@@ -33,7 +33,7 @@ function Page() {
           </p>
           <ul className="list-disc list-inside space-y-1 text-slate-300 leading-relaxed">
             <li><strong className="text-white">Gold PR</strong> \u2014 An all-time personal record. You have never lifted more weight for this many reps, ever, in your logged history. This is the highest tier and the one most people mean when they say \u201cPR.\u201d</li>
-            <li><strong className="text-white">Silver PR</strong> \u2014 A 2-month best. You haven\u2019t lifted this much in the last two months. This indicates you\u2019re surpassing recent performance and trending in the right direction, even if you haven\u2019t hit an all-time best yet.</li>
+            <li><strong className="text-white">Silver PR</strong> \u2014 A 1-month best. You haven\u2019t lifted this much in the last month. This indicates you\u2019re surpassing recent performance and trending in the right direction, even if you haven\u2019t hit an all-time best yet.</li>
             <li><strong className="text-white">Premature PR</strong> \u2014 A best at a new rep range. For example, if you\u2019ve never logged this exercise at 6 reps before and you hit a weight that\u2019s your best at 6 reps, it\u2019s flagged as a premature PR. It\u2019s technically a record, but LiftShift notes that the comparison pool is shallow. These often occur when you try a new rep scheme or exercise variation.</li>
           </ul>
         </section>
