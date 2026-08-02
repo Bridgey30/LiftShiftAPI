@@ -35,8 +35,8 @@ interface HistorySessionHeaderCardProps {
   isCollapsed: boolean;
   isLightMode: boolean;
   sessionHeatmapHasData: boolean;
-  sessionHeadlessVolumes: Map<string, number>;
-  sessionHeadlessMaxVolume: number;
+  sessionMuscleVolumes: Map<string, number>;
+  sessionMuscleMaxVolume: number;
   bodyMapGender: BodyMapGender;
   setTooltip: (state: TooltipState | null) => void;
   toggleCollapsed: () => void;
@@ -55,8 +55,8 @@ export const HistorySessionHeaderCard: React.FC<
   isCollapsed,
   isLightMode,
   sessionHeatmapHasData,
-  sessionHeadlessVolumes,
-  sessionHeadlessMaxVolume,
+  sessionMuscleVolumes,
+  sessionMuscleMaxVolume,
   bodyMapGender,
   setTooltip,
   toggleCollapsed,
@@ -207,7 +207,7 @@ export const HistorySessionHeaderCard: React.FC<
               </div>
 
               <div className="col-span-3 row-start-8 flex items-center transition-all duration-300">
-                <MuscleSetsList headlessVolumes={sessionHeadlessVolumes} />
+                <MuscleSetsList muscleVolumes={sessionMuscleVolumes} />
               </div>
 
               <div
@@ -217,8 +217,8 @@ export const HistorySessionHeaderCard: React.FC<
                 <div className="w-full h-full flex items-center justify-center overflow-visible mt-5">
                   <div className="w-full h-full overflow-visible scale-[1.3] origin-bottom">
                     <HistorySessionBodyMap
-                      headlessVolumes={sessionHeadlessVolumes}
-                      headlessMaxVolume={sessionHeadlessMaxVolume}
+                      muscleVolumes={sessionMuscleVolumes}
+                      muscleMaxVolume={sessionMuscleMaxVolume}
                       bodyMapGender={bodyMapGender}
                       setTooltip={setTooltip}
                     />
@@ -331,7 +331,7 @@ export const HistorySessionHeaderCard: React.FC<
           </button>
         </div>
         <div className="pl-1 pt-1">
-          <MuscleSetsList headlessVolumes={sessionHeadlessVolumes} />
+          <MuscleSetsList muscleVolumes={sessionMuscleVolumes} />
         </div>
       </div>
 
@@ -356,8 +356,8 @@ export const HistorySessionHeaderCard: React.FC<
           <div className="w-[50vw] h-[30vh] sm:w-32 sm:h-28 md:w-60 md:h-36 md:-mr-6 flex items-center justify-center overflow-visible">
             <div className="w-full h-full md:scale-[1.7] mt-10 overflow-visible">
               <HistorySessionBodyMap
-                headlessVolumes={sessionHeadlessVolumes}
-                headlessMaxVolume={sessionHeadlessMaxVolume}
+                muscleVolumes={sessionMuscleVolumes}
+                muscleMaxVolume={sessionMuscleMaxVolume}
                 bodyMapGender={bodyMapGender}
                 setTooltip={setTooltip}
               />

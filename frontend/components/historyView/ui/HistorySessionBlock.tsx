@@ -1,7 +1,7 @@
 import React from 'react';
 import type { ExerciseMuscleData } from '../../../utils/muscle/mapping';
 import { buildSessionMuscleHeatmap } from '../utils/muscleHeatmaps';
-import { toHeadlessVolumeMap } from '../../../utils/muscle/mapping';
+import { toMuscleVolumeMap } from '../../../utils/muscle/mapping';
 import type { Session } from '../utils/historySessions';
 import type { WeightUnit } from '../../../utils/storage/localStorage';
 import type { BodyMapGender } from '../../bodyMap/BodyMap';
@@ -73,8 +73,8 @@ export const HistorySessionBlock: React.FC<HistorySessionBlockProps> = ({
 }) => {
   const allSessionSets = session.exercises.flatMap((e) => e.sets);
   const sessionHeatmap = buildSessionMuscleHeatmap(allSessionSets, exerciseMuscleData, secondarySetMultiplier);
-  const sessionHeadlessVolumes = toHeadlessVolumeMap(sessionHeatmap.volumes);
-  const sessionHeadlessMaxVolume = Math.max(1, ...(Array.from(sessionHeadlessVolumes.values()) as number[]));
+  const sessionMuscleVolumes = toMuscleVolumeMap(sessionHeatmap.volumes);
+  const sessionMuscleMaxVolume = Math.max(1, ...(Array.from(sessionMuscleVolumes.values()) as number[]));
 
   const isCollapsed = collapsedSessions.has(session.key);
   const sessionDurationMs = getSessionDurationMs(session);
@@ -121,8 +121,8 @@ export const HistorySessionBlock: React.FC<HistorySessionBlockProps> = ({
           isCollapsed={isCollapsed}
           isLightMode={isLightMode}
           sessionHeatmapHasData={sessionHeatmap.volumes.size > 0}
-          sessionHeadlessVolumes={sessionHeadlessVolumes}
-          sessionHeadlessMaxVolume={sessionHeadlessMaxVolume}
+          sessionMuscleVolumes={sessionMuscleVolumes}
+          sessionMuscleMaxVolume={sessionMuscleMaxVolume}
           bodyMapGender={bodyMapGender}
           setTooltip={setTooltip}
           toggleCollapsed={toggleCollapsed}
