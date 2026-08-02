@@ -1,4 +1,4 @@
-export type PrType = 'weight' | 'oneRm' | 'volume';
+export type PrType = 'weight' | 'oneRm' | 'volume' | 'reps' | 'weightedReps' | 'sessionVolume' | 'distance';
 
 export interface WorkoutSet {
   title: string;
