@@ -6,9 +6,8 @@ import { ChartSkeleton } from '../../ui/ChartSkeleton';
 import { CHART_TOOLTIP_STYLE } from '../../../utils/ui/uiConstants';
 import { formatNumber } from '../../../utils/format/formatters';
 import { getRechartsXAxisInterval, RECHARTS_XAXIS_PADDING } from '../../../utils/chart/chartEnhancements';
-import { HEADLESS_MUSCLE_NAMES } from '../../../utils/muscle/mapping';
+import { MUSCLE_NAMES } from '../../../utils/muscle/mapping';
 import { SEMI_FANCY_FONT } from '../../../utils/ui/uiConstants';
-import { SVG_MUSCLE_NAMES } from '../../../utils/muscle/mapping';
 import type { WeeklySetsWindow } from '../../../utils/muscle/analytics';
 import type { ExerciseAsset } from '../../../utils/data/exerciseAssets';
 import type { ExerciseMuscleData } from '../../../utils/muscle/mapping';
@@ -19,7 +18,7 @@ import type { LifetimeAchievementData } from '../hooks/useLifetimeAchievement';
 
 interface MuscleAnalysisDetailPanelProps {
   selectedMuscle: string | null;
-  viewMode: 'muscle' | 'group' | 'headless';
+  viewMode: 'muscle' | 'group';
   weeklySetsWindow: WeeklySetsWindow;
   weeklySetsSummary: number | null;
   volumeDelta: { direction: 'up' | 'down' | 'same'; formattedPercent: string } | null;
@@ -57,10 +56,8 @@ export const MuscleAnalysisDetailPanel: React.FC<MuscleAnalysisDetailPanelProps>
   const title = selectedMuscle
     ? (viewMode === 'group'
       ? selectedMuscle
-      : viewMode === 'headless'
-        ? ((HEADLESS_MUSCLE_NAMES as any)[selectedMuscle] ?? selectedMuscle)
-        : SVG_MUSCLE_NAMES[selectedMuscle])
-    : (viewMode === 'group' ? 'All Groups' : viewMode === 'headless' ? 'All Muscles' : 'All Muscles');
+      : ((MUSCLE_NAMES as any)[selectedMuscle] ?? selectedMuscle))
+    : (viewMode === 'group' ? 'All Groups' : 'All Muscles');
 
   const totalSetsInWindow = windowedSelectionBreakdown?.totalSetsInWindow ?? 0;
 

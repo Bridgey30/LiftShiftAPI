@@ -75,7 +75,7 @@ interface LifetimeAchievementCardProps {
   /** Only include sets on or after this date (respects weekly sets window filter) */
   windowStart?: Date | null;
   /** Pre-computed weekly set rates per muscle from the body map (single source of truth for volume) */
-  headlessRatesMap?: ReadonlyMap<string, number>;
+  muscleRatesMap?: ReadonlyMap<string, number>;
   /** Training level for volume threshold selection (matches body map) */
   trainingLevel?: TrainingLevel;
   /** Pre-computed hypertrophy scores (when lifted to parent, skips internal calculation) */
@@ -351,7 +351,7 @@ export const LifetimeAchievementCard: React.FC<LifetimeAchievementCardProps> = (
   assetsMap,
   effectiveNow,
   windowStart,
-  headlessRatesMap,
+  muscleRatesMap,
   trainingLevel = 'intermediate',
   hypertrophyScores,
 }) => {
@@ -383,11 +383,11 @@ export const LifetimeAchievementCard: React.FC<LifetimeAchievementCardProps> = (
 
     const scores = calculateAllMuscleHypertrophyScores(windowedData, assetsMap, trainingLevel, true, effectiveNow, trendWindowDays);
 
-    // Override volume scores using the body map's headlessRatesMap (single source of truth)
+    // Override volume scores using the body map's muscleRatesMap (single source of truth)
     // The body map correctly handles: secondary multiplier, unilateral sets, MAX aggregation
-    if (headlessRatesMap && headlessRatesMap.size > 0) {
+    if (muscleRatesMap && muscleRatesMap.size > 0) {
       for (const m of scores) {
-        const rate = headlessRatesMap.get(m.muscleId);
+        const rate = muscleRatesMap.get(m.muscleId);
         if (rate !== undefined) {
           m.score.volumeScore = Math.round(weeklyStimulusFromThresholds(rate, getVolumeThresholds(trainingLevel)));
           m.score.raw.weeklySets = Math.round(rate * 10) / 10;
@@ -402,7 +402,7 @@ export const LifetimeAchievementCard: React.FC<LifetimeAchievementCardProps> = (
     }
 
     return scores;
-  }, [workoutData, assetsMap, effectiveNow, windowStart, headlessRatesMap, trainingLevel, hypertrophyScores]);
+  }, [workoutData, assetsMap, effectiveNow, windowStart, muscleRatesMap, trainingLevel, hypertrophyScores]);
 
   // Overall hypertrophy stats
   const hypertrophyStats = useMemo(() => {

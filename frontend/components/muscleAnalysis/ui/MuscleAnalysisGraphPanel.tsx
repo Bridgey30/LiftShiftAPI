@@ -15,7 +15,7 @@ import {
   formatAxisNumber,
   calculateYAxisDomain,
 } from "../../../utils/chart/chartEnhancements";
-import { HEADLESS_MUSCLE_NAMES } from "../../../utils/muscle/mapping";
+import { MUSCLE_NAMES } from "../../../utils/muscle/mapping";
 import type { WeeklySetsWindow } from "../../../utils/muscle/analytics";
 import {
   getVolumeZoneColor,
@@ -206,7 +206,7 @@ export const MuscleAnalysisGraphPanel: React.FC<MuscleAnalysisGraphPanelProps> =
       clearSelection,
       hypertrophyScore,
     }) => {
-      const title = `Wkly sets for ${selectedMuscle ? ((HEADLESS_MUSCLE_NAMES as any)[selectedMuscle] ?? selectedMuscle) : 'Full Body'}`;
+      const title = `Wkly sets for ${selectedMuscle ? ((MUSCLE_NAMES as any)[selectedMuscle] ?? selectedMuscle) : 'Full Body'}`;
 
       const totalSetsInWindow =
         windowedSelectionBreakdown?.totalSetsInWindow ?? 0;

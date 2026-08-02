@@ -26,7 +26,7 @@ interface MuscleAnalysisProps {
   filterCacheKey: string;
   filtersSlot?: React.ReactNode;
   onExerciseClick?: (exerciseName: string) => void;
-  initialMuscle?: { muscleId: string; viewMode?: 'headless' } | null;
+  initialMuscle?: { muscleId: string } | null;
   initialWeeklySetsWindow?: WeeklySetsWindow | null;
   onInitialMuscleConsumed?: () => void;
   stickyHeader?: boolean;
@@ -79,7 +79,7 @@ export const MuscleAnalysis: React.FC<MuscleAnalysisProps> = ({
     breakdownStart,
     effectiveNow,
     allTimeWindowStart,
-    lifetimeHeadlessVolumes,
+    lifetimeMuscleVolumes,
   } = useMuscleVolumeData({
     data,
     lifetimeData,
@@ -107,7 +107,7 @@ export const MuscleAnalysis: React.FC<MuscleAnalysisProps> = ({
     maxGroupVolume,
     selectedSubjectKeys,
     groupWeeklyRatesBySubject,
-    headlessRatesMap,
+    muscleRatesMap,
     radarData,
   } = useMuscleHeatmapData({
     data,
@@ -142,7 +142,7 @@ export const MuscleAnalysis: React.FC<MuscleAnalysisProps> = ({
     weeklySetsWindow,
     selectedSubjectKeys,
     groupWeeklyRatesBySubject,
-    headlessRatesMap,
+    muscleRatesMap,
     muscleVolume,
     windowedGroupVolumes,
     muscleVolumes,
@@ -153,7 +153,7 @@ export const MuscleAnalysis: React.FC<MuscleAnalysisProps> = ({
 
   // Compute hypertrophy scores (same function as dashboard, computed once and reused)
   const hypertrophyScores = useMemo(() => {
-    if (!assetsMap || !headlessRatesMap || headlessRatesMap.size === 0) return [];
+    if (!assetsMap || !muscleRatesMap || muscleRatesMap.size === 0) return [];
     if (!data || data.length === 0 || !effectiveNow) return [];
 
     const period: '7d' | '30d' = weeklySetsWindow === '7d' ? '7d' : '30d';
@@ -162,7 +162,7 @@ export const MuscleAnalysis: React.FC<MuscleAnalysisProps> = ({
 
     return calculateHypertrophyScoresWithExerciseTrends(
       exerciseStats ?? [],
-      headlessRatesMap,
+      muscleRatesMap,
       assetsMap,
       trainingLevel,
       period,
@@ -170,7 +170,7 @@ export const MuscleAnalysis: React.FC<MuscleAnalysisProps> = ({
       data,
       scoreWindowStart,
     );
-  }, [data, assetsMap, headlessRatesMap, trainingLevel, effectiveNow, weeklySetsWindow, exerciseStats]);
+  }, [data, assetsMap, muscleRatesMap, trainingLevel, effectiveNow, weeklySetsWindow, exerciseStats]);
 
   // Fast lookup map: muscleId → full hypertrophy score result
   const hypertrophyScoreMap = useMemo(() => {
@@ -198,17 +198,17 @@ export const MuscleAnalysis: React.FC<MuscleAnalysisProps> = ({
     setSelectedMuscle,
     selectedSvgIdForUrlRef,
     clearSelectionUrl,
-    updateSelectionUrl: (payload: { svgId: string; mode?: 'headless'; window: WeeklySetsWindow }) => updateSelectionUrl({ svgId: payload.svgId, mode: 'headless', window: payload.window }),
+    updateSelectionUrl: (payload: { svgId: string; window: WeeklySetsWindow }) => updateSelectionUrl({ svgId: payload.svgId, window: payload.window }),
     weeklySetsWindow,
-    headlessRatesMap,
+    muscleRatesMap,
     setHoverTooltip,
     trainingLevel,
     hypertrophyScoreMap,
   });
 
   const lifetimeAchievementData = useLifetimeAchievement({
-    lifetimeHeadlessVolumes,
-    weeklyHeadlessVolumes: headlessRatesMap,
+    lifetimeMuscleVolumes,
+    weeklyMuscleVolumes: muscleRatesMap,
     selectedMuscle,
   });
 
@@ -304,7 +304,7 @@ export const MuscleAnalysis: React.FC<MuscleAnalysisProps> = ({
               assetsMap={assetsMap ?? undefined}
               effectiveNow={effectiveNow}
               windowStart={windowStart}
-              headlessRatesMap={headlessRatesMap}
+              muscleRatesMap={muscleRatesMap}
               trainingLevel={trainingLevel}
               hypertrophyScores={hypertrophyScores}
             />
