@@ -1,13 +1,59 @@
 import React from 'react';
-import { Dumbbell, Trophy, BarChart3 } from 'lucide-react';
+import { Dumbbell, Trophy, BarChart3, Repeat, Target, Layers, Route, type LucideIcon } from 'lucide-react';
 
 import type { RecentPR } from '../../utils/analysis/insights';
+import type { PrType } from '../../types';
 import type { ExerciseAsset } from '../../utils/data/exerciseAssets';
 import type { WeightUnit } from '../../utils/storage/localStorage';
-import { convertWeight } from '../../utils/format/units';
+import { convertWeight, convertVolume, formatDistance } from '../../utils/format/units';
 import { formatHumanReadableDate } from '../../utils/date/dateUtils';
 import { ExerciseThumbnail } from '../common/ExerciseThumbnail';
 import { SEMI_FANCY_FONT } from '../../utils/ui/uiConstants';
+
+interface PrTypeMeta {
+  icon: LucideIcon;
+  label: string;
+  value: (weight: number, reps: number, weightUnit: WeightUnit) => string;
+}
+
+const PR_TYPE_META: Record<PrType, PrTypeMeta> = {
+  weight: {
+    icon: Dumbbell,
+    label: 'Weight',
+    value: (weight, _reps, weightUnit) => `${convertWeight(weight, weightUnit)}${weightUnit}`,
+  },
+  oneRm: {
+    icon: Trophy,
+    label: '1RM',
+    value: (weight, _reps, weightUnit) => `${convertWeight(weight, weightUnit)}${weightUnit}`,
+  },
+  volume: {
+    icon: BarChart3,
+    label: 'Set Vol',
+    value: (weight, _reps, weightUnit) => `${convertWeight(weight, weightUnit)}${weightUnit}`,
+  },
+  reps: {
+    icon: Repeat,
+    label: 'Rep',
+    value: (weight, reps, weightUnit) =>
+      weight > 0 ? `${convertWeight(weight, weightUnit)}${weightUnit} × ${reps}` : `${reps} reps`,
+  },
+  weightedReps: {
+    icon: Target,
+    label: 'Weighted Rep',
+    value: (weight, reps, weightUnit) => `${convertWeight(weight, weightUnit)}${weightUnit} × ${reps}`,
+  },
+  sessionVolume: {
+    icon: Layers,
+    label: 'Session Vol',
+    value: (weight, _reps, weightUnit) => `${convertVolume(weight, weightUnit)}${weightUnit}`,
+  },
+  distance: {
+    icon: Route,
+    label: 'Distance',
+    value: (weight, _reps, weightUnit) => formatDistance(weight, weightUnit),
+  },
+};
 
 // Recent PR Card with image and improvement
 interface RecentPRCardProps {
@@ -27,18 +73,19 @@ export const RecentPRCard: React.FC<RecentPRCardProps> = ({
   now,
   onExerciseClick,
 }) => {
-  const { exercise, weight, date, isSilver, type } = pr;
+  const { exercise, weight, reps, date, isSilver, type } = pr;
   const clickable = typeof onExerciseClick === 'function';
 
   const isToday = now ? date.toDateString() === now.toDateString() : false;
 
-  const PrIcon = type === 'weight' ? Dumbbell : type === 'oneRm' ? Trophy : BarChart3;
+  const meta = PR_TYPE_META[type] ?? PR_TYPE_META.weight;
+  const PrIcon = meta.icon;
   const iconColor = isSilver ? 'text-slate-300' : 'text-yellow-400';
 
-  const cardClass = isSilver 
+  const cardClass = isSilver
     ? (isLatest ? 'bg-slate-500/15 border border-slate-500/40' : 'bg-black/20')
     : (isLatest ? 'bg-emerald-500/5 border border-emerald-500/20' : 'bg-black/20');
-    
+
   const improvementClass = isSilver ? 'text-slate-300' : 'text-yellow-400';
 
   return (
@@ -60,10 +107,10 @@ export const RecentPRCard: React.FC<RecentPRCardProps> = ({
         <div className={`text-[10px] ${isToday ? 'text-yellow-400 font-bold' : 'text-slate-500'}`}>{formatHumanReadableDate(date, { now })}</div>
       </div>
       <div className="text-right">
-        <div className="text-sm font-bold text-[color:var(--text-primary)]">{convertWeight(weight, weightUnit)}{weightUnit}</div>
+        <div className="text-sm font-bold text-[color:var(--text-primary)] whitespace-nowrap">{meta.value(weight, reps, weightUnit)}</div>
         <div className={`text-[10px] font-bold ${improvementClass} flex items-center justify-end gap-1`}>
           <PrIcon className={`w-3 h-3 ${iconColor}`} />
-          {type === 'oneRm' ? '1RM' : type === 'volume' ? 'Volume' : 'Weight'} PR{isSilver ? ' (2mo)' : ''}
+          {meta.label} PR{isSilver ? ' (1mo)' : ''}
         </div>
       </div>
     </button>

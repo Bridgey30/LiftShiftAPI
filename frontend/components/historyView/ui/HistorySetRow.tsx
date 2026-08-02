@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertTriangle, Award, BarChart3, Info, TrendingDown, TrendingUp, Trophy } from 'lucide-react';
+import { AlertTriangle, Award, BarChart3, Info, Repeat, Target, TrendingDown, TrendingUp, Trophy } from 'lucide-react';
 import type { AnalysisResult, WorkoutSet, PrType } from '../../../types';
 import { getSetTypeConfig } from '../../../utils/analysis/classification';
 import { convertWeight } from '../../../utils/format/units';
@@ -7,6 +7,16 @@ import { formatSignedNumber } from '../../../utils/format/formatters';
 import type { WeightUnit } from '../../../utils/storage/localStorage';
 import type { ExerciseBestEvent, ExerciseVolumePrEvent } from '../utils/historyViewTypes';
 import { getLoadProgressionDirection } from '../../../utils/exercise/loadProgression';
+
+// Session-granularity PR kinds (sessionVolume, distance) never mark individual sets,
+// so they have no set-level badge.
+const PR_BADGE_META: Partial<Record<PrType, { icon: typeof Trophy; gold: string; silver: string }>> = {
+  weight: { icon: Trophy, gold: 'PR', silver: 'Lst 1 mo PR' },
+  oneRm: { icon: Award, gold: '1RM PR', silver: 'Lst 1 mo 1RM PR' },
+  volume: { icon: BarChart3, gold: 'Set Vol PR', silver: '1-Mo Set Vol PR' },
+  reps: { icon: Repeat, gold: 'Rep PR', silver: '1-Mo Rep PR' },
+  weightedReps: { icon: Target, gold: 'Wt-Rep PR', silver: '1-Mo Wt-Rep PR' },
+};
 
 interface HistorySetRowProps {
   set: WorkoutSet;
@@ -135,8 +145,9 @@ export const HistorySetRow: React.FC<HistorySetRowProps> = ({
               {/* Show badge for each PR type (Gold or Silver) */}
               {(set.isPr ? set.prTypes : set.silverPrTypes)?.map((prType: PrType, idx: number) => {
                 const types = set.isPr ? set.prTypes : set.silverPrTypes;
-                const Icon = prType === 'weight' ? Trophy : prType === 'oneRm' ? Award : BarChart3;
-                const label = prType === 'weight' ? (set.isPr ? 'PR' : 'Lst 2 mo PR') : prType === 'oneRm' ? (set.isPr ? '1RM PR' : 'Lst 2 mo 1RM PR') : (set.isPr ? 'Vol PR' : '2-Mo Vol PR');
+                const meta = PR_BADGE_META[prType] ?? PR_BADGE_META.weight!;
+                const Icon = meta.icon;
+                const label = set.isPr ? meta.gold : meta.silver;
 
                 return (
                   <span key={prType} className={`flex items-center gap-0.5 px-0.5 py-0.5 rounded text-[6px] sm:text-[8px] font-bold uppercase tracking-wider whitespace-nowrap leading-none border animate-pulse ${set.isPr ? 'bg-amber-200/70 text-yellow-300 dark:bg-yellow-500/10 dark:text-yellow-400 border-amber-300/80 dark:border-yellow-500/20' : 'bg-slate-200/70 text-slate-600 dark:bg-slate-500/10 dark:text-slate-400 border-slate-300/80 dark:border-slate-500/20'}`}>

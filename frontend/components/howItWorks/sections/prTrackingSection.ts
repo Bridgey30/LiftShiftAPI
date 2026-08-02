@@ -8,7 +8,7 @@ export const PR_TRACKING_SECTION: HowItWorksSection = {
     {
       type: 'p',
       text:
-        'A PR in LiftShift means a new all-time best for an exercise based on your logged sets. LiftShift tracks three kinds of PRs and several PR-related signals.',
+        'A PR in LiftShift means a new best for an exercise based on your logged sets. LiftShift tracks seven kinds of PRs and several PR-related signals.',
     },
     {
       type: 'callout',
@@ -27,7 +27,7 @@ export const PR_TRACKING_SECTION: HowItWorksSection = {
         {
           type: 'p',
           text:
-            'A Gold PR is a true all-time best. LiftShift tracks three types per exercise: weight PR (heaviest weight lifted in a single set), 1RM PR (highest estimated one-rep max using the Epley formula), and volume PR (highest weight x reps in a single set).',
+            'A Gold PR is a true all-time best. LiftShift tracks several types per exercise: weight PR (heaviest weight lifted in a single set), 1RM PR (highest estimated one-rep max using the Epley formula), set volume PR (highest weight x reps in a single set), rep PR (most reps in a single set), weighted rep PR (most reps at a specific weight), session volume PR (most total tonnage in one workout), and distance PR (most distance in one cardio session).',
         },
         {
           type: 'p',
@@ -38,13 +38,13 @@ export const PR_TRACKING_SECTION: HowItWorksSection = {
     },
     {
       id: 'pr-silver',
-      title: 'Silver PRs (2-month bests)',
+      title: 'Silver PRs (1-month bests)',
       sidebarTitle: 'Silver PRs',
       nodes: [
         {
           type: 'p',
           text:
-            'Experienced lifters rarely hit true all-time PRs. Silver PRs track your best performance in the last 60 days. If you haven\'t hit a Gold PR recently, a Silver PR still shows you\'re making progress. Useful for tracking momentum during training blocks.',
+            'Experienced lifters rarely hit true all-time PRs. Silver PRs track your best performance in the last 30 days. If you haven\'t hit a Gold PR recently, a Silver PR still shows you\'re making progress. Useful for tracking momentum during training blocks.',
         },
       ],
     },
