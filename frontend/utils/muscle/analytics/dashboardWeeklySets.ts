@@ -75,7 +75,7 @@ export const computeWeeklySetsDashboardData = (
   const lookup = createExerciseAssetLookup(assetsMap);
 
   const totals = new Map<string, number>();
-  const headlessTotals = new Map<string, { primary: number; secondary: number }>();
+  const muscleTotals = new Map<string, { primary: number; secondary: number }>();
   for (const s of data) {
     if (isWarmupSet(s)) continue;
     const d = s.parsedDate;
@@ -94,33 +94,33 @@ export const computeWeeklySetsDashboardData = (
     const factor = getWeeklyVolumeSetWeight(s);
     if (factor <= 0) continue;
 
-    // Per-set dedup: track which headless muscles already got primary/secondary
+    // Per-set dedup: track which muscles already got primary/secondary
     const setPrimaries = new Set<string>();
     const setSecondaries = new Set<string>();
 
     for (const c of contributions) {
       totals.set(c.muscle, (totals.get(c.muscle) ?? 0) + c.sets * factor);
 
-      // Map raw muscle name to headless ID for deduplicated aggregate
+      // Map raw muscle name to muscle ID for deduplicated aggregate
       const svgIds = getSvgIdsForCsvMuscleName(c.muscle);
       for (const svgId of svgIds) {
-        const headlessId = (DETAILED_SVG_ID_TO_MUSCLE_ID as any)[svgId];
-        if (!headlessId) continue;
-        const cur = headlessTotals.get(headlessId) || { primary: 0, secondary: 0 };
+        const muscleId = (DETAILED_SVG_ID_TO_MUSCLE_ID as any)[svgId];
+        if (!muscleId) continue;
+        const cur = muscleTotals.get(muscleId) || { primary: 0, secondary: 0 };
 
         const isPrimary = c.sets >= 1; // 1.0 = primary, < 1 = secondary
         if (isPrimary) {
-          if (!setPrimaries.has(headlessId)) {
-            setPrimaries.add(headlessId);
+          if (!setPrimaries.has(muscleId)) {
+            setPrimaries.add(muscleId);
             cur.primary += factor;
           }
         } else {
-          if (!setPrimaries.has(headlessId) && !setSecondaries.has(headlessId)) {
-            setSecondaries.add(headlessId);
+          if (!setPrimaries.has(muscleId) && !setSecondaries.has(muscleId)) {
+            setSecondaries.add(muscleId);
             cur.secondary += c.sets * factor;
           }
         }
-        headlessTotals.set(headlessId, cur);
+        muscleTotals.set(muscleId, cur);
       }
     }
   }
@@ -137,9 +137,9 @@ export const computeWeeklySetsDashboardData = (
     weeklyRates.set(k, Number((v / weeks).toFixed(1)));
   }
 
-  const headlessRates = new Map<string, number>();
-  for (const [headlessId, { primary, secondary }] of headlessTotals.entries()) {
-    headlessRates.set(headlessId, Number(((primary + secondary) / weeks).toFixed(1)));
+  const muscleRates = new Map<string, number>();
+  for (const [muscleId, { primary, secondary }] of muscleTotals.entries()) {
+    muscleRates.set(muscleId, Number(((primary + secondary) / weeks).toFixed(1)));
   }
 
   const volumes = new Map<string, number>();
@@ -155,14 +155,14 @@ export const computeWeeklySetsDashboardData = (
       if (val > maxVolume) maxVolume = val;
     }
   } else {
-    for (const [headlessId, rate] of headlessRates.entries()) {
-      const svgIds = (MUSCLE_ID_TO_DETAILED_SVG_IDS as any)[headlessId] as readonly string[] | undefined;
+    for (const [muscleId, rate] of muscleRates.entries()) {
+      const svgIds = (MUSCLE_ID_TO_DETAILED_SVG_IDS as any)[muscleId] as readonly string[] | undefined;
       if (!svgIds || svgIds.length === 0) continue;
       for (const svgId of svgIds) {
         volumes.set(svgId, (volumes.get(svgId) ?? 0) + rate);
       }
       // maxVolume: each sub-part gets the same rate via distribution,
-      // but different headless muscles may partially overlap svgIds.
+      // but different muscles may partially overlap svgIds.
       for (const svgId of svgIds) {
         const next = volumes.get(svgId) ?? 0;
         if (next > maxVolume) maxVolume = next;
@@ -182,7 +182,7 @@ export const computeWeeklySetsDashboardData = (
 
   return {
     heatmap: { volumes, maxVolume: Math.max(maxVolume, 1) },
-    weeklyRatesBySubject: grouping === 'muscles' ? headlessRates : weeklyRates,
+    weeklyRatesBySubject: grouping === 'muscles' ? muscleRates : weeklyRates,
     weeks,
     windowStart,
   };

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { calculateAchievement, findTierByAchievement, JOURNEY_TIERS } from '../../../utils/training/tierUtils';
-import type { HeadlessMuscleId } from '../../../utils/muscle/mapping/muscleHeadless';
+import type { MuscleId } from '../../../utils/muscle/mapping/muscleIds';
 
 interface LifetimeAchievementEntry {
   muscleId: string;
@@ -22,8 +22,8 @@ export interface LifetimeAchievementData {
 }
 
 interface UseLifetimeAchievementParams {
-  lifetimeHeadlessVolumes: ReadonlyMap<string, number>;
-  weeklyHeadlessVolumes?: ReadonlyMap<string, number>;
+  lifetimeMuscleVolumes: ReadonlyMap<string, number>;
+  weeklyMuscleVolumes?: ReadonlyMap<string, number>;
   selectedMuscle: string | null;
 }
 
@@ -31,8 +31,8 @@ interface UseLifetimeAchievementParams {
  * Computes lifetime hypertrophy achievement data for the current selection context.
  */
 export function useLifetimeAchievement({
-  lifetimeHeadlessVolumes,
-  weeklyHeadlessVolumes,
+  lifetimeMuscleVolumes,
+  weeklyMuscleVolumes,
   selectedMuscle,
 }: UseLifetimeAchievementParams): LifetimeAchievementData {
   return useMemo(() => {
@@ -40,8 +40,8 @@ export function useLifetimeAchievement({
     const muscles: LifetimeAchievementEntry[] = [];
     let totalLifetimeSets = 0;
 
-    for (const [muscleId, lifetimeSets] of lifetimeHeadlessVolumes) {
-      const weeklySets = weeklyHeadlessVolumes?.get(muscleId) ?? 0;
+    for (const [muscleId, lifetimeSets] of lifetimeMuscleVolumes) {
+      const weeklySets = weeklyMuscleVolumes?.get(muscleId) ?? 0;
       const achievement = calculateAchievement(lifetimeSets);
       const tier = findTierByAchievement(achievement);
 
@@ -105,5 +105,5 @@ export function useLifetimeAchievement({
       contextLabel: 'Overall',
       totalLifetimeSets,
     };
-  }, [lifetimeHeadlessVolumes, selectedMuscle, weeklyHeadlessVolumes]);
+  }, [lifetimeMuscleVolumes, selectedMuscle, weeklyMuscleVolumes]);
 }

@@ -21,11 +21,11 @@ import { weeklyStimulusFromThresholds } from './hypertrophyCalculations';
 import { lookupAsset, getLowerMap } from '../analytics/muscleAnalyticsHelpers';
 import { CSV_TO_SVG_MUSCLE_MAP_LOWERCASE } from '../mapping/muscleCsvMappings';
 import { DETAILED_SVG_ID_TO_MUSCLE_ID } from '../mapping/muscleSvgMappings';
-import { MUSCLE_NAMES, type MuscleId } from '../mapping/muscleHeadless';
+import { MUSCLE_NAMES, type MuscleId } from '../mapping/muscleIds';
 import { analyzeExerciseTrendCore, type ExerciseTrendCoreResult } from '../../analysis/exerciseTrend/exerciseTrendCore';
 
 /**
- * Map a raw muscle name (from exercise assets) to headless MuscleIds.
+ * Map a raw muscle name (from exercise assets) to muscle IDs.
  * Uses the same CSV → SVG → MuscleId chain as the lifetime achievement view.
  */
 function getMuscleIdsFromRawName(rawMuscle: string): MuscleId[] {
@@ -385,7 +385,7 @@ export function calculateMuscleHypertrophyScore(
 
 /**
  * Calculate hypertrophy scores for all muscles in dataset
- * @param useHeadlessMuscleIds - If true, uses the same muscle ID system as the
+ * @param useMuscleIds - If true, uses the same muscle ID system as the
  *   lifetime achievement view (chest, biceps, triceps, etc.) instead of normalized
  *   muscle groups (Chest, Back, Arms, etc.)
  * @param effectiveNow - Reference date for window calculations. Defaults to the
@@ -397,7 +397,7 @@ export function calculateAllMuscleHypertrophyScores(
   data: WorkoutSet[],
   assetsMap: Map<string, ExerciseAsset>,
   trainingLevel: TrainingLevel = 'intermediate',
-  useHeadlessMuscleIds = false,
+  useMuscleIds = false,
   effectiveNow?: Date,
   trendWindowDays: number = 28
 ): MuscleHypertrophyData[] {
@@ -415,7 +415,7 @@ export function calculateAllMuscleHypertrophyScores(
   // Group sets by muscle
   const muscleSets = new Map<string, { name: string; sets: WorkoutSet[] }>();
   
-  if (useHeadlessMuscleIds) {
+  if (useMuscleIds) {
     // Use the same CSV→SVG→MuscleId chain as the lifetime achievement view
     for (const set of data) {
       if (isWarmupSet(set) || getWeeklyVolumeSetWeight(set) <= 0) continue;
@@ -516,7 +516,7 @@ export function calculateAllMuscleHypertrophyScores(
  * Compute hypertrophy scores using existing exercise trend analysis for progress.
  *
  * @param exerciseStats — all exercise stats (pre-computed elsewhere)
- * @param headlessRatesMap — per-muscle weekly set rates (computed with secondarySetMultiplier)
+ * @param muscleRatesMap — per-muscle weekly set rates (computed with secondarySetMultiplier)
  * @param parsedData — full raw workout data (for frequency + progress)
  * @param period — '7d' (uses recentDeltaPct) or '30d' (uses diffPct)
  * @param effectiveNow — reference date for window calculation
@@ -524,7 +524,7 @@ export function calculateAllMuscleHypertrophyScores(
  */
 export function calculateHypertrophyScoresWithExerciseTrends(
   exerciseStats: ExerciseStats[],
-  headlessRatesMap: Map<string, number> | null,
+  muscleRatesMap: Map<string, number> | null,
   assetsMap: Map<string, ExerciseAsset>,
   trainingLevel: TrainingLevel,
   period: '7d' | '30d',
@@ -648,7 +648,7 @@ export function calculateHypertrophyScoresWithExerciseTrends(
   for (const [muscleId] of muscleProgressRaw) {
     const w = muscleProgressWeight.get(muscleId) ?? 0;
     const avgTrend = w > 0 ? muscleProgressRaw.get(muscleId)! / w : 0;
-    const weeklySets = headlessRatesMap?.get(muscleId) ?? 0;
+    const weeklySets = muscleRatesMap?.get(muscleId) ?? 0;
     if (weeklySets >= MIN_WEEKLY_SETS) {
       if (!foundQualified) {
         maxProgress = avgTrend;
@@ -666,9 +666,9 @@ export function calculateHypertrophyScoresWithExerciseTrends(
   if (maxProgress < DEFAULT_MAX_PROGRESS) maxProgress = DEFAULT_MAX_PROGRESS;
   if (minProgress > DEFAULT_MIN_PROGRESS) minProgress = DEFAULT_MIN_PROGRESS;
 
-  // Build results — iterate headlessRatesMap for volume
+  // Build results — iterate muscleRatesMap for volume
   const results: MuscleHypertrophyData[] = [];
-  for (const [muscleId, rate] of headlessRatesMap ?? new Map()) {
+  for (const [muscleId, rate] of muscleRatesMap ?? new Map()) {
     if (rate <= 0) continue;
 
     const volumeScore = Math.round(weeklyStimulusFromThresholds(rate, getVolumeThresholds(trainingLevel)));

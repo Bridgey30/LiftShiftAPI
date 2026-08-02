@@ -166,9 +166,9 @@ export const computeWindowedExerciseBreakdown = (params: {
 
     for (const svgId of primarySvgIds) {
       if (!isSelectedHit(selected, svgId)) continue;
-      const headlessId = (DETAILED_SVG_ID_TO_MUSCLE_ID as any)[svgId];
-      if (headlessId && !contributedPrimaries.has(headlessId)) {
-        contributedPrimaries.add(headlessId);
+      const muscleId = (DETAILED_SVG_ID_TO_MUSCLE_ID as any)[svgId];
+      if (muscleId && !contributedPrimaries.has(muscleId)) {
+        contributedPrimaries.add(muscleId);
         inc += setFactor;
         pInc += setFactor;
       }
@@ -176,9 +176,9 @@ export const computeWindowedExerciseBreakdown = (params: {
 
     for (const svgId of secondarySvgIds) {
       if (!isSelectedHit(selected, svgId)) continue;
-      const headlessId = (DETAILED_SVG_ID_TO_MUSCLE_ID as any)[svgId];
-      if (headlessId && !contributedPrimaries.has(headlessId) && !contributedSecondaries.has(headlessId)) {
-        contributedSecondaries.add(headlessId);
+      const muscleId = (DETAILED_SVG_ID_TO_MUSCLE_ID as any)[svgId];
+      if (muscleId && !contributedPrimaries.has(muscleId) && !contributedSecondaries.has(muscleId)) {
+        contributedSecondaries.add(muscleId);
         inc += secondarySetMultiplier * setFactor;
         sInc += secondarySetMultiplier * setFactor;
       }

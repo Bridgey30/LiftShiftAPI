@@ -2,7 +2,7 @@ export * from './muscleMapping';
 export * from './muscleMappingConstants';
 export * from './muscleCsvMappings';
 export * from './muscleGroupMappings';
-export * from './muscleHeadless';
+export * from './muscleIds';
 export * from './muscleInteractiveIds';
 export * from './muscleQuickFilters';
 export * from './muscleSvgLabels';

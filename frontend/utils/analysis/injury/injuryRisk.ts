@@ -1,6 +1,6 @@
 import type { WorkoutSet } from '../../../types';
 import type { ExerciseAsset } from '../../data/exerciseAssets';
-import type { MuscleId } from '../../muscle/mapping/muscleHeadless';
+import type { MuscleId } from '../../muscle/mapping/muscleIds';
 import { isWarmupSet, getWeeklyVolumeSetWeight } from '../classification';
 import { lookupAsset } from '../../muscle/analytics/muscleAnalyticsHelpers';
 import { getMuscleContributionsFromAsset } from '../../muscle/analytics/muscleContributions';

@@ -109,7 +109,7 @@ export const flexCacheKeys = {
   
   flexStats: (filterKey: string) => `flexStats:${VERSION}:${filterKey}`,
   
-  headlessHeatmap: (filterKey: string) => `headlessHeatmap:${VERSION}:${filterKey}`,
+  muscleHeatmap: (filterKey: string) => `muscleHeatmap:${VERSION}:${filterKey}`,
 };
 
 /**

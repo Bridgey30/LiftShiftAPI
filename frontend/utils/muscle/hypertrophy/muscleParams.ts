@@ -1,5 +1,5 @@
-import type { HeadlessMuscleId } from '../mapping/muscleHeadless';
-import { HEADLESS_MUSCLE_IDS } from '../mapping/muscleHeadless';
+import type { MuscleId } from '../mapping/muscleIds';
+import { MUSCLE_IDS } from '../mapping/muscleIds';
 
 // ---------------------------------------------------------------------------
 // Muscle size classification
@@ -170,11 +170,11 @@ export function getVolumeZone(sets: number, thresholds: MuscleVolumeThresholds):
 /**
  * Central muscle parameter table.
  *
- * Every headless muscle ID that appears on the body-map SVG must be present.
+ * Every muscle ID that appears on the body-map SVG must be present.
  * Values are tuned for psychological correctness – they should "feel right"
  * to lifters at every stage, not be biologically exact.
  */
-export const MUSCLE_PARAMS: Readonly<Record<HeadlessMuscleId, MuscleHypertrophyParams>> = {
+export const MUSCLE_PARAMS: Readonly<Record<MuscleId, MuscleHypertrophyParams>> = {
   // ── Large muscles ────────────────────────────────────────────────────
   quads: {
     name: 'Quads',
@@ -251,18 +251,18 @@ export const MUSCLE_PARAMS: Readonly<Record<HeadlessMuscleId, MuscleHypertrophyP
   },
 };
 
-// Compile-time check: every headless muscle must have params
-const _exhaustiveCheck: Record<HeadlessMuscleId, MuscleHypertrophyParams> = MUSCLE_PARAMS;
+// Compile-time check: every muscle must have params
+const _exhaustiveCheck: Record<MuscleId, MuscleHypertrophyParams> = MUSCLE_PARAMS;
 void _exhaustiveCheck;
 
 // ---------------------------------------------------------------------------
 // Convenience helpers
 // ---------------------------------------------------------------------------
 
-/** Get params for a headless muscle ID, or undefined if unknown. */
+/** Get params for a muscle ID, or undefined if unknown. */
 export function getMuscleParams(muscleId: string): MuscleHypertrophyParams | undefined {
   return (MUSCLE_PARAMS as Record<string, MuscleHypertrophyParams>)[muscleId];
 }
 
-/** All headless muscle IDs that have defined hypertrophy parameters. */
-export const ALL_PARAM_MUSCLE_IDS: readonly HeadlessMuscleId[] = [...HEADLESS_MUSCLE_IDS];
+/** All muscle IDs that have defined hypertrophy parameters. */
+export const ALL_PARAM_MUSCLE_IDS: readonly MuscleId[] = [...MUSCLE_IDS];

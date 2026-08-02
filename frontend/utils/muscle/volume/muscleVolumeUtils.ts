@@ -187,9 +187,6 @@ export const toMuscleVolumeMap = (volumes: Map<string, number>): Map<string, num
   return muscleVolumes;
 };
 
-/** @deprecated Use toMuscleVolumeMap instead */
-export const toHeadlessVolumeMap = toMuscleVolumeMap;
-
 // Sum-aggregation variant for cases where detailed SVG volumes represent independent
 // contributions per head/part (i.e. not propagated duplicates).
 export const toMuscleVolumeMapSum = (volumes: Map<string, number>): Map<string, number> => {
@@ -207,6 +204,3 @@ export const toMuscleVolumeMapSum = (volumes: Map<string, number>): Map<string, 
 
   return muscleVolumes;
 };
-
-/** @deprecated Use toMuscleVolumeMapSum instead */
-export const toHeadlessVolumeMapSum = toMuscleVolumeMapSum;

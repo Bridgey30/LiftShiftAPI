@@ -18,13 +18,7 @@ export const MUSCLE_IDS = [
   'neck',
 ] as const;
 
-/** @deprecated Use MuscleId instead */
-export const HEADLESS_MUSCLE_IDS = MUSCLE_IDS;
-
 export type MuscleId = typeof MUSCLE_IDS[number];
-
-/** @deprecated Use MuscleId instead */
-export type HeadlessMuscleId = MuscleId;
 
 export const MUSCLE_NAMES: Readonly<Record<MuscleId, string>> = {
   chest: 'Chest',
@@ -46,9 +40,6 @@ export const MUSCLE_NAMES: Readonly<Record<MuscleId, string>> = {
   neck: 'Neck',
 };
 
-/** @deprecated Use MUSCLE_NAMES instead */
-export const HEADLESS_MUSCLE_NAMES = MUSCLE_NAMES;
-
 const roundToOneDecimal = (n: number): number => Math.round(n * 10) / 10;
 
 /** Build radar chart series from muscle volume map: order by value descending (highest first), rounded values. */
@@ -59,6 +50,3 @@ export function getMuscleRadarSeries(muscleVolumes: Map<string, number>): { subj
   }));
   return [...raw].sort((a, b) => b.value - a.value);
 }
-
-/** @deprecated Use getMuscleRadarSeries instead */
-export const getHeadlessRadarSeries = getMuscleRadarSeries;

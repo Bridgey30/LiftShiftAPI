@@ -3,7 +3,7 @@
  * Single source of truth for all muscle-related mappings across the application.
  */
 
-export * from './muscleHeadless';
+export * from './muscleIds';
 export * from './muscleSvgMappings';
 export * from './muscleInteractiveIds';
 export * from './muscleGroupMappings';
