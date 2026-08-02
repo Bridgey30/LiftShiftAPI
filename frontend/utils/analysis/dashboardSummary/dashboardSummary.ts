@@ -25,6 +25,10 @@ export interface DashboardSummaryInput {
   weightUnit: WeightUnit;
   filterCacheKey: string;
   exerciseTrendResults?: Map<string, ExerciseTrendCoreResult>;
+  /** Optional strength balance warning lines, rendered as its own block at the end of the overview. */
+  strengthBalanceItems?: StrengthBalanceItem[] | null;
+  /** Optional one-line TL;DR synthesizing the strength balance findings. */
+  strengthBalanceTldr?: string | null;
 }
 
 export interface SummarySegment {
@@ -34,11 +38,20 @@ export interface SummarySegment {
   date?: Date;
 }
 
+export interface StrengthBalanceItem {
+  segments: SummarySegment[];
+  confidence: 'high' | 'medium';
+}
+
 export interface DashboardSummaryResult {
   text: string;
   sentences: string[];
   seedKey: string;
   segments: SummarySegment[];
+  /** Strength balance warning lines, rendered separately as its own block. */
+  strengthBalanceItems: StrengthBalanceItem[];
+  /** One-line TL;DR synthesizing the strength balance findings. */
+  strengthBalanceTldr: string | null;
 }
 
 type CandidateCategory = 'recent' | 'momentum' | 'weekly' | 'streak' | 'pr' | 'plateau' | 'variety' | 'exercise' | 'recovery' | 'fallback';
@@ -612,10 +625,14 @@ export const buildDashboardSummary = (input: DashboardSummaryInput): DashboardSu
     return acc;
   }, []);
 
+  const anomalyItems = input.strengthBalanceItems ?? [];
+
   return {
     text: texts.join(' '),
     sentences: texts,
     seedKey,
     segments: flatSegments,
+    strengthBalanceItems: anomalyItems,
+    strengthBalanceTldr: input.strengthBalanceTldr ?? null,
   };
 };
