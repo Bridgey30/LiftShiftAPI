@@ -13,8 +13,8 @@ interface ExerciseOverviewCardProps {
   assetLookup: ExerciseAssetLookup | null;
   bodyMapGender: BodyMapGender;
   selectedExerciseMuscleInfo: ExerciseMuscleTargets;
-  selectedExerciseHeadlessVolumes: Map<string, number>;
-  selectedExerciseHeadlessMaxVolume: number;
+  selectedExerciseMuscleVolumes: Map<string, number>;
+  selectedExerciseMuscleMaxVolume: number;
   volumeThresholds: MuscleVolumeThresholds;
 }
 
@@ -23,8 +23,8 @@ export const ExerciseOverviewCard: React.FC<ExerciseOverviewCardProps> = ({
   assetLookup,
   bodyMapGender,
   selectedExerciseMuscleInfo,
-  selectedExerciseHeadlessVolumes,
-  selectedExerciseHeadlessMaxVolume,
+  selectedExerciseMuscleVolumes,
+  selectedExerciseMuscleMaxVolume,
   volumeThresholds,
 }) => {
   return (
@@ -34,13 +34,12 @@ export const ExerciseOverviewCard: React.FC<ExerciseOverviewCardProps> = ({
         <BodyMap
           onPartClick={() => { }}
           selectedPart={null}
-          muscleVolumes={selectedExerciseHeadlessVolumes}
-          maxVolume={selectedExerciseHeadlessMaxVolume}
+          muscleVolumes={selectedExerciseMuscleVolumes}
+          maxVolume={selectedExerciseMuscleMaxVolume}
           volumeThresholds={volumeThresholds}
           useExerciseColors
           compact
           gender={bodyMapGender}
-          viewMode="headless"
           stroke={{ width: 5, color: '#484a68', opacity: 0.8 }}
         />
 

@@ -11,7 +11,7 @@ interface HeatmapData {
 
 interface WeeklySetsHeatmapViewProps {
   heatmap: HeatmapData;
-  headlessVolumes: Map<string, number>;
+  muscleVolumes: Map<string, number>;
   heatmapHoveredMuscleIds?: string[];
   onBodyMapClick: (muscleId: string) => void;
   bodyMapGender?: BodyMapGender;
@@ -21,7 +21,7 @@ interface WeeklySetsHeatmapViewProps {
 
 export const WeeklySetsHeatmapView: React.FC<WeeklySetsHeatmapViewProps> = ({
   heatmap,
-  headlessVolumes,
+  muscleVolumes,
   heatmapHoveredMuscleIds,
   onBodyMapClick,
   bodyMapGender,
@@ -42,12 +42,11 @@ export const WeeklySetsHeatmapView: React.FC<WeeklySetsHeatmapViewProps> = ({
               <BodyMap
                 onPartClick={onBodyMapClick}
                 selectedPart={null}
-                muscleVolumes={headlessVolumes}
-                maxVolume={Math.max(1, ...(Array.from(headlessVolumes.values()) as number[]))}
+                muscleVolumes={muscleVolumes}
+                maxVolume={Math.max(1, ...(Array.from(muscleVolumes.values()) as number[]))}
                 hoveredMuscleIdsOverride={heatmapHoveredMuscleIds}
                 onPartHover={onMuscleHover}
                 gender={bodyMapGender}
-                viewMode="headless"
                 volumeThresholds={volumeThresholds}
               />
             </div>

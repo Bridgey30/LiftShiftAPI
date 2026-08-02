@@ -1,12 +1,12 @@
 import React from 'react';
 import { BodyMap, BodyMapGender } from '../../bodyMap/BodyMap';
-import { HEADLESS_MUSCLE_NAMES, MUSCLE_IDS } from '../../../utils/muscle/mapping';
+import { MUSCLE_NAMES, MUSCLE_IDS } from '../../../utils/muscle/mapping';
 import type { TooltipState } from './HistoryTooltipPortal';
 import { SEMI_FANCY_FONT } from '../../../utils/ui/uiConstants';
 
 interface HistorySessionBodyMapProps {
-  headlessVolumes: Map<string, number>;
-  headlessMaxVolume: number;
+  muscleVolumes: Map<string, number>;
+  muscleMaxVolume: number;
   bodyMapGender: BodyMapGender;
   setTooltip: (state: TooltipState | null) => void;
 }
@@ -17,14 +17,14 @@ const formatSets = (value: number): string => {
   return rounded.toFixed(2).replace(/\.00$/, '').replace(/(\.\d)0$/, '$1');
 };
 
-export const getMuscleSetsListData = (headlessVolumes: Map<string, number>) => {
+export const getMuscleSetsListData = (muscleVolumes: Map<string, number>) => {
   const muscleList: { id: string; name: string; sets: number }[] = [];
   MUSCLE_IDS.forEach((muscleId) => {
-    const sets = headlessVolumes.get(muscleId) || 0;
+    const sets = muscleVolumes.get(muscleId) || 0;
     if (sets > 0) {
       muscleList.push({
         id: muscleId,
-        name: HEADLESS_MUSCLE_NAMES[muscleId as keyof typeof HEADLESS_MUSCLE_NAMES] || muscleId,
+        name: MUSCLE_NAMES[muscleId as keyof typeof MUSCLE_NAMES] || muscleId,
         sets,
       });
     }
@@ -32,8 +32,8 @@ export const getMuscleSetsListData = (headlessVolumes: Map<string, number>) => {
   return muscleList.sort((a, b) => b.sets - a.sets);
 };
 
-export const MuscleSetsList: React.FC<{ headlessVolumes: Map<string, number> }> = ({ headlessVolumes }) => {
-  const sortedMuscles = React.useMemo(() => getMuscleSetsListData(headlessVolumes), [headlessVolumes]);
+export const MuscleSetsList: React.FC<{ muscleVolumes: Map<string, number> }> = ({ muscleVolumes }) => {
+  const sortedMuscles = React.useMemo(() => getMuscleSetsListData(muscleVolumes), [muscleVolumes]);
 
   if (sortedMuscles.length === 0) return null;
 
@@ -52,21 +52,20 @@ export const MuscleSetsList: React.FC<{ headlessVolumes: Map<string, number> }> 
 };
 
 export const HistorySessionBodyMap: React.FC<HistorySessionBodyMapProps> = ({
-  headlessVolumes,
-  headlessMaxVolume,
+  muscleVolumes,
+  muscleMaxVolume,
   bodyMapGender,
   setTooltip,
 }) => (
   <BodyMap
     onPartClick={() => { }}
     selectedPart={null}
-    muscleVolumes={headlessVolumes}
-    maxVolume={headlessMaxVolume}
+    muscleVolumes={muscleVolumes}
+    maxVolume={muscleMaxVolume}
     compact
     compactFill
     interactive
     gender={bodyMapGender}
-    viewMode="headless"
     stroke={{ width: 3, color: '#484a68', opacity: 0.8 }}
     onPartHover={(muscleId, ev) => {
       if (!muscleId || !ev) {
@@ -76,8 +75,8 @@ export const HistorySessionBodyMap: React.FC<HistorySessionBodyMapProps> = ({
       const hoveredEl = (ev.target as Element | null)?.closest('g[id]');
       const rect = hoveredEl?.getBoundingClientRect();
       if (!rect) return;
-      const label = (HEADLESS_MUSCLE_NAMES as any)[muscleId] || muscleId;
-      const sets = headlessVolumes.get(muscleId) || 0;
+      const label = (MUSCLE_NAMES as any)[muscleId] || muscleId;
+      const sets = muscleVolumes.get(muscleId) || 0;
       const setsText = formatSets(sets);
       setTooltip({ rect, title: label, body: `${setsText} sets`, status: 'info' });
     }}

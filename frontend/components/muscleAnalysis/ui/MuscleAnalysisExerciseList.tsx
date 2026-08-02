@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BodyMap, type BodyMapGender } from '../../bodyMap/BodyMap';
 import { ExerciseThumbnail } from '../../common/ExerciseThumbnail';
-import { getExerciseMuscleVolumes, lookupExerciseMuscleData, toHeadlessVolumeMap, type ExerciseMuscleData } from '../../../utils/muscle/mapping';
+import { getExerciseMuscleVolumes, lookupExerciseMuscleData, toMuscleVolumeMap, type ExerciseMuscleData } from '../../../utils/muscle/mapping';
 import type { ExerciseAsset } from '../../../utils/data/exerciseAssets';
 import type { MuscleVolumeThresholds } from '../../../utils/muscle/hypertrophy/muscleParams';
 import { ChevronDown } from 'lucide-react';
@@ -52,8 +52,8 @@ export const MuscleAnalysisExerciseList: React.FC<MuscleAnalysisExerciseListProp
           const asset = assetsMap?.get(baseName);
           const exData = lookupExerciseMuscleData(ex.name, exerciseMuscleData);
           const { volumes: exVolumes, maxVolume: exMaxVol } = getExerciseMuscleVolumes(exData, secondarySetMultiplier);
-          const exHeadlessVolumes = toHeadlessVolumeMap(exVolumes);
-          const exHeadlessMaxVol = Math.max(1, ...(Array.from(exHeadlessVolumes.values()) as number[]));
+          const exMuscleVolumes = toMuscleVolumeMap(exVolumes);
+          const exMuscleMaxVol = Math.max(1, ...(Array.from(exMuscleVolumes.values()) as number[]));
           const totalSetsForCalc = totalSetsInWindow || 1;
           const pct = totalSetsForCalc > 0 ? Math.round((ex.sets / totalSetsForCalc) * 100) : 0;
 
@@ -129,13 +129,12 @@ export const MuscleAnalysisExerciseList: React.FC<MuscleAnalysisExerciseListProp
                       <BodyMap
                         onPartClick={() => { }}
                         selectedPart={null}
-                        muscleVolumes={exHeadlessVolumes}
-                        maxVolume={exHeadlessMaxVol}
+                        muscleVolumes={exMuscleVolumes}
+                        maxVolume={exMuscleMaxVol}
                         volumeThresholds={volumeThresholds}
                         useExerciseColors
                         compact
                         compactFill
-                        viewMode="headless"
                         gender={bodyMapGender}
                         stroke={{ width: 5, color: '#484a68', opacity: 0.8 }}
                       />

@@ -1,8 +1,8 @@
 import React from 'react';
 import { BodyMap, BodyMapGender } from '../../bodyMap/BodyMap';
 import { lookupExerciseMuscleData, type ExerciseMuscleData } from '../../../utils/muscle/mapping';
-import { toHeadlessVolumeMap } from '../../../utils/muscle/mapping';
-import { HEADLESS_MUSCLE_NAMES } from '../../../utils/muscle/mapping';
+import { toMuscleVolumeMap } from '../../../utils/muscle/mapping';
+import { MUSCLE_NAMES } from '../../../utils/muscle/mapping';
 import { buildExerciseMuscleHeatmap } from '../utils/muscleHeatmaps';
 import type { GroupedExercise } from '../utils/historySessions';
 import type { TooltipState } from './HistoryTooltipPortal';
@@ -25,8 +25,8 @@ export const HistoryExerciseHeatmap: React.FC<HistoryExerciseHeatmapProps> = ({
 
   if (volumes.size === 0) return null;
 
-  const headlessVolumes = toHeadlessVolumeMap(volumes);
-  const headlessMaxVolume = Math.max(1, ...(Array.from(headlessVolumes.values()) as number[]));
+  const muscleVolumes = toMuscleVolumeMap(volumes);
+  const muscleMaxVolume = Math.max(1, ...(Array.from(muscleVolumes.values()) as number[]));
 
   return (
     <div className="hidden sm:flex flex-col flex-shrink-0 pl-3 py-2 border-l border-slate-800/50 self-stretch">
@@ -34,13 +34,12 @@ export const HistoryExerciseHeatmap: React.FC<HistoryExerciseHeatmapProps> = ({
         <BodyMap
           onPartClick={() => { }}
           selectedPart={null}
-          muscleVolumes={headlessVolumes}
-          maxVolume={headlessMaxVolume}
+          muscleVolumes={muscleVolumes}
+          maxVolume={muscleMaxVolume}
           compact
           compactFill
           interactive
           gender={bodyMapGender}
-          viewMode="headless"
           stroke={{ width: 5, color: '#484a68', opacity: 0.8 }}
           onPartHover={(muscleId, ev) => {
             if (!muscleId || !ev) {
@@ -50,8 +49,8 @@ export const HistoryExerciseHeatmap: React.FC<HistoryExerciseHeatmapProps> = ({
             const hoveredEl = (ev.target as Element | null)?.closest('g[id]');
             const rect = hoveredEl?.getBoundingClientRect();
             if (!rect) return;
-            const label = (HEADLESS_MUSCLE_NAMES as any)[muscleId] || muscleId;
-            const sets = headlessVolumes.get(muscleId) || 0;
+            const label = (MUSCLE_NAMES as any)[muscleId] || muscleId;
+            const sets = muscleVolumes.get(muscleId) || 0;
             const setsText = Number.isInteger(sets) ? `${sets}` : `${sets.toFixed(1)}`;
             setTooltip({ rect, title: label, body: `${setsText} sets`, status: 'info' });
           }}

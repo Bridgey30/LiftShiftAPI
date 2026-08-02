@@ -14,25 +14,25 @@ import { SEMI_FANCY_FONT } from '../../../utils/ui/uiConstants';
 import { FANCY_FONT, RADAR_TICK_FILL } from '../../../utils/ui/uiConstants';
 import { type NormalizedMuscleGroup } from '../../../utils/muscle/analytics';
 import { BodyMap, type BodyMapGender } from '../../bodyMap/BodyMap';
-import { getHeadlessRadarSeries } from '../../../utils/muscle/mapping';
+import { getMuscleRadarSeries } from '../../../utils/muscle/mapping';
 
 // ============================================================================
 // CARD 6: Muscle Focus Card - Radar chart style
 // ============================================================================
 export const MuscleFocusCard: React.FC<{
   muscleData: { group: NormalizedMuscleGroup; sets: number }[];
-  headlessHeatmap: { volumes: Map<string, number>; maxVolume: number };
+  muscleHeatmap: { volumes: Map<string, number>; maxVolume: number };
   theme: CardTheme;
   gender?: BodyMapGender;
   effectiveNow?: Date;
-}> = ({ muscleData, headlessHeatmap, theme, gender = 'male', effectiveNow }) => {
+}> = ({ muscleData, muscleHeatmap, theme, gender = 'male', effectiveNow }) => {
   const isDark = theme === 'dark';
   const textPrimary = isDark ? 'text-white' : 'text-slate-900';
   const currentYear = effectiveNow?.getFullYear() ?? new Date().getFullYear();
 
   const [showHeatmap, setShowHeatmap] = useState(true);
 
-  const radarData = useMemo(() => getHeadlessRadarSeries(headlessHeatmap.volumes), [headlessHeatmap.volumes]);
+  const radarData = useMemo(() => getMuscleRadarSeries(muscleHeatmap.volumes), [muscleHeatmap.volumes]);
 
   const topMuscles = useMemo(() => {
     const sorted = [...radarData].filter((d) => (d.value ?? 0) > 0).sort((a, b) => (b.value ?? 0) - (a.value ?? 0));
@@ -136,11 +136,10 @@ export const MuscleFocusCard: React.FC<{
               <BodyMap
                 onPartClick={() => { }}
                 selectedPart={null}
-                muscleVolumes={headlessHeatmap.volumes}
-                maxVolume={headlessHeatmap.maxVolume}
+                muscleVolumes={muscleHeatmap.volumes}
+                maxVolume={muscleHeatmap.maxVolume}
                 compact
                 compactFill
-                viewMode="headless"
                 gender={gender}
                 stroke={{ width: 5, color: '#484a68', opacity: 0.8}}
               />

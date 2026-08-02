@@ -24,7 +24,7 @@ interface MuscleAnalysisBodyMapPanelProps {
   weeklySetsWindow: WeeklySetsWindow;
   setWeeklySetsWindow: (value: WeeklySetsWindow) => void;
   selectedSvgIdForUrlRef: React.MutableRefObject<string | null>;
-  updateSelectionUrl: (payload: { svgId: string; mode: 'headless'; window: WeeklySetsWindow }) => void;
+  updateSelectionUrl: (payload: { svgId: string; window: WeeklySetsWindow }) => void;
   muscleVolumes: Map<string, number>;
   maxVolume: number;
   volumeThresholds: MuscleVolumeThresholds;
@@ -93,7 +93,7 @@ export const MuscleAnalysisBodyMapPanel: React.FC<MuscleAnalysisBodyMapPanelProp
             setWeeklySetsWindow(v);
             const svgId = selectedSvgIdForUrlRef.current;
             if (!svgId) return;
-            updateSelectionUrl({ svgId, mode: 'headless' as const, window: v });
+            updateSelectionUrl({ svgId, window: v });
           }}
         />
       </div>
@@ -161,8 +161,6 @@ export const MuscleAnalysisBodyMapPanel: React.FC<MuscleAnalysisBodyMapPanelProp
                 volumeThresholds={volumeThresholds}
                 onPartHover={handleMuscleHover}
                 gender={bodyMapGender}
-                variant="demo"
-                viewMode="headless"
                 useHypertrophyColors
                 stroke={{ width: 2, color: '#484a68', opacity: 0.5 }}
               />

@@ -3,21 +3,14 @@ import { getVolumeColor, getExerciseMuscleColor, getHypertrophyColor, SVG_MUSCLE
 import { INTERACTIVE_MUSCLE_IDS } from '../../utils/muscle/mapping';
 import { getMuscleWithFallback } from '../../utils/muscle/mapping/bodyMapAvailability';
 import type { MuscleVolumeThresholds } from '../../utils/muscle/hypertrophy/muscleParams';
-import MaleFrontBodyMapMuscle from './muscles/MaleFrontBodyMapMuscle';
-import MaleBackBodyMapMuscle from './muscles/MaleBackBodyMapMuscle';
-import MaleFrontBodyMapGroup from './groups/MaleFrontBodyMapGroup';
-import MaleBackBodyMapGroup from './groups/MaleBackBodyMapGroup';
 import MaleFrontBodyMap from './male/MaleFrontBodyMap';
 import MaleBackBodyMap from './male/MaleBackBodyMap';
-import FemaleFrontBodyMapMuscle from './muscles/FemaleFrontBodyMapMuscle';
-import FemaleBackBodyMapMuscle from './muscles/FemaleBackBodyMapMuscle';
 import FemaleFrontBodyMapGroup from './groups/FemaleFrontBodyMapGroup';
 import FemaleBackBodyMapGroup from './groups/FemaleBackBodyMapGroup';
 import type { BodyWarpParams } from '../../hooks/useBodyMapWarp';
 import type { BodyMapStrokeConfig } from '../../config/bodyMapWarp';
 
 export type BodyMapGender = 'male' | 'female';
-export type BodyMapVariant = 'original' | 'demo';
 
 interface BodyMapProps {
   onPartClick: (muscleGroup: string) => void;
@@ -34,10 +27,8 @@ interface BodyMapProps {
   compactFill?: boolean;
   interactive?: boolean;
   gender?: BodyMapGender;
-  variant?: BodyMapVariant;
   warpParams?: BodyWarpParams;
   stroke?: Partial<BodyMapStrokeConfig>;
-  viewMode?: 'original' | 'headless';
 }
 
 // Hover and selection highlight colors (theme-driven)
@@ -81,7 +72,6 @@ export const BodyMap: React.FC<BodyMapProps> = ({
   compactFill = false,
   interactive = false,
   gender = 'male',
-  variant = 'demo',
   warpParams = undefined,
   stroke = undefined,
 }) => {
@@ -94,24 +84,21 @@ export const BodyMap: React.FC<BodyMapProps> = ({
     [selectedMuscleIdsOverride, selectedPart]
   );
 
-  const effectiveGender: BodyMapGender = (gender ?? 'male') as BodyMapGender;
-  const effectiveVariant: BodyMapVariant = (variant ?? 'demo') as BodyMapVariant;
-
   const applyColors = useCallback((hoveredId: string | null = null) => {
     if (!containerRef.current) return;
     INTERACTIVE_MUSCLES.forEach(muscleId => {
-      const targetId = getMuscleWithFallback(muscleId, effectiveVariant, effectiveGender);
+      const targetId = getMuscleWithFallback(muscleId);
       const elements = containerRef.current?.querySelectorAll(`#${targetId}`);
-      const isOriginalSelection = muscleId !== targetId;
+      const isFallbackSelection = muscleId !== targetId;
       elements?.forEach(el => {
-        const headlessId = getMuscleIdForDetailedSvgId(muscleId) ?? muscleId;
-        const volume = muscleVolumes.get(muscleId) ?? muscleVolumes.get(headlessId) ?? 0;
+        const muscleIdForVolume = getMuscleIdForDetailedSvgId(muscleId) ?? muscleId;
+        const volume = muscleVolumes.get(muscleId) ?? muscleVolumes.get(muscleIdForVolume) ?? 0;
         const color = useExerciseColors
           ? getExerciseMuscleColor(volume)
           : useHypertrophyColors
             ? getHypertrophyColor(volume)
             : getVolumeColor(volume, volumeThresholds, maxVolume);
-        const isSelected = selectedMuscleIds.includes(muscleId) || (isOriginalSelection && selectedMuscleIds.includes(targetId));
+        const isSelected = selectedMuscleIds.includes(muscleId) || (isFallbackSelection && selectedMuscleIds.includes(targetId));
         const isHovered = hoveredMuscleIdsOverride
           ? hoveredMuscleIdsOverride.some(id => getRelatedMuscleIds(id).includes(muscleId))
           : (hoveredId === muscleId || (hoveredId && getRelatedMuscleIds(hoveredId).includes(muscleId)));
@@ -146,10 +133,10 @@ export const BodyMap: React.FC<BodyMapProps> = ({
     const target = e.target as Element;
     const muscleGroup = target.closest('g[id]');
     if (muscleGroup && INTERACTIVE_MUSCLES.includes(muscleGroup.id)) {
-      const targetId = getMuscleWithFallback(muscleGroup.id, effectiveVariant, effectiveGender);
+      const targetId = getMuscleWithFallback(muscleGroup.id);
       onPartClick(targetId);
     }
-  }, [onPartClick, effectiveVariant, effectiveGender]);
+  }, [onPartClick]);
 
   const handleMouseOver = useCallback((e: MouseEvent) => {
     const target = e.target as Element;
@@ -193,19 +180,13 @@ export const BodyMap: React.FC<BodyMapProps> = ({
     ? (compactFill ? 'h-full w-auto' : 'h-28 w-auto') 
     : 'h-[45vh] sm:h-[50vh] md:h-[55vh] lg:h-[60vh] xl:h-[65vh] 2xl:max-h-[55vh] w-auto max-h-[500px]';
 
-  const isDemoVariant = variant === 'demo' && gender === 'male';
-  
-  const FrontSvg = isDemoVariant
-    ? MaleFrontBodyMap
-    : (gender === 'female' 
-      ? FemaleFrontBodyMapGroup
-      : MaleFrontBodyMapGroup);
-  
-  const BackSvg = isDemoVariant
-    ? MaleBackBodyMap
-    : (gender === 'female'
-      ? FemaleBackBodyMapGroup
-      : MaleBackBodyMapGroup);
+  const FrontSvg = gender === 'female'
+    ? FemaleFrontBodyMapGroup
+    : MaleFrontBodyMap;
+
+  const BackSvg = gender === 'female'
+    ? FemaleBackBodyMapGroup
+    : MaleBackBodyMap;
 
   return (
     <div 
