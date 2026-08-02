@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { ExerciseStats, WorkoutSet } from '../../../types';
 import { getExerciseAssets, ExerciseAsset } from '../../../utils/data/exerciseAssets';
 import { createExerciseAssetLookup, ExerciseAssetLookup } from '../../../utils/exercise/exerciseAssetLookup';
-import { loadExerciseMuscleData, ExerciseMuscleData, toHeadlessVolumeMap } from '../../../utils/muscle/mapping';
+import { loadExerciseMuscleData, ExerciseMuscleData, toMuscleVolumeMap } from '../../../utils/muscle/mapping';
 import { ExerciseTrendMode, WeightUnit, getSmartFilterMode } from '../../../utils/storage/localStorage';
 import { summarizeExerciseHistory, analyzeExerciseTrendCore, type ExerciseSessionEntry } from '../../../utils/analysis/exerciseTrend';
 import { getRechartsCategoricalTicks, getRechartsTickIndexMap } from '../../../utils/chart/chartEnhancements';
@@ -160,13 +160,13 @@ export const ExerciseView: React.FC<ExerciseViewProps> = ({
     return buildExerciseMuscleTargets(selectedStats, exerciseMuscleData, secondarySetMultiplier);
   }, [selectedStats, exerciseMuscleData, secondarySetMultiplier]);
 
-  const selectedExerciseHeadlessVolumes = useMemo(() => {
-    return toHeadlessVolumeMap(selectedExerciseMuscleInfo.volumes);
+  const selectedExerciseMuscleVolumes = useMemo(() => {
+    return toMuscleVolumeMap(selectedExerciseMuscleInfo.volumes);
   }, [selectedExerciseMuscleInfo.volumes]);
 
-  const selectedExerciseHeadlessMaxVolume = useMemo(() => {
-    return Math.max(1, ...(Array.from(selectedExerciseHeadlessVolumes.values()) as number[]));
-  }, [selectedExerciseHeadlessVolumes]);
+  const selectedExerciseMuscleMaxVolume = useMemo(() => {
+    return Math.max(1, ...(Array.from(selectedExerciseMuscleVolumes.values()) as number[]));
+  }, [selectedExerciseMuscleVolumes]);
 
   const volumeThresholds = useMemo(() => getVolumeThresholds(trainingLevel), [trainingLevel]);
 
@@ -263,8 +263,8 @@ export const ExerciseView: React.FC<ExerciseViewProps> = ({
                 assetLookup={assetLookup}
                 bodyMapGender={bodyMapGender}
                 selectedExerciseMuscleInfo={selectedExerciseMuscleInfo}
-                selectedExerciseHeadlessVolumes={selectedExerciseHeadlessVolumes}
-                selectedExerciseHeadlessMaxVolume={selectedExerciseHeadlessMaxVolume}
+                selectedExerciseMuscleVolumes={selectedExerciseMuscleVolumes}
+                selectedExerciseMuscleMaxVolume={selectedExerciseMuscleMaxVolume}
                 volumeThresholds={volumeThresholds}
               />
             </div>
@@ -305,8 +305,8 @@ export const ExerciseView: React.FC<ExerciseViewProps> = ({
               assetLookup={assetLookup}
               bodyMapGender={bodyMapGender}
               selectedExerciseMuscleInfo={selectedExerciseMuscleInfo}
-              selectedExerciseHeadlessVolumes={selectedExerciseHeadlessVolumes}
-              selectedExerciseHeadlessMaxVolume={selectedExerciseHeadlessMaxVolume}
+              selectedExerciseMuscleVolumes={selectedExerciseMuscleVolumes}
+              selectedExerciseMuscleMaxVolume={selectedExerciseMuscleMaxVolume}
               volumeThresholds={volumeThresholds}
             />
           </div>
