@@ -20,6 +20,7 @@ import { useDashboardWeeklySetsDashboard } from '../hooks/useDashboardWeeklySets
 import { DashboardLayout } from './DashboardLayout';
 import { useDashboardPlateaus } from '../hooks/useDashboardPlateaus';
 import { useDashboardInjuryRisk } from '../hooks/useDashboardInjuryRisk';
+import { useDashboardStrengthBalance } from '../hooks/useDashboardStrengthBalance';
 import { useWeeklyRhythm } from '../hooks/useWeeklyRhythm';
 import { useTrainingLevel } from '../../../hooks/app/useTrainingLevel';
 import { useTrainingTimeline } from '../../../hooks/app/useTrainingTimeline';
@@ -212,6 +213,13 @@ export const Dashboard: React.FC<DashboardProps> = ({
     filterCacheKey,
   });
 
+  const { strengthBalanceItems, strengthBalanceTldr } = useDashboardStrengthBalance({
+    fullData: filteredData,
+    assetsMap,
+    effectiveNow,
+    filterCacheKey,
+  });
+
   const { prsData, prTrendDelta, prTrendDelta7d } = useDashboardPrTrend({
     fullData: filteredData,
     rangeMode: chartModes.prTrend as any,
@@ -350,6 +358,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
     weightUnit,
     filterCacheKey,
     exerciseTrendResults,
+    strengthBalanceItems,
+    strengthBalanceTldr,
   }), [
     dashboardInsights,
     filteredData,
@@ -363,6 +373,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
     weightUnit,
     filterCacheKey,
     exerciseTrendResults,
+    strengthBalanceItems,
+    strengthBalanceTldr,
   ]);
 
   const TooltipStyle = CHART_TOOLTIP_STYLE;
