@@ -13,7 +13,7 @@ import { FlexHeader } from '../parts/FlexHeader';
 import { FLEX_CARDS } from '../utils/flexViewConstants';
 import { useFlexAssets } from '../hooks/useFlexAssets';
 import { useFlexFocus } from '../hooks/useFlexFocus';
-import { useFlexHeadlessHeatmap } from '../hooks/useFlexHeadlessHeatmap';
+import { useFlexMuscleHeatmap } from '../hooks/useFlexMuscleHeatmap';
 import { useFlexInsights } from '../hooks/useFlexInsights';
 import { useFlexStats } from '../hooks/useFlexStats';
 
@@ -48,7 +48,7 @@ export const FlexView: React.FC<FlexViewProps> = ({
   const { assetLookup, exerciseMuscleData } = useFlexAssets();
   const effectiveNow = useMemo(() => now ?? getEffectiveNowFromWorkoutData(data), [now, data]);
 
-  const ytdHeadlessHeatmap = useFlexHeadlessHeatmap(data, effectiveNow, exerciseMuscleData, secondarySetMultiplier);
+  const ytdMuscleHeatmap = useFlexMuscleHeatmap(data, effectiveNow, exerciseMuscleData, secondarySetMultiplier);
   const stats = useFlexStats({
     data,
     weightUnit,
@@ -90,7 +90,7 @@ export const FlexView: React.FC<FlexViewProps> = ({
       prInsights={prInsights}
       topPRExercises={topPRExercises}
       effectiveYear={effectiveNow.getFullYear()}
-      headlessHeatmap={ytdHeadlessHeatmap}
+      muscleHeatmap={ytdMuscleHeatmap}
       bodyMapGender={bodyMapGender}
       effectiveNow={effectiveNow}
     />

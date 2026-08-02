@@ -9,14 +9,14 @@ import {
   toMuscleVolumeMap,
   type ExerciseMuscleData,
 } from '../../../utils/muscle/mapping';
-import type { FlexHeadlessHeatmap } from '../utils/flexViewTypes';
+import type { FlexMuscleHeatmap } from '../utils/flexViewTypes';
 
-export const useFlexHeadlessHeatmap = (
+export const useFlexMuscleHeatmap = (
   data: WorkoutSet[],
   effectiveNow: Date,
   exerciseMuscleData: Map<string, ExerciseMuscleData>,
   secondarySetMultiplier: number = 0.5
-): FlexHeadlessHeatmap =>
+): FlexMuscleHeatmap =>
   useMemo(() => {
     const ytdStart = new Date(effectiveNow.getFullYear(), 0, 1);
 

@@ -2,7 +2,7 @@ export { BEST_MONTH_ACCENTS, MONTH_NAMES, MONTH_SHORT, ZERO_LIFT_MESSAGES } from
 export { FLEX_CARDS } from './flexViewConstants';
 export type { FlexCardId } from './flexViewConstants';
 export type {
-  FlexHeadlessHeatmap,
+  FlexMuscleHeatmap,
   FlexMonthlyData,
   FlexMuscleDatum,
   FlexStats,

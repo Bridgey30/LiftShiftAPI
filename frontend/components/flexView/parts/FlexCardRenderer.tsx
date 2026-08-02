@@ -14,7 +14,7 @@ import { VolumeComparisonCard } from '../ui/VolumeComparisonCard';
 import { YearlyHeatmapCard } from '../ui/YearlyHeatmapCard';
 import type { CardTheme } from '../ui/FlexCard';
 import type { FlexCardId } from '../utils/flexViewConstants';
-import type { FlexHeadlessHeatmap, FlexStats, FlexTopPRExercise } from '../utils/flexViewTypes';
+import type { FlexMuscleHeatmap, FlexStats, FlexTopPRExercise } from '../utils/flexViewTypes';
 
 interface FlexCardRendererProps {
   cardId: FlexCardId;
@@ -28,7 +28,7 @@ interface FlexCardRendererProps {
   prInsights: PRInsights;
   topPRExercises: FlexTopPRExercise[];
   effectiveYear: number;
-  headlessHeatmap: FlexHeadlessHeatmap;
+  muscleHeatmap: FlexMuscleHeatmap;
   bodyMapGender: BodyMapGender;
   effectiveNow: Date;
 }
@@ -45,7 +45,7 @@ export const FlexCardRenderer: React.FC<FlexCardRendererProps> = ({
   prInsights,
   topPRExercises,
   effectiveYear,
-  headlessHeatmap,
+  muscleHeatmap,
   bodyMapGender,
   effectiveNow,
 }) => {
@@ -94,7 +94,7 @@ export const FlexCardRenderer: React.FC<FlexCardRendererProps> = ({
       return (
         <MuscleFocusCard
           muscleData={stats.muscleData}
-          headlessHeatmap={headlessHeatmap}
+          muscleHeatmap={muscleHeatmap}
           theme={cardTheme}
           gender={bodyMapGender}
           effectiveNow={effectiveNow}

@@ -28,7 +28,7 @@ export interface FlexStats {
   muscleData: FlexMuscleDatum[];
 }
 
-export interface FlexHeadlessHeatmap {
+export interface FlexMuscleHeatmap {
   volumes: Map<string, number>;
   maxVolume: number;
 }
