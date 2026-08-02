@@ -10,7 +10,7 @@ interface Props extends Omit<React.SVGProps<SVGSVGElement>, 'stroke'> {
   stroke?: Partial<BodyMapStrokeConfig>;
 }
 
-const DemoFrontSvgContent: React.FC = () => (
+const MaleFrontSvgContent: React.FC = () => (
   <g>
     <defs>
       <radialGradient
@@ -146,11 +146,11 @@ const SVGComponent = React.forwardRef<SVGSVGElement, Props>(({ warpOverrides, st
       style={{ visibility: ready ? "visible" : "hidden" }}
       {...props}
     >
-      <DemoFrontSvgContent />
+      <MaleFrontSvgContent />
     </svg>
   );
 });
 
-SVGComponent.displayName = "DemoFrontBodyMapGroup";
+SVGComponent.displayName = "MaleFrontBodyMap";
 
 export default SVGComponent;

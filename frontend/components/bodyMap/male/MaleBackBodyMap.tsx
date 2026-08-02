@@ -5,18 +5,12 @@ import { BodyMapStrokeConfig } from "../../../config/bodyMapWarp";
 const BASE_VIEWBOX_WIDTH = 660.46;
 const BASE_VIEWBOX_HEIGHT = 1206.46;
 
-const DEMO_ORIGINAL_WIDTH = 182;
-const DEMO_ORIGINAL_HEIGHT = 379;
-
-const SCALE_X = BASE_VIEWBOX_WIDTH / DEMO_ORIGINAL_WIDTH;
-const SCALE_Y = BASE_VIEWBOX_HEIGHT / DEMO_ORIGINAL_HEIGHT;
-
 interface Props extends Omit<React.SVGProps<SVGSVGElement>, 'stroke'> {
   warpOverrides?: BodyWarpParams;
   stroke?: Partial<BodyMapStrokeConfig>;
 }
 
-const DemoBackSvgContent: React.FC = () => (
+const MaleBackSvgContent: React.FC = () => (
   <g>
     <defs>
       <radialGradient
@@ -122,11 +116,11 @@ const SVGComponent = React.forwardRef<SVGSVGElement, Props>(({ warpOverrides, st
       style={{ visibility: ready ? 'visible' : 'hidden' }}
       {...props}
     >
-      <DemoBackSvgContent />
+      <MaleBackSvgContent />
     </svg>
   );
 });
 
-SVGComponent.displayName = "DemoBackBodyMapGroup";
+SVGComponent.displayName = "MaleBackBodyMap";
 
 export default SVGComponent;

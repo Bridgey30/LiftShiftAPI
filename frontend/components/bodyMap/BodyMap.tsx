@@ -7,8 +7,8 @@ import MaleFrontBodyMapMuscle from './muscles/MaleFrontBodyMapMuscle';
 import MaleBackBodyMapMuscle from './muscles/MaleBackBodyMapMuscle';
 import MaleFrontBodyMapGroup from './groups/MaleFrontBodyMapGroup';
 import MaleBackBodyMapGroup from './groups/MaleBackBodyMapGroup';
-import DemoFrontBodyMapGroup from './demo/DemoFrontBodyMapGroup';
-import DemoBackBodyMapGroup from './demo/DemoBackBodyMapGroup';
+import MaleFrontBodyMap from './male/MaleFrontBodyMap';
+import MaleBackBodyMap from './male/MaleBackBodyMap';
 import FemaleFrontBodyMapMuscle from './muscles/FemaleFrontBodyMapMuscle';
 import FemaleBackBodyMapMuscle from './muscles/FemaleBackBodyMapMuscle';
 import FemaleFrontBodyMapGroup from './groups/FemaleFrontBodyMapGroup';
@@ -196,13 +196,13 @@ export const BodyMap: React.FC<BodyMapProps> = ({
   const isDemoVariant = variant === 'demo' && gender === 'male';
   
   const FrontSvg = isDemoVariant
-    ? DemoFrontBodyMapGroup
+    ? MaleFrontBodyMap
     : (gender === 'female' 
       ? FemaleFrontBodyMapGroup
       : MaleFrontBodyMapGroup);
   
   const BackSvg = isDemoVariant
-    ? DemoBackBodyMapGroup
+    ? MaleBackBodyMap
     : (gender === 'female'
       ? FemaleBackBodyMapGroup
       : MaleBackBodyMapGroup);
