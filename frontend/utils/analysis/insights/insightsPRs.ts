@@ -2,8 +2,10 @@ import { differenceInDays, subDays } from 'date-fns';
 import { WorkoutSet } from '../../../types';
 import {
   PRDetectionResult,
+  PR_PRIORITY,
   detectGoldAndSilverPRs,
   sortSetsChronologically,
+  isMoreImportantPR,
 } from '../core/prCalculation';
 import { getLoadProgressionDirection } from '../../exercise/loadProgression';
 
@@ -21,7 +23,7 @@ export interface PRInsights {
   recentSilverPRs: RecentPR[];
 }
 
-const SILVER_PR_WINDOW_DAYS = 60;
+const SILVER_PR_WINDOW_DAYS = 30;
 
 const normalizeDisplayImprovement = (pr: RecentPR): RecentPR => {
   const isLowerWeightBetter = getLoadProgressionDirection(pr.exercise) === 'lower';
@@ -51,44 +53,48 @@ export const calculatePRInsights = (data: WorkoutSet[], now: Date = new Date(0))
 
   const { goldPRs, silverPRs } = detectGoldAndSilverPRs(sorted, SILVER_PR_WINDOW_DAYS, now);
 
-  const lastGoldPR = goldPRs[goldPRs.length - 1];
+  // goldPRs is grouped by tracker type, not globally chronological — pick the newest by date.
+  const lastGoldPR = goldPRs.reduce<PRDetectionResult | null>(
+    (best, pr) => (best === null || pr.date > best.date ? pr : best),
+    null
+  );
   const daysSinceLastPR = lastGoldPR ? differenceInDays(now, lastGoldPR.date) : 0;
 
-  const silverCutoff = subDays(now, 60);
+  const recentGoldPRs: RecentPR[] = goldPRs.map((pr) =>
+    normalizeDisplayImprovement({ ...pr, isSilver: false })
+  );
 
-  // Track latest gold PR date per exercise (for silver exclusion, matching detectGoldAndSilverPRs logic)
-  const lastGoldDate = new Map<string, Date>();
-  for (const pr of goldPRs) {
-    const prev = lastGoldDate.get(pr.exercise);
-    if (!prev || pr.date > prev) lastGoldDate.set(pr.exercise, pr.date);
-  }
+  const recentSilverPRs: RecentPR[] = silverPRs.map((pr) =>
+    normalizeDisplayImprovement({ ...pr, isSilver: true })
+  );
 
-  // Collect up to 7 unique exercises from newest gold PRs
-  const recentGoldPRs: RecentPR[] = [];
-  const seen = new Set<string>();
-  for (let i = goldPRs.length - 1; i >= 0 && recentGoldPRs.length < 7; i--) {
-    const pr = goldPRs[i];
-    if (!seen.has(pr.exercise)) {
-      seen.add(pr.exercise);
-      recentGoldPRs.push(normalizeDisplayImprovement({ ...pr, isSilver: false }));
+  // Per exercise + session (date), keep only the single most important PR
+  // (tier first: gold over silver, then type priority). No duplicate entries.
+  const bestByExerciseSession = new Map<string, RecentPR>();
+  for (const pr of [...recentSilverPRs, ...recentGoldPRs]) {
+    const key = `${pr.exercise}::${pr.date.getTime()}`;
+    const existing = bestByExerciseSession.get(key);
+    if (!existing || isMoreImportantPR(pr, existing)) {
+      bestByExerciseSession.set(key, pr);
     }
   }
 
-  // Collect up to 5 new unique exercises from newest silver PRs
-  // Only exclude exercises whose LAST gold PR was within the last 60 days
-  const recentSilverPRs: RecentPR[] = [];
-  for (let i = silverPRs.length - 1; i >= 0 && recentSilverPRs.length < 5; i--) {
-    const pr = silverPRs[i];
-    if (seen.has(pr.exercise)) continue;
-    const lastDate = lastGoldDate.get(pr.exercise);
-    if (lastDate && lastDate >= silverCutoff) continue;
-    seen.add(pr.exercise);
-    recentSilverPRs.push(normalizeDisplayImprovement({ ...pr, isSilver: true }));
-  }
+  const sortedByDate = Array.from(bestByExerciseSession.values()).sort((a, b) => {
+    const dt = b.date.getTime() - a.date.getTime();
+    if (dt !== 0) return dt;
+    // Within the same session, gold entries sit leftmost, then silver.
+    const tierDiff = (a.isSilver ? 1 : 0) - (b.isSilver ? 1 : 0);
+    if (tierDiff !== 0) return tierDiff;
+    // Within the same tier, the most important type comes first.
+    return PR_PRIORITY[a.type] - PR_PRIORITY[b.type];
+  });
 
-  const recentPRs = [...recentGoldPRs, ...recentSilverPRs]
-    .sort((a, b) => b.date.getTime() - a.date.getTime())
-    .slice(0, 7);
+  // Always show every PR from the newest session in full, then top up with older PRs.
+  const newestTs = sortedByDate[0]?.date.getTime() ?? 0;
+  const newestSession = sortedByDate.filter((p) => p.date.getTime() === newestTs);
+  const older = sortedByDate.filter((p) => p.date.getTime() !== newestTs);
+  const topUp = Math.max(0, 7 - newestSession.length);
+  const recentPRs = [...newestSession, ...older.slice(0, topUp)];
 
   const thirtyDaysAgo = subDays(now, 30);
   const recentGoldCount = goldPRs.filter((pr) => pr.date >= thirtyDaysAgo).length;

@@ -81,3 +81,33 @@ export const convertVolume = (
   }
   return Number((volume * LBS_TO_KG).toFixed(2));
 };
+
+const KM_TO_MILES = 0.621371;
+
+/**
+ * Convert distance between units.
+ * @param km - The distance value in kilometers (source of truth)
+ * @param targetUnit - The unit system to display in: 'kg' (metric) or 'lbs' (imperial)
+ * @returns Distance in the target unit's primary scale (km for metric, miles for imperial)
+ */
+export const convertDistance = (km: number, targetUnit: WeightUnit | string): number => {
+  if (targetUnit === 'lbs') {
+    return Number((km * KM_TO_MILES).toFixed(2));
+  }
+  return Number(km.toFixed(2));
+};
+
+/**
+ * Format distance with the appropriate unit label for the user's unit system.
+ * - kg (metric): km, or meters for distances under 1 km
+ * - lbs (imperial): miles, or feet for distances under 1 mile
+ */
+export const formatDistance = (km: number, targetUnit: WeightUnit | string): string => {
+  if (targetUnit === 'lbs') {
+    const miles = km * KM_TO_MILES;
+    if (miles < 1) return `${Math.round(miles * 5280)} ft`;
+    return `${Number(miles.toFixed(2))} mi`;
+  }
+  if (km < 1) return `${Math.round(km * 1000)} m`;
+  return `${Number(km.toFixed(2))} km`;
+};

@@ -2,14 +2,8 @@ import type { PrType, WorkoutSet } from '../../../types';
 import { getDateKey, type TimePeriod, sortByTimestamp } from '../../date/dateUtils';
 import { isWarmupSet } from '../classification/setClassification';
 import {
-  PRTracker,
-  createWeightTracker,
-  createOneRmTracker,
-  createVolumeTracker,
   roundTo,
   detectGoldAndSilverPRs,
-  sortSetsChronologically,
-  PRDetectionResult,
 } from './prCalculation';
 
 const sortByParsedDate = (sets: WorkoutSet[], ascending: boolean): WorkoutSet[] => {
@@ -43,7 +37,7 @@ export interface PRTypeFlags {
   isVolumePr: boolean;
 }
 
-const SILVER_PR_WINDOW_DAYS = 60;
+const SILVER_PR_WINDOW_DAYS = 30;
 
 interface PRMatchKey {
   exercise: string;
@@ -106,6 +100,7 @@ export const identifyPersonalRecords = (data: WorkoutSet[], referenceDate?: Date
     // Check for gold PR match
     const goldTypes: PrType[] = [];
     for (const pr of goldPRs) {
+      if (pr.granularity === 'session') continue;
       if (prMatchesSet(createPRMatchKey(pr), set)) {
         goldTypes.push(pr.type);
       }
@@ -117,6 +112,7 @@ export const identifyPersonalRecords = (data: WorkoutSet[], referenceDate?: Date
     // Check for silver PR match
     const silverTypes: PrType[] = [];
     for (const pr of silverPRs) {
+      if (pr.granularity === 'session') continue;
       if (prMatchesSet(createPRMatchKey(pr), set)) {
         silverTypes.push(pr.type);
       }

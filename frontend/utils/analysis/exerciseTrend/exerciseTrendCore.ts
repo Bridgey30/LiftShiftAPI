@@ -47,7 +47,7 @@ export interface ExerciseSessionEntry {
   maxReps: number;
   /** PR types achieved in this session */
   prTypes?: PrType[];
-  /** Silver PR types achieved in this session (2-month bests) */
+  /** Silver PR types achieved in this session (1-month bests) */
   silverPrTypes?: PrType[];
   /** For unilateral exercises: 'left', 'right', or undefined for bilateral/combined */
   side?: 'left' | 'right';
