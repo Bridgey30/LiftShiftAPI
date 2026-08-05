@@ -309,7 +309,7 @@ const HypertrophyScatterChart: React.FC<{ data: MuscleHypertrophyData[] }> = ({ 
   return (
     <ResponsiveContainer width="100%" height="100%">
       <ReScatterChart margin={{ top: 28, right: 8, bottom: 28, left: 0 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#334155" strokeOpacity={0.4} />
+        <CartesianGrid strokeDasharray="3 3" stroke="#334155" strokeOpacity={0.25} />
         <XAxis
           type="number" dataKey="progress" domain={[0, 50]}
           tick={{ fill: '#94a3b8', fontSize: 9 }} tickLine={false} axisLine={{ stroke: '#475569' }}

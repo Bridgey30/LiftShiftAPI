@@ -327,7 +327,7 @@ export const ExerciseProgressChart: React.FC<ExerciseProgressChartProps> = ({
                     <stop offset="100%" stopColor="#8b5cf6" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgb(var(--border-rgb) / 0.35)" vertical={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgb(var(--border-rgb) / 0.2)" vertical={false} />
                 <XAxis
                   dataKey="date"
                   stroke="var(--text-muted)"

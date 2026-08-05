@@ -99,7 +99,7 @@ export const MuscleTrendChart: React.FC<MuscleTrendChartProps> = ({
                   <rect x="0" y="0" width="1" height="1" fill="url(#efGrad)" />
                 </mask>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#334155" strokeOpacity={0.35} vertical={false} />
               <XAxis
                 dataKey="dateFormatted"
                 stroke="#94a3b8"
@@ -132,7 +132,7 @@ export const MuscleTrendChart: React.FC<MuscleTrendChartProps> = ({
             </AreaChart>
           ) : (
             <BarChart key={`bar-${musclePeriod}-${muscleGrouping}`} data={trendData} margin={{ top: 10, ...RECHARTS_YAXIS_MARGIN, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#334155" strokeOpacity={0.35} vertical={false} />
               <XAxis
                 dataKey="dateFormatted"
                 stroke="#94a3b8"

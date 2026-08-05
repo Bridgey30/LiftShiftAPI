@@ -99,7 +99,7 @@ export const WeeklyRhythmCard = ({
             </RadarChart>
           ) : (
             <BarChart key="bar" data={weekShapeData} margin={{ top: 10, ...RECHARTS_YAXIS_MARGIN, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#334155" strokeOpacity={0.35} vertical={false} />
               <XAxis dataKey="subject" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} padding={RECHARTS_XAXIS_PADDING as any} />
               <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} domain={yAxisDomain} tickFormatter={(val) => formatAxisNumber(Number(val))} />
               <Tooltip contentStyle={tooltipStyle as any} cursor={{ fill: 'rgb(var(--overlay-rgb) / 0.12)' }} />

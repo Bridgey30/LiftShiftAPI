@@ -125,7 +125,7 @@ export const VolumeDensityCard = ({
                 <path d="M 0 0 L 6 5 L 0 10 z" fill="#8b5cf6" />
               </marker>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#334155" strokeOpacity={0.35} vertical={false} />
             <XAxis
               dataKey="dateFormatted"
               stroke="#94a3b8"
