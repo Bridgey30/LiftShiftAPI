@@ -8,7 +8,7 @@ import type { BodyMapGender } from '../../bodyMap/BodyMap';
 import { HistorySessionHeaderCard } from './HistorySessionHeaderCard';
 import { HistorySessionExercises } from './HistorySessionExercises';
 import { HistoryRestDivider } from './HistoryRestDivider';
-import { formatRestDuration, formatWorkoutDuration, getSessionDurationMs, isSameCalendarDay } from '../utils/historyViewConstants';
+import { formatRestDuration, isSameCalendarDay } from '../utils/historyViewConstants';
 import { findPreviousRoutineSession } from '../utils/routineNameMatcher';
 import type { ExerciseBestEvent, ExerciseVolumePrEvent } from '../utils/historyViewTypes';
 import type { TooltipState } from './HistoryTooltipPortal';
@@ -77,8 +77,6 @@ export const HistorySessionBlock: React.FC<HistorySessionBlockProps> = ({
   const sessionMuscleMaxVolume = Math.max(1, ...(Array.from(sessionMuscleVolumes.values()) as number[]));
 
   const isCollapsed = collapsedSessions.has(session.key);
-  const sessionDurationMs = getSessionDurationMs(session);
-  const sessionDurationText = sessionDurationMs != null ? formatWorkoutDuration(sessionDurationMs) : null;
   const exerciseCount = session.exercises.length;
 
   const previousDisplayedSession = index > 0 ? currentSessions[index - 1] : null;
@@ -116,7 +114,6 @@ export const HistorySessionBlock: React.FC<HistorySessionBlockProps> = ({
           effectiveNow={effectiveNow}
           weightUnit={weightUnit}
           exerciseCount={exerciseCount}
-          sessionDurationText={sessionDurationText}
           prevSession={prevSession}
           isCollapsed={isCollapsed}
           isLightMode={isLightMode}

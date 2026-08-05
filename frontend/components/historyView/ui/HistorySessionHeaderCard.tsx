@@ -3,15 +3,12 @@ import {
   Calendar,
   ChevronRight,
   Check,
-  Clock,
   Copy,
   Dumbbell,
   Hash,
-  Timer,
   Trophy,
   Weight,
 } from "lucide-react";
-import { format } from "date-fns";
 import type { Session } from "../utils/historySessions";
 import type { WorkoutSet } from "../../../types";
 import { exportSetsAndCopyTextOnly } from "../../../utils/export/clipboardExport";
@@ -20,7 +17,6 @@ import type { BodyMapGender } from "../../bodyMap/BodyMap";
 import type { TooltipState } from "./HistoryTooltipPortal";
 import { formatDisplayVolume } from "../../../utils/format/volumeDisplay";
 import { formatRelativeTime } from "../../../utils/date/dateUtils";
-import { parseHevyDateString } from "../../../utils/date/parseHevyDateString";
 import { FANCY_FONT } from "../../../utils/ui/uiConstants";
 import { SessionDeltaBadge } from "./SessionDeltaBadge";
 import { HistorySessionBodyMap, MuscleSetsList } from "./HistorySessionBodyMap";
@@ -30,7 +26,6 @@ interface HistorySessionHeaderCardProps {
   effectiveNow: Date;
   weightUnit: WeightUnit;
   exerciseCount: number;
-  sessionDurationText: string | null;
   prevSession: Session | null;
   isCollapsed: boolean;
   isLightMode: boolean;
@@ -50,7 +45,6 @@ export const HistorySessionHeaderCard: React.FC<
   effectiveNow,
   weightUnit,
   exerciseCount,
-  sessionDurationText,
   prevSession,
   isCollapsed,
   isLightMode,
@@ -103,7 +97,7 @@ export const HistorySessionHeaderCard: React.FC<
 
       {sessionHeatmapHasData && (
         <div
-          className={`relative z-10 w-full sm:hidden grid grid-cols-3 gap-x-3 gap-y-1 transition-all duration-300 ${isCollapsed ? "grid-rows-[auto_auto]" : "grid-rows-[auto_auto_1.75rem_1.75rem_1.75rem_1.75rem_1.75rem_1.75rem_1.75rem]"}`}
+          className={`relative z-10 w-full sm:hidden grid grid-cols-[auto_1fr_1fr] gap-x-3 gap-y-1 transition-all duration-300 ${isCollapsed ? "grid-rows-[auto_auto]" : "grid-rows-[auto_auto_1.75rem_1.75rem_1.75rem_1.75rem_auto]"}`}
         >
           <div className="col-span-3 relative flex items-center justify-between gap-2 min-w-0">
             <h3
@@ -149,22 +143,7 @@ export const HistorySessionHeaderCard: React.FC<
 
           {!isCollapsed && (
             <>
-              <div className="col-span-1 row-start-3 h-7 flex items-center gap-1 text-xs text-slate-600 dark:text-slate-400 min-w-0 transition-all duration-300">
-                <Clock
-                  className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 flex-shrink-0"
-                  aria-hidden
-                />
-                <span className="truncate">
-                  {(() => {
-                    const d =
-                      session.date ??
-                      parseHevyDateString(String(session.startTime ?? ""));
-                    return d ? format(d, "h:mm a") : "—";
-                  })()}
-                </span>
-              </div>
-
-              <div className="col-span-1 row-start-4 h-7 flex items-center gap-1 text-xs text-slate-600 dark:text-slate-400 whitespace-nowrap transition-all duration-300">
+              <div className="col-span-1 row-start-3 h-7 flex items-center gap-1 text-xs text-slate-600 dark:text-slate-400 whitespace-nowrap transition-all duration-300">
                 <Hash
                   className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400"
                   aria-hidden
@@ -172,7 +151,7 @@ export const HistorySessionHeaderCard: React.FC<
                 <span>{session.totalSets} Sets</span>
               </div>
 
-              <div className="col-span-1 row-start-5 h-7 flex items-center gap-1 text-xs text-slate-600 dark:text-slate-400 whitespace-nowrap transition-all duration-300">
+              <div className="col-span-1 row-start-4 h-7 flex items-center gap-1 text-xs text-slate-600 dark:text-slate-400 whitespace-nowrap transition-all duration-300">
                 <Dumbbell
                   className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400"
                   aria-hidden
@@ -182,15 +161,35 @@ export const HistorySessionHeaderCard: React.FC<
                 </span>
               </div>
 
-              <div className="col-span-1 row-start-6 h-7 flex items-center gap-1 text-xs text-slate-600 dark:text-slate-400 whitespace-nowrap transition-all duration-300">
-                <Timer
-                  className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400"
-                  aria-hidden
-                />
-                <span>{sessionDurationText ?? "—"}</span>
+              <div className="col-span-1 row-start-5 h-7 flex items-center gap-1 text-xs text-slate-600 dark:text-slate-400 min-w-0 transition-all duration-300">
+                {prevSession &&
+                  prevSession.totalVolume > 0 &&
+                  session.totalVolume !== prevSession.totalVolume && (
+                    (() => {
+                      const isPositive = session.totalVolume > prevSession.totalVolume;
+                      const deltaPercent = Math.round(
+                        (Math.abs(session.totalVolume - prevSession.totalVolume) / prevSession.totalVolume) * 100
+                      );
+                      return (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onNavigateToSession?.(prevSession.key);
+                          }}
+                          className={`flex items-center gap-1 text-xs whitespace-nowrap hover:opacity-80 transition-opacity cursor-pointer ${isPositive ? 'text-emerald-400' : 'text-rose-400'}`}
+                          title={`volume ${isPositive ? '+' : '-'}${deltaPercent}% vs lst - ${prevSession.title} ${prevSession.date ? formatRelativeTime(prevSession.date, effectiveNow) : ''}`}
+                        >
+                          <Weight className="w-3.5 h-3.5 flex-shrink-0" />
+                          <span>Volume</span>
+                          <span>{isPositive ? '+' : '-'}{deltaPercent}%</span>
+                        </button>
+                      );
+                    })()
+                  )}
               </div>
 
-              <div className="col-span-1 row-start-7 h-7 flex items-center gap-1 text-xs transition-all duration-300">
+              <div className="col-span-1 row-start-6 h-7 flex items-center gap-1 text-xs transition-all duration-300">
                 <button
                   type="button"
                   data-no-toggle
@@ -206,13 +205,13 @@ export const HistorySessionHeaderCard: React.FC<
                 </button>
               </div>
 
-              <div className="col-span-3 row-start-8 flex items-center transition-all duration-300">
+              <div className="col-span-3 row-start-7 flex items-center transition-all duration-300">
                 <MuscleSetsList muscleVolumes={sessionMuscleVolumes} />
               </div>
 
               <div
                 data-no-toggle
-                className="col-start-2 col-span-2 row-start-3 row-span-5 flex items-stretch pl-2 border-l border-slate-800/50 overflow-visible transition-all duration-300"
+                className="col-start-2 col-span-2 row-start-3 row-span-4 flex items-stretch pl-2 border-l border-slate-800/50 overflow-visible transition-all duration-300"
               >
                 <div className="w-full h-full flex items-center justify-center overflow-visible mt-5">
                   <div className="w-full h-full overflow-visible scale-[1.3] origin-bottom">
@@ -279,16 +278,6 @@ export const HistorySessionHeaderCard: React.FC<
               {exerciseCount} Exercise{exerciseCount === 1 ? "" : "s"}
             </span>
           </span>
-          {sessionDurationText && (
-            <span className="inline-flex items-center gap-1 whitespace-nowrap">
-              <Clock
-                className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500 dark:text-slate-400"
-                aria-hidden
-              />
-              <span>{sessionDurationText}</span>
-            </span>
-          )}
-
           <span className="flex items-baseline min-w-0">
             <span className="inline-flex items-center gap-1 whitespace-nowrap min-w-0 truncate">
               <Weight

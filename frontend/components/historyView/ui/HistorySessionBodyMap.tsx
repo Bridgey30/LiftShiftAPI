@@ -38,7 +38,7 @@ export const MuscleSetsList: React.FC<{ muscleVolumes: Map<string, number> }> = 
   if (sortedMuscles.length === 0) return null;
 
   return (
-    <div className="flex flex-wrap gap-x-2 mt-15 gap-y-0.5 text-[12px] sm:text-sm">
+    <div className="flex flex-wrap gap-x-2 mt-5 gap-y-0.5 text-[12px] sm:text-sm">
       {sortedMuscles.map((muscle) => (
         <span key={muscle.id} className="text-slate-600 dark:text-slate-400">
           <span className="capitalize" style={SEMI_FANCY_FONT}>{muscle.name}</span>
