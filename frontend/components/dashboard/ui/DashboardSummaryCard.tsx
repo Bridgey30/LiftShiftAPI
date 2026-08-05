@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Sparkles, Flame, TrendingUp, TrendingDown, AlertTriangle, Trophy, Activity, Target, ChevronDown, ChevronUp, Plus, Minus } from 'lucide-react';
+import { Sparkles, Flame, TrendingUp, TrendingDown, AlertTriangle, Trophy, Activity, Target, ChevronDown, ChevronUp, ChevronRight } from 'lucide-react';
 import type { DashboardSummaryResult, SummarySegment } from '../../../utils/analysis/dashboardSummary/dashboardSummary';
 
 interface DashboardSummaryCardProps {
   summary: DashboardSummaryResult;
   onExerciseClick?: (exerciseName: string) => void;
   onDayClick?: (date: Date) => void;
+  onStrengthBalanceDetails?: () => void;
 }
 
 const InlineIcon: React.FC<{ text: string; index: number }> = ({ text, index }) => {
@@ -114,44 +115,13 @@ const SegmentRenderer: React.FC<{
   );
 };
 
-const WarningSegmentRenderer: React.FC<{
-  segments: SummarySegment[];
-  onExerciseClick?: (exerciseName: string) => void;
-}> = ({ segments, onExerciseClick }) => {
-  const linkClass = 'text-blue-400 hover:text-blue-300 hover:underline cursor-pointer transition-colors';
-
-  return (
-    <>
-      {segments.map((seg, i) => {
-        if (seg.type === 'exercise') {
-          return (
-            <span
-              key={i}
-              className={`${linkClass} hover:underline cursor-pointer transition-colors`}
-              onClick={(e) => {
-                e.stopPropagation();
-                if (seg.exerciseName) onExerciseClick?.(seg.exerciseName);
-              }}
-            >
-              {seg.text}
-            </span>
-          );
-        }
-        return (
-          <span key={i}>{seg.text}</span>
-        );
-      })}
-    </>
-  );
-};
-
 export const DashboardSummaryCard: React.FC<DashboardSummaryCardProps> = ({
   summary,
   onExerciseClick,
   onDayClick,
+  onStrengthBalanceDetails,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [sbOpen, setSbOpen] = useState(false);
 
   const hasStrengthBalance = (summary.strengthBalanceItems?.length ?? 0) > 0;
 
@@ -159,12 +129,12 @@ export const DashboardSummaryCard: React.FC<DashboardSummaryCardProps> = ({
 
   const hasSegments = summary.segments && summary.segments.length > 0;
   
-  // Calculate if text is long enough to need truncation (approx 120 chars for 2 lines on mobile)
-  const isLongText = summary.text.length > 120;
+  // Text that can't fit on a single mobile line gets a "more" toggle.
+  const isLongText = summary.text.length > 70;
 
   return (
-    <div 
-      className={`bg-black/20 border border-slate-700/50 rounded-xl p-4 overflow-hidden relative sm:h-auto ${isExpanded || hasStrengthBalance ? 'h-auto' : 'h-[120px]'}`}
+    <div
+      className="bg-black/20 border border-slate-700/50 rounded-xl p-4 relative"
       onClick={() => !isExpanded && isLongText && setIsExpanded(true)}
     >
       <div className="relative flex items-start gap-3">
@@ -173,7 +143,7 @@ export const DashboardSummaryCard: React.FC<DashboardSummaryCardProps> = ({
         </div>
         <div className="min-w-0 flex-1">
           <div className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 mb-1">Overview</div>
-          <p className={`text-sm sm:text-[15px] leading-normal text-slate-200 ${!isExpanded && isLongText ? 'line-clamp-2' : ''}`}>
+          <p className={`text-sm sm:text-[15px] leading-normal text-slate-200 ${!isExpanded && isLongText ? 'line-clamp-1' : ''}`}>
             {hasSegments ? (
               <SegmentRenderer
                 segments={summary.segments}
@@ -185,14 +155,14 @@ export const DashboardSummaryCard: React.FC<DashboardSummaryCardProps> = ({
             )}
           </p>
 
-          {/* Mobile expand/collapse control */}
+          {/* Expand/collapse control */}
           {isLongText && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 setIsExpanded(!isExpanded);
               }}
-              className="sm:hidden mt-2 flex items-center gap-1 text-[11px] text-emerald-400 hover:text-emerald-300 transition-colors"
+              className="mt-2 flex items-center gap-1 text-[11px] text-emerald-400 hover:text-emerald-300 transition-colors"
             >
               {isExpanded ? (
                 <>
@@ -208,47 +178,27 @@ export const DashboardSummaryCard: React.FC<DashboardSummaryCardProps> = ({
             </button>
           )}
 
-          {hasStrengthBalance && summary.strengthBalanceItems ? (
-            <div className="mt-3">
+          {hasStrengthBalance ? (
+            <div className="mt-3 flex items-center gap-1.5 flex-wrap">
+              <span className="text-[11px] font-bold text-red-400">
+                Strength imbalance detected
+                {summary.strengthBalanceItems && summary.strengthBalanceItems.length > 1
+                  ? ` · ${summary.strengthBalanceItems.length} findings`
+                  : ''}
+              </span>
+              {summary.strengthBalanceTldr ? (
+                <span className="hidden sm:inline text-[11px] text-slate-400">{summary.strengthBalanceTldr}</span>
+              ) : null}
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  setSbOpen((v) => !v);
+                  onStrengthBalanceDetails?.();
                 }}
-                className="flex items-center gap-1.5 w-full text-left group"
+                className="inline-flex items-center gap-0.5 text-[11px] font-bold text-blue-400 hover:text-blue-300 hover:underline transition-colors"
               >
-                {sbOpen ? (
-                  <Minus className="w-3.5 h-3.5 text-red-400 flex-shrink-0" />
-                ) : (
-                  <Plus className="w-3.5 h-3.5 text-red-400 flex-shrink-0" />
-                )}
-                <span className="text-[11px] font-bold text-red-400 group-hover:text-red-300 transition-colors">
-                  Strength balance · {summary.strengthBalanceItems.length} lift{summary.strengthBalanceItems.length === 1 ? '' : 's'} outside typical ranges
-                </span>
+                See details
+                <ChevronRight className="w-3 h-3" />
               </button>
-              {sbOpen ? (
-                <div className="mt-1.5 space-y-1 text-sm sm:text-[15px] leading-normal text-slate-200">
-                  {summary.strengthBalanceItems.map((item, i) => (
-                    <div key={i} className="flex items-start gap-1.5">
-                      <span className="flex-shrink-0 text-slate-500">•</span>
-                      <div className="min-w-0">
-                        <WarningSegmentRenderer
-                          segments={item.segments}
-                          onExerciseClick={onExerciseClick}
-                        />
-                        <span className="text-slate-500">
-                          {' '}[{item.confidence === 'high' ? 'High' : 'Medium'} confidence]
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                  {summary.strengthBalanceTldr ? (
-                    <div className="pt-1.5 mt-1 border-t border-red-500/20 font-bold text-red-400">
-                      TL;DR {summary.strengthBalanceTldr}
-                    </div>
-                  ) : null}
-                </div>
-              ) : null}
             </div>
           ) : null}
         </div>

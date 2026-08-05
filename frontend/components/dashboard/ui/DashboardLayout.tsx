@@ -5,6 +5,7 @@ import type { WeightUnit, TimeFilterMode } from '../../../utils/storage/localSto
 import type { TimelineProgress } from '../../../utils/training/trainingTimeline';
 import type { DashboardSummaryResult } from '../../../utils/analysis/dashboardSummary/dashboardSummary';
 import type { InjuryRiskResult } from '../../../utils/analysis/injury/injuryRisk';
+import type { StrengthBalancePairResult } from '../../../utils/analysis/strengthBalance/strengthBalance';
 import { DashboardHeaderBar } from './DashboardHeaderBar';
 import { DashboardInsightsSection } from './DashboardInsightsSection';
 import { DashboardPrimaryCharts } from './DashboardPrimaryCharts';
@@ -82,6 +83,10 @@ interface DashboardLayoutProps {
   hypertrophyPeriod: '7d' | '30d';
   setHypertrophyPeriod: (v: '7d' | '30d') => void;
   injuryRiskData: InjuryRiskResult[];
+  strengthBalanceResults: StrengthBalancePairResult[];
+  strengthBalanceTldr: string | null;
+  sbCardRef: React.RefObject<HTMLDivElement | null>;
+  onStrengthBalanceDetails?: () => void;
 }
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = (props) => {
@@ -157,6 +162,10 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = (props) => {
     hypertrophyPeriod,
     setHypertrophyPeriod,
     injuryRiskData,
+    strengthBalanceResults,
+    strengthBalanceTldr,
+    sbCardRef,
+    onStrengthBalanceDetails,
   } = props;
 
   return (
@@ -185,6 +194,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = (props) => {
           dailyData={dailyData}
           timelineProgress={timelineProgress}
           weeklySetsDashboard={weeklySetsDashboard}
+          onStrengthBalanceDetails={onStrengthBalanceDetails}
         />
 
         <DashboardPrimaryCharts
@@ -232,6 +242,10 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = (props) => {
           hypertrophyPeriod={hypertrophyPeriod}
           setHypertrophyPeriod={setHypertrophyPeriod}
           injuryRiskData={injuryRiskData}
+          strengthBalanceResults={strengthBalanceResults}
+          strengthBalanceTldr={strengthBalanceTldr}
+          sbCardRef={sbCardRef}
+          onExerciseClick={onExerciseClick}
         />
       </div>
 

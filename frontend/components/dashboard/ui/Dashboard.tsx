@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useRef, useCallback } from 'react';
 import { DailySummary, ExerciseStats, WorkoutSet } from '../../../types';
 import type { BodyMapGender } from '../../bodyMap/BodyMap';
 import { getSmartFilterMode, TimeFilterMode, WeightUnit } from '../../../utils/storage/localStorage';
@@ -213,12 +213,20 @@ export const Dashboard: React.FC<DashboardProps> = ({
     filterCacheKey,
   });
 
-  const { strengthBalanceItems, strengthBalanceTldr } = useDashboardStrengthBalance({
-    fullData: filteredData,
+  const { strengthBalanceItems, strengthBalanceTldr, strengthBalanceResults } = useDashboardStrengthBalance({
+    filteredData,
     assetsMap,
     effectiveNow,
     filterCacheKey,
   });
+
+  const sbCardRef = useRef<HTMLDivElement | null>(null);
+
+  const handleStrengthBalanceDetails = useCallback(() => {
+    window.setTimeout(() => {
+      sbCardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
+  }, []);
 
   const { prsData, prTrendDelta, prTrendDelta7d } = useDashboardPrTrend({
     fullData: filteredData,
@@ -453,6 +461,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
       hypertrophyPeriod={hypertrophyPeriod}
       setHypertrophyPeriod={setHypertrophyPeriod}
       injuryRiskData={injuryRiskData}
+      strengthBalanceResults={strengthBalanceResults}
+      strengthBalanceTldr={strengthBalanceTldr}
+      sbCardRef={sbCardRef}
+      onStrengthBalanceDetails={handleStrengthBalanceDetails}
     />
   );
 };

@@ -27,6 +27,7 @@ interface DashboardInsightsSectionProps {
   dailyData: DailySummary[];
   timelineProgress: TimelineProgress;
   weeklySetsDashboard: WeeklySetsDashboardResult | null;
+  onStrengthBalanceDetails?: () => void;
 }
 
 export const DashboardInsightsSection: React.FC<DashboardInsightsSectionProps> = ({
@@ -45,9 +46,15 @@ export const DashboardInsightsSection: React.FC<DashboardInsightsSectionProps> =
   dailyData,
   timelineProgress,
   weeklySetsDashboard,
+  onStrengthBalanceDetails,
 }) => (
   <>
-    <DashboardSummaryCard summary={dashboardSummary} onExerciseClick={onExerciseClick} onDayClick={onDayClick} />
+    <DashboardSummaryCard
+      summary={dashboardSummary}
+      onExerciseClick={onExerciseClick}
+      onDayClick={onDayClick}
+      onStrengthBalanceDetails={onStrengthBalanceDetails}
+    />
 
     <InsightsPanel
       insights={dashboardInsights}
