@@ -6,11 +6,13 @@ import { pickTopFindings } from '../../../utils/analysis/strengthBalance/strengt
 import {
   buildStrengthBalanceAnomalySegments,
   buildStrengthBalanceCompactSegments,
+  buildStrengthBalanceOkSegments,
   buildTrendChip,
   getFindingLabel,
   getFraming,
   getLaggardPctSeries,
   getRatioTrend,
+  smoothSeries,
   type StrengthBalanceSegment,
 } from '../../../utils/analysis/strengthBalance/strengthBalanceCopy';
 import { getStrengthMovement } from '../../../utils/analysis/strengthBalance/ratioRegistry';
@@ -26,16 +28,6 @@ const roundTo5 = (v: number): number => Math.round(v / 5) * 5;
 
 const weekLabel = (weekStart: number): string =>
   new Date(weekStart).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-
-/** 3-point centered moving average; edges keep their value. */
-const smoothSeries = (values: number[]): number[] => {
-  if (values.length < 3) return values;
-  return values.map((v, i) => {
-    const prev = values[i - 1] ?? v;
-    const next = values[i + 1] ?? v;
-    return (prev + v + next) / 3;
-  });
-};
 
 const SegmentsText: React.FC<{
   segments: StrengthBalanceSegment[];
@@ -180,9 +172,11 @@ const FindingRow: React.FC<{
   result: StrengthBalancePairResult;
   onExerciseClick?: (exerciseName: string) => void;
 }> = ({ result, onExerciseClick }) => {
-  const segments = result.severity === 'flag'
-    ? buildStrengthBalanceAnomalySegments(result)
-    : buildStrengthBalanceCompactSegments(result);
+  const segments = result.severity === 'ok'
+    ? buildStrengthBalanceOkSegments(result)
+    : result.severity === 'flag'
+      ? buildStrengthBalanceAnomalySegments(result)
+      : buildStrengthBalanceCompactSegments(result);
 
   const trend = getRatioTrend(result);
   const trendColor = TREND_COLORS[trend];
@@ -210,10 +204,18 @@ export const StrengthBalanceCard: React.FC<{
   tldr: string | null;
   onExerciseClick?: (exerciseName: string) => void;
 }> = ({ results, tldr, onExerciseClick }) => {
-  const findings = useMemo(() => pickTopFindings(results), [results]);
+  // Imbalances (watch/flag) come first, deduped and prioritized; all other
+  // pairs with data follow so the segment control shows every comparison.
+  const imbalances = useMemo(() => pickTopFindings(results), [results]);
+  const inRange = useMemo(() => {
+    const flaggedIds = new Set(imbalances.map((f) => f.pair.id));
+    return results.filter((r) => r.severity === 'ok' && !flaggedIds.has(r.pair.id));
+  }, [results, imbalances]);
+  const allPairs = useMemo(() => [...imbalances, ...inRange], [imbalances, inRange]);
+
   const [activeIndex, setActiveIndex] = useState(0);
-  const active = findings.length > 0 ? Math.min(activeIndex, findings.length - 1) : 0;
-  const finding = findings.length > 0 ? findings[active] : null;
+  const active = allPairs.length > 0 ? Math.min(activeIndex, allPairs.length - 1) : 0;
+  const current = allPairs.length > 0 ? allPairs[active] : null;
 
   return (
     <div
@@ -231,39 +233,69 @@ export const StrengthBalanceCard: React.FC<{
               <p className="text-[10px] sm:text-xs text-slate-500 mt-0.5">Compared by estimated 1-rep max · population statistics</p>
             </div>
           </div>
-          {findings.length === 1 ? (
-            <span className="text-[10px] sm:text-xs px-2 py-0.5 rounded-full bg-red-500/10 text-red-400 font-bold">
-              1 finding
+          {imbalances.length > 0 ? (
+            <span className="text-[10px] sm:text-xs px-2 py-0.5 rounded-full bg-slate-500/10 text-slate-300 font-bold whitespace-nowrap">
+              <span className="text-red-400">
+                {imbalances.length} imbalance{imbalances.length === 1 ? '' : 's'}
+              </span>
+              {inRange.length > 0 ? (
+                <>
+                  {' · '}
+                  <span className="text-emerald-400">{inRange.length} in range</span>
+                </>
+              ) : null}
+            </span>
+          ) : inRange.length > 0 ? (
+            <span className="text-[10px] sm:text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-bold whitespace-nowrap">
+              {inRange.length} in range · all good
             </span>
           ) : null}
         </div>
       </div>
 
       <div className="flex-1 min-h-0 overflow-y-auto pb-3">
-        {finding ? (
+        {current ? (
           <div className="flex flex-col h-full space-y-2 pr-1">
-            {findings.length > 1 ? (
-              <div className="flex-shrink-0 flex items-center justify-center">
-                <SegmentControl
-                  options={findings.map((f) => ({ value: f.pair.id, label: getFindingLabel(f), title: getFindingLabel(f) }))}
-                  value={finding.pair.id}
-                  onChange={(value) => {
-                    const idx = findings.findIndex((f) => f.pair.id === value);
-                    if (idx >= 0) setActiveIndex(idx);
-                  }}
-                />
+            {allPairs.length > 1 ? (
+              <div className="flex-shrink-0 w-full max-w-full overflow-x-auto pb-1 scrollbar-hide">
+                <div className="w-max mx-auto">
+                  <SegmentControl
+                    options={allPairs.map((f) => {
+                      const label = getFindingLabel(f);
+                      const isImbalance = f.severity !== 'ok';
+                      return {
+                        value: f.pair.id,
+                        label,
+                        title: label,
+                        className: isImbalance
+                          ? 'text-red-400/80 hover:text-red-300'
+                          : 'text-emerald-400/80 hover:text-emerald-300',
+                        activeClassName: isImbalance
+                          ? 'bg-red-500/20 text-red-400'
+                          : 'bg-emerald-500/20 text-emerald-400',
+                      };
+                    })}
+                    value={current.pair.id}
+                    onChange={(value) => {
+                      const idx = allPairs.findIndex((f) => f.pair.id === value);
+                      if (idx >= 0) setActiveIndex(idx);
+                    }}
+                  />
+                </div>
               </div>
             ) : null}
 
-            <FindingRow result={finding} onExerciseClick={onExerciseClick} />
+            <FindingRow result={current} onExerciseClick={onExerciseClick} />
 
             <p className="text-[10px] sm:text-xs text-slate-500 px-1 pt-1">
-              A gap can be a real imbalance, different training history, or form/technique differences. Use this as a hint, not a verdict.
+              {current.severity === 'ok'
+                ? 'These comparisons reference population statistics. Use them as a hint, not a verdict.'
+                : 'A gap can be a real imbalance, different training history, or form/technique differences. Use this as a hint, not a verdict.'}
             </p>
           </div>
         ) : (
           <div className="text-[10px] sm:text-xs text-slate-500 py-4 text-center">
-            No imbalances outside typical ranges right now.
+            No imbalance comparisons available yet.
           </div>
         )}
       </div>

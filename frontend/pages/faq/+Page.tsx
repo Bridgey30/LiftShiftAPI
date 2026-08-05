@@ -15,7 +15,7 @@ function Page() {
         <section>
           <h2 className="text-lg font-semibold text-white mb-3">What is LiftShift?</h2>
           <p className="text-slate-300 leading-relaxed mb-4">
-            LiftShift is a free and open source workout analytics tool that connects to Hevy, Strong, or Lyfta and provides insights your logging app doesn&rsquo;t offer &mdash; muscle heatmaps, plateau detection, set-by-set feedback, PR tracking, and AI-ready exports. Everything runs locally in your browser. See the <a href={assetPath('about/')} className="text-emerald-300/80 hover:text-emerald-400 transition-colors duration-200">About</a> page for more.
+            LiftShift is a free and open source workout analytics tool that connects to Hevy, Strong, or Lyfta and provides insights your logging app doesn&rsquo;t offer &mdash; muscle heatmaps, plateau detection, set-by-set feedback, PR tracking, per-joint injury risk scoring, strength imbalance detection, and AI-ready exports. Everything runs locally in your browser. See the <a href={assetPath('about/')} className="text-emerald-300/80 hover:text-emerald-400 transition-colors duration-200">About</a> page for more.
           </p>
         </section>
 
@@ -58,6 +58,20 @@ function Page() {
           <h2 className="text-lg font-semibold text-white mb-3">What is set-by-set feedback?</h2>
           <p className="text-slate-300 leading-relaxed mb-4">
             After every workout, LiftShift analyzes each set across 19 predefined scenarios &mdash; including RIR errors, volume mismatch, intensity drops, rep quality issues, and more. Each set gets a badge, a plain-English explanation, and a concrete improvement suggestion. This gives you coaching-style feedback without needing a coach.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-lg font-semibold text-white mb-3">What is the Injury Risk card?</h2>
+          <p className="text-slate-300 leading-relaxed mb-4">
+            The Injury Risk card estimates joint stress from 0 to 100 percent for each joint you train. It combines three factors: your <strong>workload ratio</strong> (this week&rsquo;s sets vs. your 4-week average), <strong>recovery</strong> (back-to-back training days on the same joint), and <strong>antagonist balance</strong> (volume ratio between opposing muscle groups). Lower is safer &mdash; a spike above 40 percent suggests considering a deload or rebalancing your program. It is a load-management hint, not medical advice. See the <a href={assetPath('how-it-works/')} className="text-emerald-300/80 hover:text-emerald-400 transition-colors duration-200">How it works</a> guide for the full methodology.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-lg font-semibold text-white mb-3">What is Strength Imbalance?</h2>
+          <p className="text-slate-300 leading-relaxed mb-4">
+            Strength Imbalance compares your estimated 1-rep max across 13 related exercise pairs (bench vs. overhead press, rows vs. bench, squat vs. bench, curls vs. pushdowns, and more) against typical ratios from population statistics &mdash; roughly 28 million logged lifts. When one side of a pair falls outside its typical band, LiftShift flags it as a watch or flag, shows your weekly trend over the last 3 months, and tells you whether the gap is closing or widening. A flagged ratio is a hint &mdash; it can mean a real imbalance, different training history, or a logging difference &mdash; never a verdict on your form.
           </p>
         </section>
 

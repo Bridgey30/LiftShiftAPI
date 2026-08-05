@@ -196,7 +196,7 @@ export const DashboardPrimaryCharts: React.FC<DashboardPrimaryChartsProps> = ({
         )}
 
         {strengthBalanceResults.length > 0 && (
-          <div ref={sbCardRef} className="min-w-0 scroll-mt-20">
+          <div ref={sbCardRef} className="min-w-0 scroll-mt-16 sm:scroll-mt-20">
             <LazyRender className="min-w-0" placeholder={<ChartSkeleton className="min-h-[400px] sm:min-h-[480px]" />}>
               <Suspense fallback={<ChartSkeleton className="min-h-[400px] sm:min-h-[480px]" />}>
                 <StrengthBalanceCard

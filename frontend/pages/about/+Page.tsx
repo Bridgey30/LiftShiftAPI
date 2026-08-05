@@ -8,7 +8,7 @@ function Page() {
   return (
     <InfoShell
       title="About LiftShift"
-      subtitle="A free and open source workout analytics tool (AGPL-3.0). Connect Hevy, Strong, or Lyfta and get answers your logging app doesn't give you &mdash; muscle heatmaps, plateau detection, set-by-set feedback, and AI-ready exports. Everything runs in your browser."
+      subtitle="A free and open source workout analytics tool (AGPL-3.0). Connect Hevy, Strong, or Lyfta and get answers your logging app doesn't give you &mdash; muscle heatmaps, plateau detection, set-by-set feedback, PR tracking, injury risk scoring, strength imbalance detection, and AI-ready exports. Everything runs in your browser."
       activeNav={null}
     >
       <div className="space-y-10">
@@ -27,6 +27,7 @@ function Page() {
             <li>Detects plateaus and gives specific, actionable next-session suggestions.</li>
             <li>Analyzes every set in a workout with plain-English feedback across 19 scenarios.</li>
             <li>Tracks seven kinds of PRs (weight, 1RM, set volume, session volume, reps, weighted reps, distance) with all-time and 1-month tiers, plus premature PR detection.</li>
+            <li>Scores per-joint injury risk from workload, recovery, and antagonist balance, and detects strength imbalances across 13 exercise ratio pairs with a monthly trend.</li>
             <li>Exports structured training data for AI analysis with built-in analysis modules.</li>
             <li>Combines data from multiple apps into one unified dashboard.</li>
             <li>Processes everything locally in your browser &mdash; no server-side storage.</li>

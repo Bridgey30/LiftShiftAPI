@@ -13,6 +13,20 @@ export type StrengthBalanceSegment = {
 
 const roundTo5 = (value: number): number => Math.round(value / 5) * 5;
 
+/**
+ * 3-point centered moving average used by the dashboard chart and the trend
+ * chip alike, so the chip's numbers are always values visible on the graph.
+ * Edges keep their value.
+ */
+export const smoothSeries = (values: number[]): number[] => {
+  if (values.length < 3) return values;
+  return values.map((v, i) => {
+    const prev = values[i - 1] ?? v;
+    const next = values[i + 1] ?? v;
+    return (prev + v + next) / 3;
+  });
+};
+
 const movementLabel = (movementId: string): string => {
   return getStrengthMovement(movementId)?.label ?? movementId.replace(/_/g, ' ');
 };
@@ -46,6 +60,10 @@ export interface StrengthBalanceFraming {
  * Shared framing: the laggard (weaker side of the user's pair) is the subject,
  * the strong lift is only ever the reference — never the problem. All values
  * are in "laggard as % of stronger" units so copy and charts stay consistent.
+ *
+ * For `ok` pairs (ratio inside the band) neither side is really lagging, so
+ * the framing switches to the strictly weaker side (ratio < 1) — that's what
+ * the positive "in the typical range" copy and its chart use.
  */
 export const getFraming = (result: StrengthBalancePairResult): StrengthBalanceFraming => {
   const { pair, ratio } = result;
@@ -54,7 +72,8 @@ export const getFraming = (result: StrengthBalancePairResult): StrengthBalanceFr
   // the expected band (not the hard band) keeps watch-tier findings framed
   // in the right direction too. BAND_EPS keeps exact boundary ratios
   // (e.g. 0.95 from round weights) from flipping sides on float noise.
-  const laggardIsA = ratio < pair.expectedMin - BAND_EPS;
+  const boundary = result.severity === 'ok' ? 1 : pair.expectedMin;
+  const laggardIsA = ratio < boundary - BAND_EPS;
   const laggardId = laggardIsA ? pair.a : pair.b;
   const strongerId = laggardIsA ? pair.b : pair.a;
   const laggardTitle = laggardIsA ? result.aExerciseTitle : result.bExerciseTitle;
@@ -135,6 +154,30 @@ export const buildStrengthBalanceCompactSegments = (
     titleSegment(f.strongerTitle, movementLabel(f.strongerId)),
     {
       text: `. Most lifters sit around ${f.typicalRange} of their ${movementLabel(f.strongerId)}.`,
+      type: 'text',
+    },
+  ];
+};
+
+/**
+ * Positive one-liner for pairs inside the typical band: same framing and
+ * units as the finding copy, with a reassurance tail. Used by the "all
+ * comparisons" view so in-range pairs read as good news, not silence.
+ */
+export const buildStrengthBalanceOkSegments = (
+  result: StrengthBalancePairResult
+): StrengthBalanceSegment[] | null => {
+  if (result.severity !== 'ok') return null;
+
+  const f = getFraming(result);
+
+  return [
+    { text: 'Your ', type: 'text' },
+    titleSegment(f.laggardTitle, movementLabel(f.laggardId)),
+    { text: ` is at about ${f.laggardPct}% of the strength of your `, type: 'text' },
+    titleSegment(f.strongerTitle, movementLabel(f.strongerId)),
+    {
+      text: `. Most lifters sit around ${f.typicalRange} of their ${movementLabel(f.strongerId)}. You're right in the typical range.`,
       type: 'text',
     },
   ];
@@ -238,37 +281,46 @@ export type RatioTrend = 'closing' | 'widening' | 'steady';
 
 interface TrendAnalysis {
   trend: RatioTrend;
-  /** Fitted laggard % at the start of the recent window (copy-rounded). */
+  /** Actual first point of the chart series in the recent window (copy-rounded). */
   startPct: number;
-  /** Fitted laggard % at the end of the recent window (copy-rounded). */
+  /** Actual last point — the current "now" value (copy-rounded). */
   endPct: number;
   months: number;
 }
 
 /**
  * Trend of the laggard-% series measured over the RECENT window only — the
- * last ~5 weeks (min 2 points). A least-squares fit replaces raw first/last
- * values, so a single weird week can't swing the verdict and the direction
- * reflects the overall trajectory, not two noisy endpoints. "Closing" means
- * the fitted line moves toward the expected band midpoint; "widening" means
- * away. This answers "how has it been doing lately", not "what happened 3
- * months ago".
+ * last ~5 weeks plus the current value (min 2 points). It runs on the exact
+ * same series the dashboard chart plots: 3-week smoothed weekly points with
+ * the raw current value appended as the "now" point, so every number the
+ * chip shows is a value visible on the graph. The direction verdict comes
+ * from a least-squares fit over those points (a single weird week can't
+ * swing it, and the smoothed series keeps the fit from chasing noise).
+ * "Closing" means the fitted line moves toward the expected band midpoint;
+ * "widening" means away. This answers "how has it been doing lately", not
+ * "what happened 3 months ago".
  */
 const analyzeTrend = (result: StrengthBalancePairResult): TrendAnalysis | null => {
-  const series = getLaggardPctSeries(result);
+  const f = getFraming(result);
+  const rawSeries = getLaggardPctSeries(result);
   const { history } = result;
-  if (series.length < 2) return null;
+  if (rawSeries.length < 2) return null;
 
-  // Recent window: points within the last 5 weeks of the newest one. If that
-  // yields a single point (sparse logging), fall back to the two newest.
+  // Chart series, in the same order the chart renders it: smoothed weekly
+  // points, then the raw current value as the final "now" point. "now" gets
+  // an x one week after the newest logged week so the fit can use it.
+  const chartSeries = [...smoothSeries(rawSeries), f.laggardPctRaw];
   const lastWeek = history[history.length - 1].weekStart;
+  const nowX = lastWeek + 7 * DAY_MS;
+
+  // Recent window: points within the last 5 weeks of the newest one. The
+  // "now" point always belongs to it; with sparse logging the window can
+  // shrink to just the newest week + "now", which is still a fit.
   const windowCutoff = lastWeek - 5 * 7 * DAY_MS;
-  let pts = history
-    .map((h, i) => ({ x: h.weekStart, y: series[i] }))
+  const pts = history
+    .map((h, i) => ({ x: h.weekStart, y: chartSeries[i] }))
     .filter((p) => p.x >= windowCutoff);
-  if (pts.length < 2) {
-    pts = history.slice(-2).map((h, i) => ({ x: h.weekStart, y: series.slice(-2)[i] }));
-  }
+  pts.push({ x: nowX, y: f.laggardPctRaw });
 
   const n = pts.length;
   const mx = pts.reduce((s, p) => s + p.x, 0) / n;
@@ -276,20 +328,29 @@ const analyzeTrend = (result: StrengthBalancePairResult): TrendAnalysis | null =
   const sxx = pts.reduce((s, p) => s + (p.x - mx) ** 2, 0);
   const sxy = pts.reduce((s, p) => s + (p.x - mx) * (p.y - my), 0);
   const slope = sxx > 0 ? sxy / sxx : 0;
-  const startPct = roundTo5(my + slope * (pts[0].x - mx));
-  const endPct = roundTo5(my + slope * (pts[pts.length - 1].x - mx));
+  const fittedStart = my + slope * (pts[0].x - mx);
+  const fittedEnd = my + slope * (pts[pts.length - 1].x - mx);
 
   let trend: RatioTrend = 'steady';
-  if (startPct !== endPct) {
-    const f = getFraming(result);
+  const startPct = roundTo5(pts[0].y);
+  const endPct = roundTo5(pts[pts.length - 1].y);
+  // A chip with equal displayed values ("50% → 50%") would contradict its
+  // own direction label, so require movement in both the displayed points
+  // and the fitted line before calling a trend.
+  if (startPct !== endPct && roundTo5(fittedStart) !== roundTo5(fittedEnd)) {
     const mid = (f.typicalMin + f.typicalMax) / 2;
-    const startDist = Math.abs(startPct - mid);
-    const endDist = Math.abs(endPct - mid);
+    const startDist = Math.abs(fittedStart - mid);
+    const endDist = Math.abs(fittedEnd - mid);
     trend = endDist < startDist ? 'closing' : 'widening';
   }
 
   const spanDays = (pts[pts.length - 1].x - pts[0].x) / DAY_MS;
-  return { trend, startPct, endPct, months: Math.max(1, Math.round(spanDays / 30)) };
+  return {
+    trend,
+    startPct,
+    endPct,
+    months: Math.max(1, Math.round(spanDays / 30)),
+  };
 };
 
 /**
@@ -302,9 +363,11 @@ export const getRatioTrend = (result: StrengthBalancePairResult): RatioTrend =>
 
 /**
  * One-line chip for the dashboard card, in the same units as the sentence:
- * "Gap closing · 50% → 60% over 3 months". The values are the fitted trend
- * of the last ~5 weeks, and the span is reported in months. Null when the
- * trend is steady or there isn't enough history.
+ * "Gap closing · 50% → 60% over 3 months". The values are the first and
+ * last points of the chart series in the recent window (smoothed weekly +
+ * current "now" value), so they always appear on the graph, and the span is
+ * reported in months. Null when the trend is steady or there isn't enough
+ * history.
  */
 export const buildTrendChip = (result: StrengthBalancePairResult): string | null => {
   const analysis = analyzeTrend(result);

@@ -19,6 +19,8 @@ function Page() {
             <li><a href={assetPath('metrics/personal-records/')} className="text-emerald-300/80 hover:text-emerald-400 transition-colors duration-200">Personal records (PRs)</a> \u2014 Data-derived bests, not performance promises. Covers the three PR tiers, how PRs are calculated, and what they don\u2019t mean.</li>
             <li><a href={assetPath('metrics/one-rep-max/')} className="text-emerald-300/80 hover:text-emerald-400 transition-colors duration-200">1RM (one-rep max)</a> \u2014 Estimated one-rep max values derived from your logged sets using standard formulas. Tracks strength trends without testing maxes.</li>
             <li><a href={assetPath('metrics/muscle-heatmap/')} className="text-emerald-300/80 hover:text-emerald-400 transition-colors duration-200">Muscle heatmaps</a> \u2014 Visual estimates of which muscles your training emphasises, based on exercise-to-muscle mapping and volume allocation.</li>
+            <li><a href={assetPath('metrics/injury-risk/')} className="text-emerald-300/80 hover:text-emerald-400 transition-colors duration-200">Injury Risk</a> \u2014 A 0-100 per-joint stress estimate combining workload ratio, recovery, and antagonist balance. A load-management hint, not a diagnosis.</li>
+            <li><a href={assetPath('metrics/strength-imbalance/')} className="text-emerald-300/80 hover:text-emerald-400 transition-colors duration-200">Strength Imbalance</a> \u2014 Your strength ratios across 13 related exercise pairs compared against population statistics, with a monthly closing/widening trend.</li>
           </ul>
         </section>
 

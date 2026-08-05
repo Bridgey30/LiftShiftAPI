@@ -7,6 +7,8 @@ import { MUSCLE_HEATMAPS_SECTION } from '../sections/muscleHeatmapsSection';
 import { EXERCISE_ANALYSIS_SECTION } from '../sections/exerciseAnalysisSection';
 import { PR_TRACKING_SECTION } from '../sections/prTrackingSection';
 import { PLATEAU_DETECTION_SECTION } from '../sections/plateauDetectionSection';
+import { INJURY_RISK_SECTION } from '../sections/injuryRiskSection';
+import { STRENGTH_IMBALANCE_SECTION } from '../sections/strengthImbalanceSection';
 import { SET_BY_SET_SECTION } from '../sections/setBySetSection';
 import { ACTIVITY_CONSISTENCY_SECTION } from '../sections/activityConsistencySection';
 import { CALENDAR_FILTERING_SECTION } from '../sections/calendarFilteringSection';
@@ -27,6 +29,8 @@ export const HOW_IT_WORKS_SECTIONS: HowItWorksSection[] = [
   EXERCISE_ANALYSIS_SECTION,
   PR_TRACKING_SECTION,
   PLATEAU_DETECTION_SECTION,
+  INJURY_RISK_SECTION,
+  STRENGTH_IMBALANCE_SECTION,
   SET_BY_SET_SECTION,
   CALENDAR_FILTERING_SECTION,
   AI_EXPORT_SECTION,

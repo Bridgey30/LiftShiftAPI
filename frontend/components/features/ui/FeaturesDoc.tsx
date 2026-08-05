@@ -13,6 +13,7 @@ const featureGroups = [
       'GitHub-style yearly consistency heatmap with streaks, consistency scores, and workout day highlights.',
       'Rolling window comparisons: last week vs. previous week, last month vs. previous month, on every metric.',
       'Training focus breakdown by rep ranges (strength / hypertrophy / endurance).',
+      'Per-joint Injury Risk scoring: workload, recovery, and antagonist balance combine into a 0-100 risk score per joint.',
     ],
   },
   {
@@ -31,6 +32,7 @@ const featureGroups = [
     alt: 'LiftShift set-by-set coaching feedback on every set in a workout',
     items: [
       'Set-by-set analysis, 19 scenarios with badges, tooltips, and improvement suggestions.',
+      'Strength imbalance detection: 13 push/pull and leg/back ratios against population statistics, with a monthly trend so you can watch a gap close.',
       'AI-ready export, one-click structured data export with built-in analysis modules (junk volume audit, structural balance, joint health, and more).',
       'Weight-up / weight-down suggestions based on your actual performance quality.',
     ],

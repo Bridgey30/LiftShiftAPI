@@ -221,11 +221,24 @@ export const Dashboard: React.FC<DashboardProps> = ({
   });
 
   const sbCardRef = useRef<HTMLDivElement | null>(null);
+  const sbScrollTimers = useRef<number[]>([]);
 
   const handleStrengthBalanceDetails = useCallback(() => {
-    window.setTimeout(() => {
-      sbCardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 50);
+    // The card mounts lazily (skeleton first), so its height shifts after
+    // the first scroll. Retry a few times so the card header lands at the
+    // top of the viewport once the real content has rendered.
+    const scroll = () => sbCardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    for (const delay of [50, 300, 700]) {
+      sbScrollTimers.current.push(window.setTimeout(scroll, delay));
+    }
+  }, []);
+
+  useEffect(() => {
+    const timers = sbScrollTimers.current;
+    return () => {
+      for (const t of timers) window.clearTimeout(t);
+      sbScrollTimers.current = [];
+    };
   }, []);
 
   const { prsData, prTrendDelta, prTrendDelta7d } = useDashboardPrTrend({
