@@ -121,7 +121,7 @@ const HypertrophyScoreBar: React.FC<{
   legendMax: number;
 }> = ({ score, thresholds, legendMax }) => {
   const isMobile = useIsMobile(768);
-  const TOTAL_PILLS = isMobile ? 25 : 50;
+  const TOTAL_PILLS = isMobile ? 12 : 24;
   const pillData = usePillSizing(TOTAL_PILLS);
   const totalFlex = pillData.reduce((sum, p) => sum + p.flexGrow, 0);
   const filledFlex = (score / 100) * totalFlex;
@@ -352,7 +352,7 @@ export const MuscleAnalysisGraphPanel: React.FC<MuscleAnalysisGraphPanelProps> =
       }, [zones, legendMax, showOverdrive]);
 
       const isMobileLegend = useIsMobile(768);
-      const TOTAL_PILLS = isMobileLegend ? 25 : 50;
+      const TOTAL_PILLS = isMobileLegend ? 12 : 24;
       const legendPillSizing = usePillSizing(TOTAL_PILLS);
 
       const pillData = useMemo(() => {

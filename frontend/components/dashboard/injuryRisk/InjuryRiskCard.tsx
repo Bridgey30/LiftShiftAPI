@@ -19,7 +19,7 @@ const RiskProgressBar: React.FC<{
   imbalance: number;
 }> = ({ acwr, recovery, imbalance }) => {
   const isMobile = useIsMobile(768);
-  const TOTAL_PILLS = isMobile ? 15 : 30;
+  const TOTAL_PILLS = isMobile ? 6 : 10;
 
   const pillData = useMemo(() =>
     Array.from({ length: TOTAL_PILLS }).map(() => {

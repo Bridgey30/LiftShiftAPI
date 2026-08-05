@@ -18,7 +18,7 @@ const FactorProgressBar: React.FC<{
   frequency: number;
 }> = ({ volumeScore, progressiveOverload, frequency }) => {
   const isMobile = useIsMobile(768);
-  const TOTAL_PILLS = isMobile ? 15 : 30;
+  const TOTAL_PILLS = isMobile ? 7 : 12;
 
   const pillData = useMemo(() =>
     Array.from({ length: TOTAL_PILLS }).map(() => {

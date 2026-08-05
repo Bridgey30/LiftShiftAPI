@@ -81,7 +81,7 @@ const SegmentLine: React.FC<{
   fillPercent: number;
 }> = ({ fillPercent }) => {
   const isMobile = useIsMobile(768);
-  const TOTAL_PILLS = isMobile ? 8 : 15;
+  const TOTAL_PILLS = isMobile ? 3 : 5;
   const emeraldColor = '#34d399';
   
   const pillData = useMemo(() => 

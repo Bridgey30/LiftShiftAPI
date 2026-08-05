@@ -104,7 +104,7 @@ const TierIcon: React.FC<{ tierKey: string; className?: string }> = ({
 
 const ProgressBar: React.FC<{ percent: number; color: string }> = ({ percent, color }) => {
   const isMobile = useIsMobile(768);
-  const TOTAL_PILLS = isMobile ? 15 : 30;
+  const TOTAL_PILLS = isMobile ? 6 : 10;
   
   const pillData = useMemo(() => 
     Array.from({ length: TOTAL_PILLS }).map(() => {
@@ -163,7 +163,7 @@ const FactorProgressBar: React.FC<{
   frequency: number;
 }> = ({ volumeScore, progressiveOverload, frequency }) => {
   const isMobile = useIsMobile(768);
-  const TOTAL_PILLS = isMobile ? 15 : 30;
+  const TOTAL_PILLS = isMobile ? 8 : 14;
 
   const pillData = useMemo(() =>
     Array.from({ length: TOTAL_PILLS }).map(() => {
