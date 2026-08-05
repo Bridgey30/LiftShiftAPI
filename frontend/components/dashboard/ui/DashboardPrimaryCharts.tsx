@@ -7,6 +7,7 @@ import type { WeightUnit, TimeFilterMode } from '../../../utils/storage/localSto
 import type { TrainingLevel } from '../../../utils/muscle/hypertrophy/muscleParams';
 import { DashboardAIAnalysisCard } from './DashboardAIAnalysisCard';
 import type { InjuryRiskResult } from '../../../utils/analysis/injury/injuryRisk';
+import type { StrengthBalancePairResult } from '../../../utils/analysis/strengthBalance/strengthBalance';
 
 const WeeklySetsCard = React.lazy(() => import('../weeklySets/WeeklySetsCard').then((m) => ({ default: m.WeeklySetsCard })));
 const MuscleTrendCard = React.lazy(() => import('../muscleTrend/MuscleTrendCard').then((m) => ({ default: m.MuscleTrendCard })));
@@ -16,6 +17,7 @@ const HypertrophyScatterCard = React.lazy(() => import('../hypertrophy/Hypertrop
 const HypertrophyBarCard = React.lazy(() => import('../hypertrophy/HypertrophyBarCard').then((m) => ({ default: m.HypertrophyBarCard })));
 const VolumeDensityCard = React.lazy(() => import('../volumeDensity/VolumeDensityCard').then((m) => ({ default: m.VolumeDensityCard })));
 const InjuryRiskCard = React.lazy(() => import('../injuryRisk/InjuryRiskCard').then((m) => ({ default: m.InjuryRiskCard })));
+const StrengthBalanceCard = React.lazy(() => import('../strengthBalance/StrengthBalanceCard').then((m) => ({ default: m.StrengthBalanceCard })));
 
 interface DashboardPrimaryChartsProps {
   fullData: WorkoutSet[];
@@ -62,6 +64,10 @@ interface DashboardPrimaryChartsProps {
   muscleTrendInsight: any;
   muscleVsLabel: string;
   injuryRiskData: InjuryRiskResult[];
+  strengthBalanceResults: StrengthBalancePairResult[];
+  strengthBalanceTldr: string | null;
+  sbCardRef: React.RefObject<HTMLDivElement | null>;
+  onExerciseClick?: (exerciseName: string) => void;
 }
 
 export const DashboardPrimaryCharts: React.FC<DashboardPrimaryChartsProps> = ({
@@ -109,6 +115,10 @@ export const DashboardPrimaryCharts: React.FC<DashboardPrimaryChartsProps> = ({
   muscleTrendInsight,
   muscleVsLabel,
   injuryRiskData,
+  strengthBalanceResults,
+  strengthBalanceTldr,
+  sbCardRef,
+  onExerciseClick,
 }) => {
   const scatterHypertrophyData = useMemo(() =>
     hypertrophyData.filter(m => m.score.raw.weeklySets >= 1.0 && m.score.raw.daysPerWeek >= 1.0),
@@ -175,6 +185,32 @@ export const DashboardPrimaryCharts: React.FC<DashboardPrimaryChartsProps> = ({
       </LazyRender>
     </div>
 
+    {(injuryRiskData.length > 0 || strengthBalanceResults.length > 0) && (
+      <div className={injuryRiskData.length > 0 && strengthBalanceResults.length > 0 ? 'grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-2' : ''}>
+        {injuryRiskData.length > 0 && (
+          <LazyRender className="min-w-0" placeholder={<ChartSkeleton className="min-h-[400px] sm:min-h-[480px]" />}>
+            <Suspense fallback={<ChartSkeleton className="min-h-[400px] sm:min-h-[480px]" />}>
+              <InjuryRiskCard injuryRiskData={injuryRiskData} />
+            </Suspense>
+          </LazyRender>
+        )}
+
+        {strengthBalanceResults.length > 0 && (
+          <div ref={sbCardRef} className="min-w-0 scroll-mt-20">
+            <LazyRender className="min-w-0" placeholder={<ChartSkeleton className="min-h-[400px] sm:min-h-[480px]" />}>
+              <Suspense fallback={<ChartSkeleton className="min-h-[400px] sm:min-h-[480px]" />}>
+                <StrengthBalanceCard
+                  results={strengthBalanceResults}
+                  tldr={strengthBalanceTldr}
+                  onExerciseClick={onExerciseClick}
+                />
+              </Suspense>
+            </LazyRender>
+          </div>
+        )}
+      </div>
+    )}
+
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-2">
       <DashboardAIAnalysisCard
         fullData={fullData}
@@ -199,14 +235,6 @@ export const DashboardPrimaryCharts: React.FC<DashboardPrimaryChartsProps> = ({
         </Suspense>
       </LazyRender>
     </div>
-
-    {injuryRiskData.length > 0 && (
-      <LazyRender className="min-w-0" placeholder={<ChartSkeleton className="min-h-[400px] sm:min-h-[480px]" />}>
-        <Suspense fallback={<ChartSkeleton className="min-h-[400px] sm:min-h-[480px]" />}>
-          <InjuryRiskCard injuryRiskData={injuryRiskData} />
-        </Suspense>
-      </LazyRender>
-    )}
 
     <LazyRender className="min-w-0" placeholder={<ChartSkeleton className="min-h-[400px] sm:min-h-[480px]" />}>
       <Suspense fallback={<ChartSkeleton className="min-h-[400px] sm:min-h-[480px]" />}>

@@ -3,6 +3,7 @@ import type { WorkoutSet } from '../../../types';
 import type { ExerciseAsset } from '../../../utils/data/exerciseAssets';
 import { computationCache } from '../../../utils/storage/computationCache';
 import { createCacheKey } from '../../../utils/storage/cacheKeys';
+import { useStrengthBalanceDismissals } from '../../../utils/storage/strengthBalanceDismissals';
 import {
   computeStrengthBalance,
   pickTopFindings,
@@ -21,27 +22,33 @@ export interface StrengthBalanceLine {
 }
 
 export const useDashboardStrengthBalance = ({
-  fullData,
+  filteredData,
   assetsMap,
   effectiveNow,
   filterCacheKey,
 }: {
-  fullData: WorkoutSet[];
+  filteredData: WorkoutSet[];
   assetsMap: Map<string, ExerciseAsset> | null;
   effectiveNow: Date;
   filterCacheKey: string;
-}): { strengthBalanceItems: StrengthBalanceLine[] | null; strengthBalanceTldr: string | null; strengthBalanceResults: StrengthBalancePairResult[] } => {
+}): { strengthBalanceResults: StrengthBalancePairResult[]; strengthBalanceItems: StrengthBalanceLine[] | null; strengthBalanceTldr: string | null } => {
+  const dismissed = useStrengthBalanceDismissals();
+
   const { results, items, tldr } = useMemo(() => {
-    if (!assetsMap || fullData.length === 0) return { results: [], items: null, tldr: null };
+    if (!assetsMap || filteredData.length === 0) return { results: [], items: null, tldr: null };
 
     const cacheKey = createCacheKey('strengthBalance', filterCacheKey);
 
-    const results = computationCache.getOrCompute<StrengthBalancePairResult[]>(
+    const allResults = computationCache.getOrCompute<StrengthBalancePairResult[]>(
       cacheKey,
-      fullData,
-      () => computeStrengthBalance(fullData, assetsMap, effectiveNow),
+      filteredData,
+      () => computeStrengthBalance(filteredData, assetsMap, effectiveNow),
       { ttl: 10 * 60 * 1000 }
     );
+
+    const results = dismissed.size > 0
+      ? allResults.filter((r) => !dismissed.has(r.pair.id))
+      : allResults;
 
     const findings = pickTopFindings(results);
     if (findings.length === 0) return { results, items: null, tldr: null };
@@ -56,7 +63,7 @@ export const useDashboardStrengthBalance = ({
       if (segments) items.push({ segments, confidence: finding.confidence });
     }
     return { results, items, tldr: buildStrengthBalanceTldr(findings) };
-  }, [fullData, assetsMap, effectiveNow, filterCacheKey]);
+  }, [filteredData, assetsMap, effectiveNow, filterCacheKey, dismissed]);
 
-  return { strengthBalanceItems: items, strengthBalanceTldr: tldr, strengthBalanceResults: results };
+  return { strengthBalanceResults: results, strengthBalanceItems: items, strengthBalanceTldr: tldr };
 };
