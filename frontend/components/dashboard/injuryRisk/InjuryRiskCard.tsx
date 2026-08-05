@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Shield, TrendingUp } from 'lucide-react';
+import { Bone, TrendingUp } from 'lucide-react';
 import { Tooltip, useTooltip } from '../../ui/Tooltip';
 import { SEMI_FANCY_FONT } from '../../../utils/ui/uiConstants';
 import { useIsMobile } from '../../insights/useIsMobile';
@@ -120,9 +120,14 @@ export const InjuryRiskCard: React.FC<{
     <div className="bg-black/20 rounded-xl border border-slate-700/50 px-2 sm:px-3 py-4 sm:py-6 min-h-[400px] sm:min-h-[520px] lg:min-h-0 lg:h-full flex flex-col" style={{ backgroundColor: 'rgb(var(--panel-rgb) / 0.5)' }}>
       <div className="flex-shrink-0">
         <div className="flex items-center justify-between mb-3 gap-3">
-          <div>
-            <h2 className="text-xs font-bold text-white">Injury Risk</h2>
-            <p className="text-[10px] text-slate-500 mt-0.5">Lower is safer · Per joint breakdown</p>
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 rounded-lg bg-amber-500/10">
+              <Bone className="w-4 h-4 text-amber-400" />
+            </div>
+            <div>
+              <h2 className="text-xs font-bold text-white">Injury Risk</h2>
+              <p className="text-[10px] text-slate-500 mt-0.5">Lower is safer · Per joint breakdown</p>
+            </div>
           </div>
         </div>
 
@@ -145,7 +150,6 @@ export const InjuryRiskCard: React.FC<{
               <div className="flex items-center gap-1.5 mt-0.5">
                 <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold"
                   style={{ backgroundColor: `${rating.color}20`, color: rating.color }}>
-                  <Shield className="w-3 h-3" />
                   {rating.label} Risk
                 </span>
               </div>
