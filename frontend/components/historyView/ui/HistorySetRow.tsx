@@ -7,6 +7,7 @@ import { formatSignedNumber } from '../../../utils/format/formatters';
 import type { WeightUnit } from '../../../utils/storage/localStorage';
 import type { ExerciseBestEvent, ExerciseVolumePrEvent } from '../utils/historyViewTypes';
 import { getLoadProgressionDirection } from '../../../utils/exercise/loadProgression';
+import { PR_PRIORITY } from '../../../utils/analysis/core/prCalculation';
 
 // Session-granularity PR kinds (sessionVolume, distance) never mark individual sets,
 // so they have no set-level badge.
@@ -107,6 +108,15 @@ export const HistorySetRow: React.FC<HistorySetRowProps> = ({
     }
   };
 
+  const showLegacyVolBadge = !!(volPrEvent && setIndex === volPrAnchorIndex && !set.prTypes?.includes('volume'));
+
+  const badges: { prType: PrType; legacy?: boolean }[] = [
+    ...(set.isPr ? set.prTypes : set.silverPrTypes)?.map((prType) => ({ prType })) ?? [],
+    ...(showLegacyVolBadge ? [{ prType: 'volume' as PrType, legacy: true }] : []),
+  ]
+    .sort((a, b) => PR_PRIORITY[a.prType] - PR_PRIORITY[b.prType])
+    .slice(0, 3);
+
   return (
     <div
       className={`relative z-10 flex items-center gap-2 sm:gap-3 p-1.5 sm:p-2 rounded-lg border ${rowStatusClass} transition-all hover:bg-black/60 group overflow-visible ${insight ? 'cursor-help' : ''}`}
@@ -142,18 +152,35 @@ export const HistorySetRow: React.FC<HistorySetRowProps> = ({
         <div className="flex items-center gap-1 sm:gap-2 flex-none pl-2 overflow-hidden">
           {(set.isPr || set.isSilverPr || (volPrEvent && setIndex === volPrAnchorIndex)) && (
             <div className="flex flex-col gap-0.5">
-              {/* Show badge for each PR type (Gold or Silver) */}
-              {(set.isPr ? set.prTypes : set.silverPrTypes)?.map((prType: PrType, idx: number) => {
-                const types = set.isPr ? set.prTypes : set.silverPrTypes;
-                const meta = PR_BADGE_META[prType] ?? PR_BADGE_META.weight!;
+              {badges.map((badge) => {
+                if (badge.legacy) {
+                  return (
+                    <span
+                      key="legacy-vol"
+                      className={`flex items-center gap-0.5 px-0.5 py-0.5 rounded text-[6px] sm:text-[8px] font-bold uppercase tracking-wider whitespace-nowrap leading-none border animate-pulse ${set.isPr ? 'bg-amber-200/70 text-yellow-300 dark:bg-yellow-500/10 dark:text-yellow-400 border-amber-300/80 dark:border-yellow-500/20' : 'bg-slate-200/70 text-slate-600 dark:bg-slate-500/10 dark:text-slate-400 border-slate-300/80 dark:border-slate-500/20'}`}
+                      title="Volume PR (best-ever single-set volume)"
+                      aria-label="Volume PR (best-ever single-set volume)"
+                    >
+                      <BarChart3 className="w-2 h-2 sm:w-2.5 sm:h-2.5 flex-none" />
+                      <span>Vol PR</span>
+                      {volPrEvent!.previousBest > 0 && (
+                        <span className="text-[4px] sm:text-[6px] font-extrabold text-yellow-500 dark:text-yellow-300 leading-none">
+                          {formatSignedNumber(((volPrEvent!.volume - volPrEvent!.previousBest) / volPrEvent!.previousBest) * 100, { maxDecimals: 0 })}%
+                        </span>
+                      )}
+                    </span>
+                  );
+                }
+
+                const meta = PR_BADGE_META[badge.prType] ?? PR_BADGE_META.weight!;
                 const Icon = meta.icon;
                 const label = set.isPr ? meta.gold : meta.silver;
 
                 return (
-                  <span key={prType} className={`flex items-center gap-0.5 px-0.5 py-0.5 rounded text-[6px] sm:text-[8px] font-bold uppercase tracking-wider whitespace-nowrap leading-none border animate-pulse ${set.isPr ? 'bg-amber-200/70 text-yellow-300 dark:bg-yellow-500/10 dark:text-yellow-400 border-amber-300/80 dark:border-yellow-500/20' : 'bg-slate-200/70 text-slate-600 dark:bg-slate-500/10 dark:text-slate-400 border-slate-300/80 dark:border-slate-500/20'}`}>
+                  <span key={badge.prType} className={`flex items-center gap-0.5 px-0.5 py-0.5 rounded text-[6px] sm:text-[8px] font-bold uppercase tracking-wider whitespace-nowrap leading-none border animate-pulse ${set.isPr ? 'bg-amber-200/70 text-yellow-300 dark:bg-yellow-500/10 dark:text-yellow-400 border-amber-300/80 dark:border-yellow-500/20' : 'bg-slate-200/70 text-slate-600 dark:bg-slate-500/10 dark:text-slate-400 border-slate-300/80 dark:border-slate-500/20'}`}>
                     <Icon className="w-2 h-2 sm:w-2.5 sm:h-2.5 flex-none" />
                     <span>{label}</span>
-                    {prType === 'weight' && prDelta > 0 && (
+                    {badge.prType === 'weight' && prDelta > 0 && (
                       <span className={`text-[4px] sm:text-[6px] font-extrabold leading-none ${set.isPr ? 'text-yellow-500' : 'text-slate-500'}`}>
                         {formatSignedNumber(convertWeight(prDelta, weightUnit), { maxDecimals: 2 })}{weightUnit}{isLowerWeightBetter ? ' less assist' : ''}
                       </span>
@@ -161,23 +188,6 @@ export const HistorySetRow: React.FC<HistorySetRowProps> = ({
                   </span>
                 );
               })}
-
-              {/* Show legacy vol PR if not already in prTypes */}
-              {volPrEvent && setIndex === volPrAnchorIndex && !set.prTypes?.includes('volume') && (
-                <span
-                  className={`flex items-center gap-0.5 px-0.5 py-0.5 rounded text-[6px] sm:text-[8px] font-bold uppercase tracking-wider whitespace-nowrap leading-none border animate-pulse ${set.isPr ? 'bg-amber-200/70 text-yellow-300 dark:bg-yellow-500/10 dark:text-yellow-400 border-amber-300/80 dark:border-yellow-500/20' : 'bg-slate-200/70 text-slate-600 dark:bg-slate-500/10 dark:text-slate-400 border-slate-300/80 dark:border-slate-500/20'}`}
-                  title="Volume PR (best-ever single-set volume)"
-                  aria-label="Volume PR (best-ever single-set volume)"
-                >
-                  <BarChart3 className="w-2 h-2 sm:w-2.5 sm:h-2.5 flex-none" />
-                  <span>Vol PR</span>
-                  {volPrEvent.previousBest > 0 && (
-                    <span className="text-[4px] sm:text-[6px] font-extrabold text-yellow-500 dark:text-yellow-300 leading-none">
-                      {formatSignedNumber(((volPrEvent.volume - volPrEvent.previousBest) / volPrEvent.previousBest) * 100, { maxDecimals: 0 })}%
-                    </span>
-                  )}
-                </span>
-              )}
             </div>
           )}
 
