@@ -8,7 +8,7 @@ import PlatformDock from './PlatformDock';
 import { ReviewsCarousel } from './ReviewsCarousel';
 import { HeroIllustration } from './HeroIllustration';
 import LightRays from '../lightRays/LightRays';
-import { Flame, CalendarDays, Trophy, BarChart3, Activity } from 'lucide-react';
+import { Flame, CalendarDays, Trophy, BarChart3, Activity, Bone, Scale } from 'lucide-react';
 import { FANCY_FONT } from '../../../utils/ui/uiConstants';
 import { assetPath } from '../../../constants';
 import lightBgImage from '../../../src/assets/images/misc/light-bg1.avif';
@@ -275,12 +275,50 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onSelectPlatform, onTr
                 </div>
               </div>
 
-              {/* AI export, image: AI.avif */}
+              {/* Injury risk, image: injury-risk.avif */}
               <div className="grid lg:grid-cols-2 gap-12 items-center mb-24">
-                <div className="lg:order-2 rounded-2xl overflow-hidden aspect-[1/1]">
-                  <img src={assetPath('/images/misc/AI.avif')} alt="LiftShift AI analysis prompt generator" loading="lazy" className={`w-full h-full object-contain ${isLight ? 'invert' : ''}`} />
+                <div className="lg:order-1 rounded-2xl overflow-hidden aspect-[4/3]">
+                  <img src={assetPath('/images/misc/injury-risk.avif')} alt="LiftShift per-joint injury risk scoring card" loading="lazy" className={`w-full h-full object-contain ${isLight ? 'invert' : ''}`} />
+                </div>
+                <div className="lg:order-2">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-500/15 flex items-center justify-center mb-4">
+                    <Bone className="w-5 h-5 text-amber-400" />
+                  </div>
+                  <h3 className={`text-2xl font-bold ${isLight ? 'text-slate-900' : 'text-slate-200'} mb-3`}>Per-joint injury risk</h3>
+                  <p className={`${isLight ? 'text-slate-600' : 'text-slate-400'} leading-relaxed mb-3`}>
+                    LiftShift scores every joint from 0 to 100 percent, combining your workload ratio (this week vs. your 4-week average), back-to-back recovery days, and antagonist muscle balance. A spike above 40 is a cue to consider a deload &mdash; a load-management hint, not a diagnosis.
+                  </p>
+                  <p className="text-slate-500 text-sm">
+                    Workload ratio &middot; Recovery days &middot; Antagonist balance &middot; 0-100 risk score
+                  </p>
+                </div>
+              </div>
+
+              {/* Strength imbalance, image: strength-imbalance.avif */}
+              <div className="grid lg:grid-cols-2 gap-12 items-center mb-24">
+                <div className="lg:order-2 rounded-2xl overflow-hidden aspect-[4/3]">
+                  <img src={assetPath('/images/misc/strength-imbalance.avif')} alt="LiftShift strength imbalance trend chart with typical band" loading="lazy" className={`w-full h-full object-contain ${isLight ? 'invert' : ''}`} />
                 </div>
                 <div className="lg:order-1">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-500/15 flex items-center justify-center mb-4">
+                    <Scale className="w-5 h-5 text-red-400" />
+                  </div>
+                  <h3 className={`text-2xl font-bold ${isLight ? 'text-slate-900' : 'text-slate-200'} mb-3`}>Strength imbalance detection</h3>
+                  <p className={`${isLight ? 'text-slate-600' : 'text-slate-400'} leading-relaxed mb-3`}>
+                    Compares your strength across 13 related exercise pairs &mdash; bench vs. press, rows vs. bench, legs vs. back &mdash; against population statistics. See your weekly trend against the typical band and whether the gap is closing or widening over the last month.
+                  </p>
+                  <p className="text-slate-500 text-sm">
+                    13 ratio pairs &middot; Typical band &middot; Monthly gap trend &middot; A hint, not a diagnosis
+                  </p>
+                </div>
+              </div>
+
+              {/* AI export, image: AI.avif */}
+              <div className="grid lg:grid-cols-2 gap-12 items-center mb-24">
+                <div className="lg:order-1 rounded-2xl overflow-hidden aspect-[1/1]">
+                  <img src={assetPath('/images/misc/AI.avif')} alt="LiftShift AI analysis prompt generator" loading="lazy" className={`w-full h-full object-contain ${isLight ? 'invert' : ''}`} />
+                </div>
+                <div className="lg:order-2">
                   <div className="w-10 h-10 rounded-xl bg-emerald-500/15 flex items-center justify-center mb-4">
                     <svg className="w-5 h-5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a4 4 0 0 0-4 4v1H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3V6a4 4 0 0 0-4-4z"/><path d="M12 11v4"/><path d="M8 11v4"/><path d="M16 11v4"/></svg>
                   </div>
@@ -296,10 +334,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onSelectPlatform, onTr
 
               {/* Hypertrophy scatter, image: hypertrophy.avif */}
               <div className="grid lg:grid-cols-2 gap-12 items-center mb-24">
-                <div className="lg:order-1 rounded-2xl overflow-hidden aspect-[1/1]">
+                <div className="lg:order-2 rounded-2xl overflow-hidden aspect-[1/1]">
                   <img src={assetPath('/images/misc/hypertrophy.avif')} alt="LiftShift hypertrophy scatter plot showing volume vs progressive overload by muscle" loading="lazy" className={`w-full h-full object-contain ${isLight ? 'invert' : ''}`} />
                 </div>
-                <div className="lg:order-2">
+                <div className="lg:order-1">
                   <div className="w-10 h-10 rounded-xl bg-emerald-500/15 flex items-center justify-center mb-4">
                     <Activity className="w-5 h-5 text-emerald-400" />
                   </div>
@@ -315,10 +353,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onSelectPlatform, onTr
 
               {/* Calendar filtering, image: calender.avif */}
               <div className="grid lg:grid-cols-2 gap-12 items-center">
-                <div className="lg:order-2 rounded-2xl overflow-hidden aspect-[1/1]">
+                <div className="lg:order-1 rounded-2xl overflow-hidden aspect-[1/1]">
                   <img src={assetPath('/images/misc/calender.avif')} alt="LiftShift calendar filtering with date range selection and filtered dashboard" loading="lazy" className={`w-full h-full object-contain ${isLight ? 'invert' : ''}`} />
                 </div>
-                <div className="lg:order-1">
+                <div className="lg:order-2">
                   <div className="w-10 h-10 rounded-xl bg-emerald-500/15 flex items-center justify-center mb-4">
                     <CalendarDays className="w-5 h-5 text-blue-400" />
                   </div>
