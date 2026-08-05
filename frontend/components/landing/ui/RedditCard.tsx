@@ -119,7 +119,7 @@ export const RedditCard: React.FC<RedditCardProps> = React.memo(({ username, quo
           className={`absolute inset-0 rounded-xl overflow-hidden flex flex-col px-3.5 py-3 gap-2 ${cardFaceClass(isLight)}`}
           style={{ backfaceVisibility: 'hidden' }}
         >
-          <div className="flex items-center gap-1.5 text-[11px] sm:text-xs">
+          <div className="flex items-center gap-1.5 text-xs">
             <SnooAvatar color={color} size={16} />
             <span className={`font-medium ${isLight ? 'text-black/80' : 'text-neutral-200'}`}>
               r/{subreddit}
@@ -141,7 +141,7 @@ export const RedditCard: React.FC<RedditCardProps> = React.memo(({ username, quo
             ))}
           </p>
 
-          <div className="flex items-center gap-1.5 text-[11px] sm:text-xs">
+          <div className="flex items-center gap-1.5 text-xs">
             <ArrowBigUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF4500]" fill="#FF4500" />
             <span className={`font-bold tabular-nums -ml-0.5 ${isLight ? 'text-slate-700' : 'text-neutral-400'}`}>{upvotes}</span>
             <span className={`ml-auto flex items-center gap-1 ${isLight ? 'text-slate-400' : 'text-neutral-600'}`}>

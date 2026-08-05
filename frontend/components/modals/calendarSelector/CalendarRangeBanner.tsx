@@ -25,7 +25,7 @@ export const CalendarRangeBanner: React.FC<CalendarRangeBannerProps> = ({
       <div className="mb-3 px-2 flex justify-end">
         <button
           onClick={onGoToToday}
-          className="text-[11px] px-2.5 py-1.5 rounded-lg bg-black/60 hover:bg-white/5 text-slate-200 font-semibold transition-colors"
+          className="text-xs px-2.5 py-1.5 rounded-lg bg-black/60 hover:bg-white/5 text-slate-200 font-semibold transition-colors"
           title="Go to today"
         >
           Today
@@ -38,7 +38,7 @@ export const CalendarRangeBanner: React.FC<CalendarRangeBannerProps> = ({
     <div className="mb-3 px-2">
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <div className="text-[10px] text-slate-400 uppercase tracking-wide mb-1">Selected Range</div>
+          <div className="text-[11px] sm:text-xs text-slate-400 uppercase tracking-wide mb-1">Selected Range</div>
           <div className="flex items-center gap-2 text-sm font-semibold">
             <button
               onClick={() => rangeStart && jumpToDate(rangeStart)}
@@ -65,14 +65,14 @@ export const CalendarRangeBanner: React.FC<CalendarRangeBannerProps> = ({
         <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={onClear}
-            className="text-[11px] px-2.5 py-1.5 rounded-lg border border-slate-700/10 bg-black/60 hover:bg-white/5 text-slate-200 font-semibold transition-colors"
+            className="text-xs px-2.5 py-1.5 rounded-lg border border-slate-700/10 bg-black/60 hover:bg-white/5 text-slate-200 font-semibold transition-colors"
             title="Clear selection"
           >
             Clear
           </button>
           <button
             onClick={onGoToToday}
-            className="text-[11px] px-2.5 py-1.5 rounded-lg border border-slate-700/10 bg-black/60 hover:bg-white/5 text-slate-200 font-semibold transition-colors"
+            className="text-xs px-2.5 py-1.5 rounded-lg border border-slate-700/10 bg-black/60 hover:bg-white/5 text-slate-200 font-semibold transition-colors"
             title="Go to today"
           >
             Today

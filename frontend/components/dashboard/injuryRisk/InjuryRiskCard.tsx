@@ -125,8 +125,8 @@ export const InjuryRiskCard: React.FC<{
               <Bone className="w-4 h-4 text-amber-400" />
             </div>
             <div>
-              <h2 className="text-xs font-bold text-white">Injury Risk</h2>
-              <p className="text-[10px] text-slate-500 mt-0.5">Lower is safer · Per joint breakdown</p>
+              <h2 className="text-xs sm:text-lg font-semibold text-white">Injury Risk</h2>
+              <p className="text-[10px] sm:text-xs text-slate-500 mt-0.5">Lower is safer · Per joint breakdown</p>
             </div>
           </div>
         </div>
@@ -148,13 +148,13 @@ export const InjuryRiskCard: React.FC<{
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-1.5 mt-0.5">
-                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold"
+                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] sm:text-xs font-bold"
                   style={{ backgroundColor: `${rating.color}20`, color: rating.color }}>
                   {rating.label} Risk
                 </span>
               </div>
-              <p className="text-[10px] text-slate-500 mt-1 leading-tight">{stats.count} joints analyzed</p>
-              <p className="text-[10px] text-slate-500 mt-0.5">
+              <p className="text-[10px] sm:text-xs text-slate-500 mt-1 leading-tight">{stats.count} joints analyzed</p>
+              <p className="text-[10px] sm:text-xs text-slate-500 mt-0.5">
                 {stats.best?.label} ({stats.best?.riskScore}%) safest
               </p>
             </div>
@@ -162,7 +162,7 @@ export const InjuryRiskCard: React.FC<{
         )}
 
         {!stats && (
-          <div className="text-[10px] text-slate-500 py-2">Not enough data for injury risk scoring.</div>
+          <div className="text-[10px] sm:text-xs text-slate-500 py-2">Not enough data for injury risk scoring.</div>
         )}
       </div>
 
@@ -177,7 +177,7 @@ export const InjuryRiskCard: React.FC<{
               ] as const).map((item) => (
                 <div key={item.label} className="flex items-center gap-1">
                   <div className="w-2 h-2 rounded-sm flex-shrink-0" style={{ backgroundColor: item.color }} />
-                  <span className="text-[8px] text-slate-500">{item.label}</span>
+                  <span className="text-[8px] sm:text-[10px] text-slate-500">{item.label}</span>
                 </div>
               ))}
             </div>
@@ -188,16 +188,16 @@ export const InjuryRiskCard: React.FC<{
                   className="flex items-center gap-1 rounded py-0.5 group relative"
                   onMouseEnter={(e) => handleMouseEnter(e, r)}
                   onMouseLeave={hideTooltip}>
-                  <span className="text-[10px] w-[18%] lg:w-[15%] truncate flex-shrink-0 text-slate-400" style={SEMI_FANCY_FONT}>
+                  <span className="text-[10px] sm:text-xs w-[18%] lg:w-[15%] truncate flex-shrink-0 text-slate-400" style={SEMI_FANCY_FONT}>
                     {r.label}
                   </span>
                   <div className="flex-1">
                     <RiskProgressBar acwr={r.factors.acwr} recovery={r.factors.recovery} imbalance={r.factors.imbalance} />
                   </div>
-                  <span className="text-[10px] font-semibold w-[8%] text-right flex-shrink-0 text-white">
+                  <span className="text-[10px] sm:text-xs font-semibold w-[8%] text-right flex-shrink-0 text-white">
                     {r.riskScore}%
                   </span>
-                  <span className="text-[9px] flex items-center gap-1 w-[15%] lg:w-[13%] flex-shrink-0" style={{ color: riskRating.color }}>
+                  <span className="text-[9px] sm:text-[10px] flex items-center gap-1 w-[15%] lg:w-[13%] flex-shrink-0" style={{ color: riskRating.color }}>
                     <span className="truncate">{riskRating.label}</span>
                     <TrendingUp className="w-3 h-3" />
                   </span>
@@ -206,7 +206,7 @@ export const InjuryRiskCard: React.FC<{
             })}
           </div>
         ) : (
-          <div className="text-[10px] text-slate-500 py-4 text-center">No joint data available.</div>
+          <div className="text-[10px] sm:text-xs text-slate-500 py-4 text-center">No joint data available.</div>
         )}
       </div>
 

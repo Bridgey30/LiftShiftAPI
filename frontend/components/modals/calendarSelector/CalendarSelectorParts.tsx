@@ -15,14 +15,14 @@ export const StartEndTooltip: React.FC<{
     <div className={`absolute z-50 ${positionClasses[position]} flex gap-1 bg-slate-950/75 border border-slate-700/35 rounded-xl p-1.5 shadow-xl`}>
       <button
         onClick={onStart}
-        className="px-2.5 py-1.5 text-[10px] font-semibold rounded-lg bg-black/40 hover:bg-white/5 border border-emerald-500/30 text-emerald-200 whitespace-nowrap transition-colors"
+        className="px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold rounded-lg bg-black/40 hover:bg-white/5 border border-emerald-500/30 text-emerald-200 whitespace-nowrap transition-colors"
         style={{ color: 'rgb(var(--mw-calendar-start-rgb, 16 185 129) / 1)' }}
       >
         Set start
       </button>
       <button
         onClick={onEnd}
-        className="px-2.5 py-1.5 text-[10px] font-semibold rounded-lg bg-black/40 hover:bg-white/5 border border-rose-500/30 text-rose-200 whitespace-nowrap transition-colors"
+        className="px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold rounded-lg bg-black/40 hover:bg-white/5 border border-rose-500/30 text-rose-200 whitespace-nowrap transition-colors"
         style={{ color: 'rgb(var(--mw-calendar-end-rgb, 244 63 94) / 1)' }}
       >
         Set end

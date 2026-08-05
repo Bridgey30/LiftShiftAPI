@@ -87,7 +87,7 @@ export const MuscleAnalysisExerciseList: React.FC<MuscleAnalysisExerciseListProp
                   {ex.strengthLabel && (
                     <div className="my-0.5">
                       <span
-                        className={`inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] font-semibold ${
+                        className={`inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-semibold ${
                           (ex.strengthTrend ?? 0) > 0 
                             ? 'bg-emerald-500/15 text-emerald-400' 
                             : (ex.strengthTrend ?? 0) < 0 
@@ -100,13 +100,13 @@ export const MuscleAnalysisExerciseList: React.FC<MuscleAnalysisExerciseListProp
                     </div>
                   )}
 
-                  <div className="flex flex-wrap items-center gap-2 text-[11px]">
+                  <div className="flex flex-wrap items-center gap-2 text-[11px] sm:text-xs">
                     <div className="text-slate-400">
                       {pct}% of sets
                     </div>
                     {isPrimary && (
                       <span
-                        className="px-2 py-0.5 rounded-full text-[9px] font-semibold bg-emerald-500/15 text-emerald-200"
+                        className="px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-semibold bg-emerald-500/15 text-emerald-200"
                         title={`${primaryRounded} direct set${primaryRounded === 1 ? '' : 's'}`}
                       >
                         {primaryRounded} direct
@@ -114,7 +114,7 @@ export const MuscleAnalysisExerciseList: React.FC<MuscleAnalysisExerciseListProp
                     )}
                     {isSecondary && (
                       <span
-                        className="px-2 py-0.5 rounded-full text-[9px] font-semibold bg-sky-500/15 text-sky-200"
+                        className="px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-semibold bg-sky-500/15 text-sky-200"
                         title={`${secondaryRounded} indirect set${secondaryRounded === 1 ? '' : 's'}`}
                       >
                         {secondaryRounded} indirect 

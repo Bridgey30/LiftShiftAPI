@@ -235,7 +235,7 @@ export const PersonalRecordsCard: React.FC<{
                           {exercise.weight}
                           <span className={`${isDark ? 'text-white/90' : 'text-slate-900/80'} font-bold ml-1`}>{weightUnit}</span>
                           {exercise.isLowerWeightBetter ? (
-                            <span className={`ml-1 text-[9px] ${isDark ? 'text-slate-200/80' : 'text-slate-700/80'}`}>less assist</span>
+                            <span className={`ml-1 text-[9px] sm:text-[10px] ${isDark ? 'text-slate-200/80' : 'text-slate-700/80'}`}>less assist</span>
                           ) : null}
                         </div>
                       </div>

@@ -16,7 +16,7 @@ export const AiAnalyzeCategoryChips: React.FC<AiAnalyzeCategoryChipsProps> = ({
   <div className="space-y-2">
     <div className="space-y-1">
       <div className="text-xs font-medium text-slate-200">Analysis Add-ons</div>
-      <div className="text-[10px] text-slate-500">Select specific checks to include</div>
+      <div className="text-[11px] sm:text-xs text-slate-500">Select specific checks to include</div>
     </div>
 
     <div className="flex flex-wrap gap-2">

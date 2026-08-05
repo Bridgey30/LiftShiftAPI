@@ -50,7 +50,7 @@ export const DashboardAIAnalysisCard: React.FC<DashboardAIAnalysisCardProps> = (
         </div>
         <div>
           <h3 className="text-sm font-semibold text-white">AI Analysis</h3>
-          <p className="text-[11px] text-slate-500">Generate analysis prompts directly from your dashboard</p>
+          <p className="text-[11px] sm:text-xs text-slate-500">Generate analysis prompts directly from your dashboard</p>
         </div>
       </div>
 

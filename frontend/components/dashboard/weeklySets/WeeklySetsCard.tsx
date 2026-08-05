@@ -153,7 +153,7 @@ export const WeeklySetsCard = ({
       </div>
 
       {weeklySetsView === 'heatmap' && heatmap.volumes.size > 0 ? (
-        <div className="sm:hidden -mt-12 text-center text-[11px] font-semibold text-slate-500">
+        <div className="sm:hidden -mt-12 text-center text-[11px] sm:text-xs font-semibold text-slate-500">
           Tap on the muscles
         </div>
       ) : null}

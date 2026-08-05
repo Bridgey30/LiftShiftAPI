@@ -116,7 +116,7 @@ export const ExerciseListPanel: React.FC<ExerciseListPanelProps> = ({
             ) : (
               <Calendar className="w-3 h-3" />
             )}
-            <span className="text-[9px] leading-none">{exerciseListSortDir === 'desc' ? '↓' : '↑'}</span>
+            <span className="text-[9px] sm:text-[10px] leading-none">{exerciseListSortDir === 'desc' ? '↓' : '↑'}</span>
             <ChevronDown className={`w-2.5 h-2.5 transition-transform ${isSortOpen ? 'rotate-180' : ''}`} />
           </button>
 

@@ -71,7 +71,7 @@ export const ExerciseStatusCard: React.FC<ExerciseStatusCardProps> = ({
               })()} />
               {currentCore?.prematurePr ? (
                 <span
-                  className="hidden sm:inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border text-[10px] font-semibold whitespace-nowrap bg-orange-500/10 text-orange-400 border-orange-500/25"
+                  className="hidden sm:inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border text-[10px] sm:text-xs font-semibold whitespace-nowrap bg-orange-500/10 text-orange-400 border-orange-500/25"
                   title={selectedPrematurePrTooltip ?? undefined}
                   aria-label="Premature PR"
                 >
@@ -99,7 +99,7 @@ export const ExerciseStatusCard: React.FC<ExerciseStatusCardProps> = ({
                   <span
                     key={i}
                     title={getTrendEvidenceTitle(currentStatus, t)}
-                    className={`inline-flex items-center px-2 py-0.5 rounded-full border max-w-full ${badgeBgColor} ${badgeBorderColor} ${badgeTextColor} ${isStrengthLike ? 'font-semibold' : 'font-mono'} text-[10px] whitespace-normal break-words`}
+                    className={`inline-flex items-center px-2 py-0.5 rounded-full border max-w-full ${badgeBgColor} ${badgeBorderColor} ${badgeTextColor} ${isStrengthLike ? 'font-semibold' : 'font-mono'} text-[10px] sm:text-xs whitespace-normal break-words`}
                   >
                     {renderEvidenceWithColoredSigns(t)}
                   </span>
@@ -107,7 +107,7 @@ export const ExerciseStatusCard: React.FC<ExerciseStatusCardProps> = ({
               })}
               {currentCore?.prematurePr ? (
                 <span
-                  className="sm:hidden inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border text-[10px] font-semibold whitespace-nowrap bg-orange-500/10 text-orange-400 border-orange-500/25"
+                  className="sm:hidden inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border text-[10px] sm:text-xs font-semibold whitespace-nowrap bg-orange-500/10 text-orange-400 border-orange-500/25"
                   title={selectedPrematurePrTooltip ?? undefined}
                   aria-label="Premature PR"
                 >
@@ -124,7 +124,7 @@ export const ExerciseStatusCard: React.FC<ExerciseStatusCardProps> = ({
                 <div className="absolute inset-0 bg-black/20" />
                 <div className={`absolute inset-0 ${currentStatus.bgColor}`} />
                 <div className="relative z-10">
-                  <div className={`text-[10px] uppercase tracking-wider font-bold ${currentStatus.color}`}>Next</div>
+                  <div className={`text-[10px] sm:text-xs uppercase tracking-wider font-bold ${currentStatus.color}`}>Next</div>
                   <div className="mt-0.5 text-[11px] sm:text-xs font-mono text-slate-200 leading-snug whitespace-normal">
                     {currentStatus.subtext}
                   </div>

@@ -304,7 +304,7 @@ export const HowItWorksDoc: React.FC<Props> = ({ className = '', showTitle = tru
         {/* Sidebar */}
         <aside ref={sidebarRef} className={`hidden lg:flex lg:flex-col w-[280px] shrink-0  sticky top-0 self-start ${isLight ? 'border-slate-300/50' : 'border-slate-800/40'}`}>
           <div className={`sticky top-0 z-10 shrink-0 px-5 py-3.5 `}>
-            <span className={`text-[11px] font-bold uppercase tracking-widest ${isLight ? 'text-slate-500' : 'text-slate-500'}`}>Contents</span>
+            <span className={`text-xs font-bold uppercase tracking-widest ${isLight ? 'text-slate-500' : 'text-slate-500'}`}>Contents</span>
           </div>
           <nav className="py-3 space-y-0">
             {navItems.map((i) => {
@@ -337,7 +337,7 @@ export const HowItWorksDoc: React.FC<Props> = ({ className = '', showTitle = tru
         <div ref={contentRef} className={`flex-1 overflow-y-auto min-w-0 scroll-pt-8 relative rounded-xl border ${isLight ? 'border-slate-300/40' : 'border-white/15'}`} style={paneHeight > 0 ? { maxHeight: paneHeight } : undefined}>
           {mobileMenuOpen ? (
             <div className="max-w-3xl mx-auto px-8 py-6">
-              <span className={`text-[11px] font-bold uppercase tracking-widest ${isLight ? 'text-slate-500' : 'text-slate-500'}`}>Contents</span>
+              <span className={`text-xs font-bold uppercase tracking-widest ${isLight ? 'text-slate-500' : 'text-slate-500'}`}>Contents</span>
               <nav className="mt-4">
                 {navItems.map((i) => (
                   <a

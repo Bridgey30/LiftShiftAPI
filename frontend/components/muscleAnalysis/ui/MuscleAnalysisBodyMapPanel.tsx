@@ -167,11 +167,11 @@ export const MuscleAnalysisBodyMapPanel: React.FC<MuscleAnalysisBodyMapPanelProp
             </div>
           </div>
 
-          <div className="sm:hidden text-center text-[11px] font-semibold text-slate-600 mt-3">
+          <div className="sm:hidden text-center text-[11px] sm:text-xs font-semibold text-slate-600 mt-3">
             Tap to see more details
           </div>
           <div className="flex flex-col items-center justify-center w-full mt-3">
-            <div className="hidden sm:block text-center text-[11px] text-slate-500">
+            <div className="hidden sm:block text-center text-[11px] sm:text-xs text-slate-500">
               Hover over muscles to preview, click to view exercises
             </div>
           </div>

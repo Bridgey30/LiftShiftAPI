@@ -22,7 +22,7 @@ export const ShiftedMeta = ({
 export const BadgeLabel = ({ main, meta }: { main: React.ReactNode; meta?: React.ReactNode }) => (
   <span className="inline-flex items-center gap-2">
     <span className="font-semibold leading-none">{main}</span>
-    {meta && <span className="text-[9px] opacity-70 leading-none">{meta}</span>}
+    {meta && <span className="text-[9px] sm:text-[10px] opacity-70 leading-none">{meta}</span>}
   </span>
 );
 
@@ -53,7 +53,7 @@ export const TrendBadge: React.FC<{
           ? 'border-blue-500/30 bg-blue-500/10 text-blue-300'
           : 'border-slate-700/40 bg-slate-900/20 text-slate-300';
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold tracking-normal border ${cls}`}>
+    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] sm:text-xs font-semibold tracking-normal border ${cls}`}>
       {label}
     </span>
   );
@@ -101,7 +101,7 @@ const splitInsightSentences = (text: string) => {
 export const InsightText = ({ text }: { text: string }) => {
   const sentences = useMemo(() => splitInsightSentences(text), [text]);
   return (
-    <div className="text-[11px] text-slate-500 leading-snug">
+    <div className="text-[11px] sm:text-xs text-slate-500 leading-snug">
       {sentences.map((s, i) => (
         <span key={i} className="block">
           {s}

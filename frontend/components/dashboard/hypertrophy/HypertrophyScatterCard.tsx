@@ -138,9 +138,9 @@ const CustomScatterTooltip = ({ active, payload }: any) => {
         </span>
       </div>
       <div className="border-t pt-1.5 text-slate-400" style={{ borderColor: 'rgb(var(--border-rgb) / 0.3)' }}>
-        <p className="font-semibold text-[10px]">{d.quadrant}</p>
-        <p className="text-[9px] leading-tight mt-0.5">{q.desc}</p>
-        <p className="text-[8px] mt-1">{q.advice}</p>
+        <p className="font-semibold text-[10px] sm:text-xs">{d.quadrant}</p>
+        <p className="text-[9px] sm:text-[10px] leading-tight mt-0.5">{q.desc}</p>
+        <p className="text-[8px] sm:text-[10px] mt-1">{q.advice}</p>
       </div>
     </div>
   );
@@ -340,8 +340,8 @@ export const HypertrophyScatterCard: React.FC<HypertrophyScatterCardProps> = ({
       <div className="p-3 flex-shrink-0">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-xs font-bold text-white">Hypertrophy Scatter Plot</h2>
-            <p className="text-[10px] text-slate-500 mt-0.5">Progress vs Volume per muscle</p>
+            <h2 className="text-xs sm:text-lg font-semibold text-white">Hypertrophy Scatter Plot</h2>
+            <p className="text-[10px] sm:text-xs text-slate-500 mt-0.5">Progress vs Volume per muscle</p>
           </div>
           <SegmentControl
             options={[
@@ -477,7 +477,7 @@ export const HypertrophyScatterCard: React.FC<HypertrophyScatterCardProps> = ({
             </ReScatterChart>
           </ResponsiveContainer>
         ) : (
-          <div className="text-[10px] text-slate-500 py-4 text-center">No muscle data available.</div>
+          <div className="text-[10px] sm:text-xs text-slate-500 py-4 text-center">No muscle data available.</div>
         )}
       </div>
     </div>

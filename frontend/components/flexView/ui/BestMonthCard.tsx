@@ -76,7 +76,7 @@ export const BestMonthCard: React.FC<{
                     style={{ height: `${Math.max(heightPx, 6)}px` }}
                   />
                 </div>
-                <span className={`text-[9px] ${textSecondary}`}>{month[0]}</span>
+                <span className={`text-[9px] sm:text-[10px] ${textSecondary}`}>{month[0]}</span>
               </div>
             );
           })}

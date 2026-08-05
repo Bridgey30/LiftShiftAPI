@@ -19,7 +19,7 @@ export const DeltaBadge: React.FC<{ delta: number; suffix?: string; invert?: boo
 
   return (
     <span
-      className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full border text-[9px] font-bold ${colorClass} ${
+      className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full border text-[9px] sm:text-[10px] font-bold ${colorClass} ${
         size === 'compact' ? 'scale-90 origin-left' : ''
       }`}
     >
@@ -58,7 +58,7 @@ export const ConfidenceBadge: React.FC<{ confidence?: 'low' | 'medium' | 'high';
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border text-[10px] font-semibold whitespace-nowrap ${meta.cls}`}
+      className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border text-[10px] sm:text-xs font-semibold whitespace-nowrap ${meta.cls}`}
       title={tooltip}
       aria-label={meta.label}
     >

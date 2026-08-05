@@ -140,7 +140,7 @@ export const ExerciseProgressChart: React.FC<ExerciseProgressChartProps> = ({
             onChange={setViewMode}
           />
         </div>
-        <div className="flex items-center justify-between gap-2 text-[10px]">
+        <div className="flex items-center justify-between gap-2 text-[10px] sm:text-xs">
           <span className="text-slate-500">
             {isBodyweightLike ? 'Top reps vs sets' : (
               <>
@@ -170,13 +170,13 @@ export const ExerciseProgressChart: React.FC<ExerciseProgressChartProps> = ({
             ) : (
               <>
                  <div className="flex items-center gap-1.5 text-emerald-400/80">
-                   <span className="w-2 h-2 rounded-full bg-emerald-500/20 border border-emerald-400/60"></span> <span className="text-[10px] font-semibold">{positiveLabel}</span>
+                   <span className="w-2 h-2 rounded-full bg-emerald-500/20 border border-emerald-400/60"></span> <span className="text-[10px] sm:text-xs font-semibold">{positiveLabel}</span>
                  </div>
                 <div className="flex items-center gap-1.5 text-yellow-400/80">
-                  <span className="w-2 h-2 rounded-full bg-yellow-500/20 border border-yellow-400/60"></span> <span className="text-[10px] font-semibold">Plateauing</span>
+                  <span className="w-2 h-2 rounded-full bg-yellow-500/20 border border-yellow-400/60"></span> <span className="text-[10px] sm:text-xs font-semibold">Plateauing</span>
                 </div>
                  <div className="flex items-center gap-1.5 text-rose-400/80">
-                   <span className="w-2 h-2 rounded-full bg-rose-500/20 border border-rose-400/60"></span> <span className="text-[10px] font-semibold">{negativeLabel}</span>
+                   <span className="w-2 h-2 rounded-full bg-rose-500/20 border border-rose-400/60"></span> <span className="text-[10px] sm:text-xs font-semibold">{negativeLabel}</span>
                  </div>
               </>
             )}
@@ -200,40 +200,40 @@ export const ExerciseProgressChart: React.FC<ExerciseProgressChartProps> = ({
           <div className="hidden sm:flex items-center gap-2">
             <div className="flex items-center gap-2 px-2 py-1.5 min-h-8 bg-black/20 border border-slate-700/50 rounded-lg">
               <Activity className="w-3 h-3 text-slate-400" />
-              <div className="flex items-center gap-1 text-[10px]">
+              <div className="flex items-center gap-1 text-[10px] sm:text-xs">
                 <span className="text-white font-bold">{sessionsCount}</span>
-                <span className="text-[8px] text-slate-500 font-semibold uppercase tracking-wider">Sessions</span>
+                <span className="text-[8px] sm:text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Sessions</span>
               </div>
             </div>
           </div>
           {isBodyweightLike ? (
             <>
               <div className="flex items-center gap-2 text-blue-400">
-                <span className="w-2.5 h-2.5 rounded-full bg-blue-500/20 border border-blue-500/60"></span> <span className="text-[10px] font-semibold">Top reps</span>
+                <span className="w-2.5 h-2.5 rounded-full bg-blue-500/20 border border-blue-500/60"></span> <span className="text-[10px] sm:text-xs font-semibold">Top reps</span>
               </div>
               <div className="flex items-center gap-2 text-slate-500">
-                <span className="w-2.5 h-0.5 bg-slate-500 border-t border-dashed border-slate-500"></span> <span className="text-[10px] font-semibold">Sets</span>
+                <span className="w-2.5 h-0.5 bg-slate-500 border-t border-dashed border-slate-500"></span> <span className="text-[10px] sm:text-xs font-semibold">Sets</span>
               </div>
             </>
           ) : showUnilateral && hasUnilateralChartData ? (
             <>
               <div className="flex items-center gap-2 text-cyan-400">
-                <span className="w-2.5 h-2.5 rounded-full bg-cyan-500/20 border border-cyan-500/60"></span> <span className="text-[10px] font-semibold">Left</span>
+                <span className="w-2.5 h-2.5 rounded-full bg-cyan-500/20 border border-cyan-500/60"></span> <span className="text-[10px] sm:text-xs font-semibold">Left</span>
               </div>
               <div className="flex items-center gap-2 text-violet-400">
-                <span className="w-2.5 h-2.5 rounded-full bg-violet-500/20 border border-violet-500/60"></span> <span className="text-[10px] font-semibold">Right</span>
+                <span className="w-2.5 h-2.5 rounded-full bg-violet-500/20 border border-violet-500/60"></span> <span className="text-[10px] sm:text-xs font-semibold">Right</span>
               </div>
             </>
           ) : (
             <>
                <div className="flex items-center gap-2 text-emerald-400">
-                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/20 border border-emerald-500/60"></span> <span className="text-[10px] font-semibold">{positiveLabel}</span>
+                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/20 border border-emerald-500/60"></span> <span className="text-[10px] sm:text-xs font-semibold">{positiveLabel}</span>
                </div>
               <div className="flex items-center gap-2 text-yellow-400">
-                <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/20 border border-yellow-500/60"></span> <span className="text-[10px] font-semibold">Plateauing</span>
+                <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/20 border border-yellow-500/60"></span> <span className="text-[10px] sm:text-xs font-semibold">Plateauing</span>
               </div>
                <div className="flex items-center gap-2 text-rose-400">
-                 <span className="w-2.5 h-2.5 rounded-full bg-rose-500/20 border border-rose-500/60"></span> <span className="text-[10px] font-semibold">{negativeLabel}</span>
+                 <span className="w-2.5 h-2.5 rounded-full bg-rose-500/20 border border-rose-500/60"></span> <span className="text-[10px] sm:text-xs font-semibold">{negativeLabel}</span>
                </div>
             </>
           )}
@@ -243,7 +243,7 @@ export const ExerciseProgressChart: React.FC<ExerciseProgressChartProps> = ({
               onClick={() => setShowUnilateral(!showUnilateral)}
               title={showUnilateral ? 'Hide L/R split' : 'Show L/R split'}
               aria-label={showUnilateral ? 'Hide L/R split' : 'Show L/R split'}
-              className={`px-2 py-1 rounded text-[9px] font-bold whitespace-nowrap border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/20 cursor-pointer ${showUnilateral
+              className={`px-2 py-1 rounded text-[9px] sm:text-[10px] font-bold whitespace-nowrap border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/20 cursor-pointer ${showUnilateral
                 ? 'bg-blue-600 text-white border-transparent'
                 : 'text-slate-500 hover:text-slate-300 hover:bg-black/60 border border-slate-700/50'
                 }`}

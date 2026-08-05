@@ -237,7 +237,7 @@ export const ActivityHeatmap = memo(({
               <div className="p-1.5 rounded-md bg-emerald-500/10 text-emerald-400">
                 <Target className="w-4 h-4" />
               </div>
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Consistency</span>
+              <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400">Consistency</span>
             </div>
             <StreakBadge streak={streakInfo} />
           </div>
@@ -260,7 +260,7 @@ export const ActivityHeatmap = memo(({
 
             <div className="flex items-center justify-end">
               {todayInRange && (
-                <div className="flex items-center gap-1.5 text-[10px] text-slate-500">
+                <div className="flex items-center gap-1.5 text-[10px] sm:text-xs text-slate-500">
                   <span>Less</span>
                   <div className="flex gap-0.5">
                     {[0, 0.25, 0.5, 0.75, 1].map((intensity, i) => {
@@ -288,7 +288,7 @@ export const ActivityHeatmap = memo(({
                   className="flex flex-col items-center gap-0.5 text-slate-400 hover:text-white transition-colors"
                 >
                   <ChevronLeft className="w-4 h-4" />
-                  <span className="text-[10px] font-medium">Older</span>
+                  <span className="text-[10px] sm:text-xs font-medium">Older</span>
                 </button>
               )}
             </div>
@@ -296,13 +296,13 @@ export const ActivityHeatmap = memo(({
               const dayOfWeekLabels = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
               return (
               <div key={month.key} className="flex flex-col items-center">
-                <div className="h-4 mb-0.5 flex items-center justify-center text-[10px] text-slate-500 font-medium whitespace-nowrap">
+                <div className="h-4 mb-0.5 flex items-center justify-center text-[10px] sm:text-xs text-slate-500 font-medium whitespace-nowrap">
                   {month.label}
                 </div>
                 {monthIdx === 0 && (
                   <div className="grid grid-cols-7 gap-1 mb-1">
                     {dayOfWeekLabels.map((label, i) => (
-                      <div key={i} className="w-[18px] h-3 flex items-center justify-center text-[9px] text-slate-600 font-medium">
+                      <div key={i} className="w-[18px] h-3 flex items-center justify-center text-[9px] sm:text-[10px] text-slate-600 font-medium">
                         {label}
                       </div>
                     ))}
@@ -320,7 +320,7 @@ export const ActivityHeatmap = memo(({
                       return (
                         <div
                           key={day.date.toISOString()}
-                          className={`w-[18px] h-[18px] rounded-full flex items-center justify-center text-[8px] font-medium ${bgClass} ${textColor} transition-all duration-300 hover:ring-1 hover:ring-white/20 ${day.totalVolume > 0 && !isFuture ? 'cursor-pointer' : 'cursor-default'} ${isToday ? 'ring-2 ring-blue-400/70' : ''}`}
+                          className={`w-[18px] h-[18px] rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-medium ${bgClass} ${textColor} transition-all duration-300 hover:ring-1 hover:ring-white/20 ${day.totalVolume > 0 && !isFuture ? 'cursor-pointer' : 'cursor-default'} ${isToday ? 'ring-2 ring-blue-400/70' : ''}`}
                           style={style}
                           onClick={() => day.count > 0 && !isFuture && onDayClick?.(day.date)}
                           onMouseEnter={(e) => !isFuture && handleMouseEnter(e, day)}
@@ -341,7 +341,7 @@ export const ActivityHeatmap = memo(({
                   className="flex flex-col items-center gap-0.5 text-slate-400 hover:text-white transition-colors"
                 >
                   <ChevronRight className="w-4 h-4" />
-                  <span className="text-[10px] font-medium">Recent</span>
+                  <span className="text-[10px] sm:text-xs font-medium">Recent</span>
                 </button>
               )}
             </div>

@@ -195,7 +195,7 @@ const FindingRow: React.FC<{
       </div>
 
       {trendChip ? (
-        <div className="flex-shrink-0 text-[11px] font-semibold" style={{ color: trendColor }}>
+        <div className="flex-shrink-0 text-[11px] sm:text-xs font-semibold" style={{ color: trendColor }}>
           {trendChip}
         </div>
       ) : null}
@@ -227,12 +227,12 @@ export const StrengthBalanceCard: React.FC<{
               <Scale className="w-4 h-4 text-red-400" />
             </div>
             <div>
-              <h2 className="text-xs font-bold text-white">Strength Imbalance</h2>
-              <p className="text-[10px] text-slate-500 mt-0.5">Compared by estimated 1-rep max · population statistics</p>
+              <h2 className="text-xs sm:text-lg font-semibold text-white">Strength Imbalance</h2>
+              <p className="text-[10px] sm:text-xs text-slate-500 mt-0.5">Compared by estimated 1-rep max · population statistics</p>
             </div>
           </div>
           {findings.length === 1 ? (
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-500/10 text-red-400 font-bold">
+            <span className="text-[10px] sm:text-xs px-2 py-0.5 rounded-full bg-red-500/10 text-red-400 font-bold">
               1 finding
             </span>
           ) : null}
@@ -257,12 +257,12 @@ export const StrengthBalanceCard: React.FC<{
 
             <FindingRow result={finding} onExerciseClick={onExerciseClick} />
 
-            <p className="text-[10px] text-slate-500 px-1 pt-1">
+            <p className="text-[10px] sm:text-xs text-slate-500 px-1 pt-1">
               A gap can be a real imbalance, different training history, or form/technique differences. Use this as a hint, not a verdict.
             </p>
           </div>
         ) : (
-          <div className="text-[10px] text-slate-500 py-4 text-center">
+          <div className="text-[10px] sm:text-xs text-slate-500 py-4 text-center">
             No imbalances outside typical ranges right now.
           </div>
         )}
@@ -270,7 +270,7 @@ export const StrengthBalanceCard: React.FC<{
 
       {tldr ? (
         <div className="flex-shrink-0 mt-1 pt-2 border-t border-red-500/20">
-          <span className="text-[10px] font-bold text-red-400" style={SEMI_FANCY_FONT}>
+          <span className="text-[10px] sm:text-xs font-bold text-red-400" style={SEMI_FANCY_FONT}>
             TL;DR {tldr}
           </span>
         </div>

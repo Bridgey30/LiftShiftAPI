@@ -38,12 +38,12 @@ export const RecentPRsPanel: React.FC<RecentPRsPanelProps> = memo(function Recen
         </div>
         <div className="flex items-center gap-3">
           {prFrequency > 0 && (
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 font-bold">
+            <span className="text-[11px] sm:text-xs px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 font-bold">
               ~{prFrequency}/week
             </span>
           )}
           {prDrought && (
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 font-bold">
+            <span className="text-[11px] sm:text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 font-bold">
               {daysSinceLastPR}d drought
             </span>
           )}

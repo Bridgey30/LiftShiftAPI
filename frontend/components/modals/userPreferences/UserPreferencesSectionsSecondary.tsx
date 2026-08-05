@@ -72,7 +72,7 @@ export const ThemeSection: React.FC<ThemeSectionProps> = ({
             <button
               type="button"
               onClick={() => onDarkBgChoiceChange?.('dark-bg1')}
-              className={`flex-1 py-1.5 rounded-md border text-[11px] font-medium transition-all cursor-pointer ${
+              className={`flex-1 py-1.5 rounded-md border text-xs font-medium transition-all cursor-pointer ${
                 darkBgChoice === 'dark-bg1'
                   ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-400'
                   : 'bg-slate-900/20 border-slate-700/50 text-slate-400 hover:ring-1 hover:ring-emerald-500'
@@ -83,7 +83,7 @@ export const ThemeSection: React.FC<ThemeSectionProps> = ({
             <button
               type="button"
               onClick={() => onDarkBgChoiceChange?.('dark-bg5')}
-              className={`flex-1 py-1.5 rounded-md border text-[11px] font-medium transition-all cursor-pointer ${
+              className={`flex-1 py-1.5 rounded-md border text-xs font-medium transition-all cursor-pointer ${
                 darkBgChoice === 'dark-bg5'
                   ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-400'
                   : 'bg-slate-900/20 border-slate-700/50 text-slate-400 hover:ring-1 hover:ring-emerald-500'
@@ -99,7 +99,7 @@ export const ThemeSection: React.FC<ThemeSectionProps> = ({
           <Palette className="w-3.5 h-3.5 text-slate-500" />
           <span className="text-xs font-medium text-slate-300">Theme</span>
         </div>
-        <p className="text-[10px] text-slate-500">Choose the app color scheme</p>
+        <p className="text-[11px] sm:text-xs text-slate-500">Choose the app color scheme</p>
         <div className="grid grid-cols-3 gap-2">
           <CompactThemeOption
             mode="pure-black"
@@ -127,13 +127,13 @@ export const ThemeSection: React.FC<ThemeSectionProps> = ({
         {showDarkBgToggle && (
           <div className="pt-1">
             <div className="flex items-center gap-2 mb-1.5">
-              <span className="text-[10px] font-medium text-slate-500">Dark BG</span>
+              <span className="text-[11px] sm:text-xs font-medium text-slate-500">Dark BG</span>
             </div>
             <div className="flex gap-1.5">
               <button
                 type="button"
                 onClick={() => onDarkBgChoiceChange?.('dark-bg1')}
-                className={`flex-1 py-1.5 rounded-md border text-[11px] font-medium transition-all cursor-pointer ${
+                className={`flex-1 py-1.5 rounded-md border text-xs font-medium transition-all cursor-pointer ${
                   darkBgChoice === 'dark-bg1'
                     ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-400'
                     : 'bg-slate-900/20 border-slate-700/50 text-slate-400 hover:ring-1 hover:ring-emerald-500'
@@ -144,7 +144,7 @@ export const ThemeSection: React.FC<ThemeSectionProps> = ({
               <button
                 type="button"
                 onClick={() => onDarkBgChoiceChange?.('dark-bg5')}
-                className={`flex-1 py-1.5 rounded-md border text-[11px] font-medium transition-all cursor-pointer ${
+                className={`flex-1 py-1.5 rounded-md border text-xs font-medium transition-all cursor-pointer ${
                   darkBgChoice === 'dark-bg5'
                     ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-400'
                     : 'bg-slate-900/20 border-slate-700/50 text-slate-400 hover:ring-1 hover:ring-emerald-500'
@@ -245,7 +245,7 @@ export const SecondarySetMultiplierSection: React.FC<SecondarySetMultiplierSecti
         placeholder="0.00 to 1.00"
         aria-label="Secondary set multiplier"
       />
-      <p className="text-[10px] text-slate-500">For accurate tracking, set to: Beginner 0.4, Intermediate 0.3, Advanced 0.2</p>
+      <p className="text-[11px] sm:text-xs text-slate-500">For accurate tracking, set to: Beginner 0.4, Intermediate 0.3, Advanced 0.2</p>
     </div>
     </div>
   );

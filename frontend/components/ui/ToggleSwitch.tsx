@@ -25,7 +25,7 @@ export const ToggleSwitch: React.FC<{
         }`
       }
     >
-      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 whitespace-nowrap">{label}</span>
+      <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-400 whitespace-nowrap">{label}</span>
       <span
         className={`relative inline-flex h-4 w-8 rounded-full transition-colors ${
           checked ? 'bg-blue-600' : 'bg-slate-700'

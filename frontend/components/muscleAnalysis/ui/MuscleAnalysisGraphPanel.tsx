@@ -83,7 +83,7 @@ const CustomMuscleTooltip: React.FC<CustomMuscleTooltipProps> = ({
         {zoneLabel && (
           <div className="mt-1.5 pt-1.5 border-t border-slate-700/50">
             <span className="text-xs font-semibold" style={{ color: zoneColor }}>{zoneLabel}</span>
-            <p className="text-[10px] text-slate-500 mt-0.5 leading-tight">{zoneExplanation}</p>
+            <p className="text-[10px] sm:text-xs text-slate-500 mt-0.5 leading-tight">{zoneExplanation}</p>
           </div>
         )}
       </div>
@@ -129,7 +129,7 @@ const HypertrophyScoreBar: React.FC<{
   let accumulatedFlex = 0;
 
   return (
-    <div className="relative flex items-center text-[9px]">
+    <div className="relative flex items-center text-[9px] sm:text-[10px]">
       {Array.from({ length: TOTAL_PILLS }).map((_, idx) => {
         const position = (idx / (TOTAL_PILLS - 1)) * legendMax;
         const color = getVolumeZoneColor(position, thresholds, thresholds.maxv);
@@ -166,7 +166,7 @@ const HypertrophyScoreBar: React.FC<{
         );
       })}
       <span
-        className="absolute inset-0 flex items-center justify-center text-[8px] font-bold"
+        className="absolute inset-0 flex items-center justify-center text-[8px] sm:text-[10px] font-bold"
         style={{
           color: "#fff",
           textShadow: "0 0 1px #000, 0 0 1px #000, 0 0 1px #000",
@@ -409,7 +409,7 @@ export const MuscleAnalysisGraphPanel: React.FC<MuscleAnalysisGraphPanelProps> =
           <div className="bg-black/20 p-3 flex items-center justify-between flex-shrink-0 gap-2">
             <div className="flex items-center gap-2 min-w-0">
               <h2 className="text-sm font-bold text-white truncate" style={SEMI_FANCY_FONT}>{title}</h2>
-              <span className="text-[10px] text-slate-400 whitespace-nowrap">
+              <span className="text-[10px] sm:text-xs text-slate-400 whitespace-nowrap">
                 {volumeDelta && volumeDelta.direction !== "same" && (
                   <span
                     className={`flex items-center font-semibold rounded-full gap-0.5 px-1.5 py-0.5 rounded ${volumeDelta.direction === "up" ? "bg-emerald-500/20 text-emerald-400" : "bg-rose-500/20 text-rose-400"}`}
@@ -450,7 +450,7 @@ export const MuscleAnalysisGraphPanel: React.FC<MuscleAnalysisGraphPanelProps> =
                   className="absolute -top-2 transform -translate-x-1/2 transition-all duration-300 z-10 flex flex-col items-center"
                   style={{ left: `${arrowPosition}%` }}
                 >
-                  <div className="flex items-center gap-1  rounded px-2 py-1 text-[9px] whitespace-nowrap">
+                  <div className="flex items-center gap-1  rounded px-2 py-1 text-[9px] sm:text-[10px] whitespace-nowrap">
                     <span className="text-white font-semibold">
                       avg {arrowValue.toFixed(1)} sets/wk
                     </span>
@@ -463,7 +463,7 @@ export const MuscleAnalysisGraphPanel: React.FC<MuscleAnalysisGraphPanelProps> =
               )}
 
               {/* Pill-style volume zone visualization */}
-              <div className="relative flex items-center text-[9px] pt-6">
+              <div className="relative flex items-center text-[9px] sm:text-[10px] pt-6">
                 {pillData.map((pill, idx) => (
                   <div
                     key={idx}
@@ -486,7 +486,7 @@ export const MuscleAnalysisGraphPanel: React.FC<MuscleAnalysisGraphPanelProps> =
                   </div>
                 ))}
                 {showOverdrive && (
-                  <span className="ml-1 text-[7px] text-orange-400/60 cursor-help flex-shrink-0 border border-orange-400/30 rounded-full px-1 leading-none" title="Volume above max recoverable threshold &mdash; poor ROI, recovery suffers.">
+                  <span className="ml-1 text-[7px] sm:text-[10px] text-orange-400/60 cursor-help flex-shrink-0 border border-orange-400/30 rounded-full px-1 leading-none" title="Volume above max recoverable threshold &mdash; poor ROI, recovery suffers.">
                     ?
                   </span>
                 )}

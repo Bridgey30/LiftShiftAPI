@@ -81,7 +81,7 @@ export const MuscleAnalysisDetailPanel: React.FC<MuscleAnalysisDetailPanelProps>
             {weeklySetsSummary !== null && `${weeklySetsSummary.toFixed(1)} sets/wk`}
           </span>
           {volumeDelta && volumeDelta.direction !== 'same' && (
-            <span className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-bold ${volumeDelta.direction === 'up'
+            <span className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] sm:text-xs font-bold ${volumeDelta.direction === 'up'
               ? 'bg-emerald-500/10 text-emerald-400'
               : 'bg-rose-500/10 text-rose-400'
               }`}>

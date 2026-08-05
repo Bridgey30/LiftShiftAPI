@@ -19,7 +19,7 @@ const PRStatusBadge: React.FC<{ prInsights: PRInsights }> = ({ prInsights }) => 
 
   if (daysSinceLastPR < 0) {
     return (
-      <span className="text-[10px] text-slate-500 font-medium">Chase your first PR</span>
+      <span className="text-[11px] sm:text-xs text-slate-500 font-medium">Chase your first PR</span>
     );
   }
 
@@ -27,7 +27,7 @@ const PRStatusBadge: React.FC<{ prInsights: PRInsights }> = ({ prInsights }) => 
     return (
       <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20">
         <AlertTriangle className="w-3 h-3 text-amber-400 flex-shrink-0" />
-        <span className="text-[10px] font-semibold text-amber-400 whitespace-nowrap">{daysSinceLastPR}d drought</span>
+        <span className="text-[11px] sm:text-xs font-semibold text-amber-400 whitespace-nowrap">{daysSinceLastPR}d drought</span>
       </div>
     );
   }
@@ -35,7 +35,7 @@ const PRStatusBadge: React.FC<{ prInsights: PRInsights }> = ({ prInsights }) => 
   return (
     <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
       <Trophy className="w-3 h-3 text-emerald-400 flex-shrink-0" />
-      <span className="text-[10px] font-semibold text-emerald-400 whitespace-nowrap">
+      <span className="text-[11px] sm:text-xs font-semibold text-emerald-400 whitespace-nowrap">
         {daysSinceLastPR === 0 ? 'PR today!' : `${daysSinceLastPR}d ago`}
       </span>
     </div>
@@ -81,7 +81,7 @@ const ConsistencyRing: React.FC<{ score: number; size?: number }> = ({ score, si
         />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-[9px] font-bold text-slate-200 leading-none">{score}%</span>
+        <span className="text-[10px] font-bold text-slate-200 leading-none">{score}%</span>
       </div>
     </div>
   );

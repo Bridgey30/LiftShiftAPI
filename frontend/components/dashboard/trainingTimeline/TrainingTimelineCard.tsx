@@ -192,7 +192,7 @@ const CheckpointLabelNode: React.FC<{
 }> = ({ checkpoint, isReached, isCurrent }) => (
   <span
     className={`
-      text-[8px] sm:text-[9px] font-semibold whitespace-nowrap transition-colors duration-200
+      text-[8px] sm:text-[11px] font-semibold whitespace-nowrap transition-colors duration-200
       ${isCurrent
         ? 'text-amber-300 font-bold'
         : isReached
@@ -226,7 +226,7 @@ const PhaseSection: React.FC<{
       <div className="mb-2 pr-1">
         <span
           className={`
-            block w-full px-2 py-0.5 rounded text-[9px] sm:text-[10px] font-semibold text-center
+            block w-full px-2 py-0.5 rounded text-[10px] sm:text-xs font-semibold text-center
             ${checkpoints.some((_, i) => {
               const globalIdx = allCheckpoints.indexOf(checkpoints[i]);
               return globalIdx === currentIndex;
@@ -409,7 +409,7 @@ export const TrainingTimelineCard: React.FC<TrainingTimelineCardProps> = ({ prog
         <div className="flex items-center gap-2">
           <span
             className={`
-              inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold
+              inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] sm:text-xs font-bold
               ${PHASE_CONFIG[currentCheckpoint.phase].bgColor}
               ${PHASE_CONFIG[currentCheckpoint.phase].color}
             `}

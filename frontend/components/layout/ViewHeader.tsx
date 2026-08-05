@@ -41,7 +41,7 @@ export const ViewHeader: React.FC<ViewHeaderProps> = ({
               <stat.icon className="w-4 h-4 text-slate-400" />
               <div className="text-xs">
                 <div className="text-white font-bold leading-4">{stat.value}</div>
-                <div className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">{stat.label}</div>
+                <div className="text-[11px] sm:text-xs text-slate-500 font-semibold uppercase tracking-wider">{stat.label}</div>
               </div>
             </div>
           ))}
@@ -62,7 +62,7 @@ export const ViewHeader: React.FC<ViewHeaderProps> = ({
                 <stat.icon className="w-4 h-4 text-slate-400" />
                 <div className="text-xs">
                   <div className="text-white font-bold leading-4">{stat.value}</div>
-                  <div className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">{stat.label}</div>
+                  <div className="text-[11px] sm:text-xs text-slate-500 font-semibold uppercase tracking-wider">{stat.label}</div>
                 </div>
               </div>
             ))}
@@ -79,7 +79,7 @@ export const ViewHeader: React.FC<ViewHeaderProps> = ({
                 </button>
                 {isMenuOpen && (
                   <div className="absolute right-0 top-full mt-2 w-48 sm:w-56 bg-black/90 border border-slate-700/50 rounded-xl shadow-xl z-50 p-2 animate-in fade-in slide-in-from-top-2">
-                    <p className="text-[10px] uppercase font-bold text-slate-500 px-3 py-1">Visible Charts</p>
+                    <p className="text-[11px] sm:text-xs uppercase font-bold text-slate-500 px-3 py-1">Visible Charts</p>
                     {configureOptions.map((option) => (
                       <button 
                         key={option.key} 

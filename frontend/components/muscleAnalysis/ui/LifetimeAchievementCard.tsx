@@ -495,7 +495,7 @@ export const LifetimeAchievementCard: React.FC<LifetimeAchievementCardProps> = (
       {/* Header */}
       <div className="p-3 flex-shrink-0">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-xs font-bold text-white">Lifetime Progress</h2>
+          <h2 className="text-xs sm:text-lg font-semibold text-white">Lifetime Progress</h2>
         </div>
 
         {/* Content — always lifetime */}
@@ -534,16 +534,16 @@ export const LifetimeAchievementCard: React.FC<LifetimeAchievementCardProps> = (
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-1.5 mt-0.5">
                 <span
-                  className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold ${overallTier.color}`}
+                  className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] sm:text-xs font-bold ${overallTier.color}`}
                 >
                   <TierIcon tierKey={overallTier.key} />
                   {overallTier.label}
                 </span>
               </div>
-              <p className="text-[10px] text-slate-500 mt-1 leading-tight">
+              <p className="text-[10px] sm:text-xs text-slate-500 mt-1 leading-tight">
                 {overallTier.description}
               </p>
-              <p className="text-[10px] text-slate-500 mt-0.5">
+              <p className="text-[10px] sm:text-xs text-slate-500 mt-0.5">
                 {Math.round(overallData.avgAchievement)}% of lifetime gains
                 {totalSets > 0 && (
                   <span className="text-slate-400"> · {formatNumber(Math.round(totalSets))} sets</span>
@@ -575,7 +575,7 @@ export const LifetimeAchievementCard: React.FC<LifetimeAchievementCardProps> = (
                   onMouseLeave={hideTooltip}
                 >
                   <span
-                    className={`text-[10px] w-[15%] lg:w-[12%] truncate flex-shrink-0 ${
+                    className={`text-[10px] sm:text-xs w-[15%] lg:w-[12%] truncate flex-shrink-0 ${
                       isSelected ? 'font-semibold text-white' : 'text-slate-500'
                     }`}
                     style={SEMI_FANCY_FONT}
@@ -586,20 +586,20 @@ export const LifetimeAchievementCard: React.FC<LifetimeAchievementCardProps> = (
                     <ProgressBar percent={m.achievement} color={color} />
                   </div>
                   <span
-                    className={`text-[10px] font-semibold w-[10%] text-right flex-shrink-0 ${
+                    className={`text-[10px] sm:text-xs font-semibold w-[10%] text-right flex-shrink-0 ${
                       isSelected ? 'text-white' : 'text-slate-500'
                     }`}
                   >
                     {Math.round(m.achievement)}%
                   </span>
                   <span
-                    className={`text-[9px] flex items-center gap-1 w-[20%] lg:w-[12%] flex-shrink-0 ${m.tier.color}`}
+                    className={`text-[9px] sm:text-[10px] flex items-center gap-1 w-[20%] lg:w-[12%] flex-shrink-0 ${m.tier.color}`}
                   >
                     <span className="truncate">{m.tier.label}</span>
                     <TierIcon tierKey={m.tier.key} />
                   </span>
                   {m.weeksToNext && (
-                    <span className="text-[9px] text-slate-500 w-[12%] lg:w-[5%] flex-shrink-0">
+                    <span className="text-[9px] sm:text-[10px] text-slate-500 w-[12%] lg:w-[5%] flex-shrink-0">
                       {formatEta(m.weeksToNext)}
                     </span>
                   )}
@@ -608,7 +608,7 @@ export const LifetimeAchievementCard: React.FC<LifetimeAchievementCardProps> = (
             })}
           </div>
         ) : (
-          <div className="text-[10px] text-slate-500 py-4 text-center">No muscle data available.</div>
+          <div className="text-[10px] sm:text-xs text-slate-500 py-4 text-center">No muscle data available.</div>
         )}
       </div>
       {tooltip && <Tooltip data={tooltip} />}

@@ -13,7 +13,7 @@ export const AiAnalyzeTimeframePicker: React.FC<AiAnalyzeTimeframePickerProps> =
     <div className="space-y-2">
       <div className="space-y-1">
       <div className="text-xs font-medium text-slate-200">Analysis Context</div>
-      <div className="text-[10px] text-slate-500">Choose the workout range to export</div>
+      <div className="text-[11px] sm:text-xs text-slate-500">Choose the workout range to export</div>
       </div>
     <div className="flex flex-wrap gap-2">
       {([

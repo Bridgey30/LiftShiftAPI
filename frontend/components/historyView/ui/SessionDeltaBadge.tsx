@@ -44,7 +44,7 @@ export const SessionDeltaBadge: React.FC<SessionDeltaBadgeProps> = ({
           e.stopPropagation();
           onClick();
         }}
-        className={`relative -top-[2px] inline-flex items-center gap-0.5 ml-1 text-[10px] font-bold leading-none ${colorClass} hover:opacity-80 transition-opacity cursor-pointer`}
+        className={`relative -top-[2px] inline-flex items-center gap-0.5 ml-1 text-[10px] sm:text-xs font-bold leading-none ${colorClass} hover:opacity-80 transition-opacity cursor-pointer`}
         title={`${deltaPercent}% ${label} ${context} — click to view`}
       >
         {content}
@@ -54,7 +54,7 @@ export const SessionDeltaBadge: React.FC<SessionDeltaBadgeProps> = ({
 
   return (
     <span
-      className={`relative -top-[2px] inline-flex items-center gap-0.5 ml-1 text-[10px] font-bold leading-none ${colorClass}`}
+      className={`relative -top-[2px] inline-flex items-center gap-0.5 ml-1 text-[10px] sm:text-xs font-bold leading-none ${colorClass}`}
       title={`${deltaPercent}% ${label} ${context}`}
     >
       {content}

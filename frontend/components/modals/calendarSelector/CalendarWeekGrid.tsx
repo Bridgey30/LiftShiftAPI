@@ -59,7 +59,7 @@ export const CalendarWeekGrid: React.FC<CalendarWeekGridProps> = ({
   onSetDayEnd,
 }) => (
   <>
-    <div className="flex items-center gap-1 text-[10px] text-slate-400 mb-1">
+    <div className="flex items-center gap-1 text-[11px] sm:text-xs text-slate-400 mb-1">
       {mode !== 'day' && (
         <div className={`${multipleWeeks ? 'w-6' : 'w-[72px]'} shrink-0 opacity-0`}>
           Wk
@@ -113,7 +113,7 @@ export const CalendarWeekGrid: React.FC<CalendarWeekGridProps> = ({
               ) : (
                 <button
                   onClick={() => onSelectWeek && enabledWeek && onSelectWeek({ start: weekStart, end: weekEnd })}
-                  className={`text-[9px] px-1.5 py-1 rounded border w-[72px] shrink-0 truncate ${
+                  className={`text-[10px] px-1.5 py-1 rounded border w-[72px] shrink-0 truncate ${
                     enabledWeek ? 'bg-black/20 hover:bg-black/60 border-slate-700/50' : 'bg-black/40 border-slate-700/50 opacity-25 cursor-not-allowed'
                   }`}
                   title={`${formatDayContraction(weekStart)}–${formatDayContraction(weekEnd)}`}
@@ -146,7 +146,7 @@ export const CalendarWeekGrid: React.FC<CalendarWeekGridProps> = ({
                     <button
                       onClick={() => mode !== 'week' && hasWorkout && onDayClick(day)}
                       disabled={disabled || !hasWorkout}
-                      className={`relative w-full h-7 rounded flex items-center justify-center text-[11px] border-2 transition-colors
+                      className={`relative w-full h-7 rounded flex items-center justify-center text-xs border-2 transition-colors
                         ${inRange
                           ? isStart || isEnd
                             ? 'border-sky-400/70 bg-sky-500/25 text-white font-bold shadow-md'
@@ -174,7 +174,7 @@ export const CalendarWeekGrid: React.FC<CalendarWeekGridProps> = ({
           </div>
         );
       })}
-      <div className="mt-1 mb-3 px-2 text-[11px] text-slate-400 text-center">
+      <div className="mt-1 mb-3 px-2 text-xs text-slate-400 text-center">
         Tap green elements to set filter limits
       </div>
     </div>

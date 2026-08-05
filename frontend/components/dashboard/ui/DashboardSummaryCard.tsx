@@ -142,7 +142,7 @@ export const DashboardSummaryCard: React.FC<DashboardSummaryCardProps> = ({
           <Sparkles className="w-3 h-3" />
         </div>
         <div className="min-w-0 flex-1">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 mb-1">Overview</div>
+          <div className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-emerald-400 mb-1">Overview</div>
           <p className={`text-sm sm:text-[15px] leading-normal text-slate-200 ${!isExpanded && isLongText ? 'line-clamp-1' : ''}`}>
             {hasSegments ? (
               <SegmentRenderer
@@ -162,7 +162,7 @@ export const DashboardSummaryCard: React.FC<DashboardSummaryCardProps> = ({
                 e.stopPropagation();
                 setIsExpanded(!isExpanded);
               }}
-              className="mt-2 flex items-center gap-1 text-[11px] text-emerald-400 hover:text-emerald-300 transition-colors"
+              className="mt-2 flex items-center gap-1 text-[11px] sm:text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
             >
               {isExpanded ? (
                 <>
@@ -180,21 +180,21 @@ export const DashboardSummaryCard: React.FC<DashboardSummaryCardProps> = ({
 
           {hasStrengthBalance ? (
             <div className="mt-3 flex items-center gap-1.5 flex-wrap">
-              <span className="text-[11px] font-bold text-red-400">
+              <span className="text-[11px] sm:text-xs font-bold text-red-400">
                 Strength imbalance detected
                 {summary.strengthBalanceItems && summary.strengthBalanceItems.length > 1
                   ? ` · ${summary.strengthBalanceItems.length} findings`
                   : ''}
               </span>
               {summary.strengthBalanceTldr ? (
-                <span className="hidden sm:inline text-[11px] text-slate-400">{summary.strengthBalanceTldr}</span>
+                <span className="hidden sm:inline text-[11px] sm:text-xs text-slate-400">{summary.strengthBalanceTldr}</span>
               ) : null}
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   onStrengthBalanceDetails?.();
                 }}
-                className="inline-flex items-center gap-0.5 text-[11px] font-bold text-blue-400 hover:text-blue-300 hover:underline transition-colors"
+                className="inline-flex items-center gap-0.5 text-[11px] sm:text-xs font-bold text-blue-400 hover:text-blue-300 hover:underline transition-colors"
               >
                 See details
                 <ChevronRight className="w-3 h-3" />

@@ -36,11 +36,11 @@ export function SegmentControl<T extends string = string>({
           className={`h-7 flex items-center justify-center gap-1 rounded-2xl cursor-pointer transition-all duration-200 ${
             value === option.value ? ACTIVE_CLASS : INACTIVE_CLASS
           } ${
-            option.icon ? 'pl-2 pr-1.5 pt-0.5' : 'px-1.5 text-[11px] font-bold leading-none whitespace-nowrap'
+            option.icon ? 'pl-2 pr-1.5 pt-0.5' : 'px-1.5 text-xs font-bold leading-none whitespace-nowrap'
           }`}
         >
           {option.icon && <span className="w-3.5 h-3.5 flex-shrink-0">{option.icon}</span>}
-          {option.label && <span className="text-[11px] font-bold leading-none whitespace-nowrap">{option.label}</span>}
+          {option.label && <span className="text-xs font-bold leading-none whitespace-nowrap">{option.label}</span>}
         </button>
       ))}
     </div>

@@ -108,9 +108,9 @@ export const YearlyHeatmapCard: React.FC<{
   const monthGridGapX = isUltraDense ? 'gap-x-2' : isVeryDense ? 'gap-x-2' : isDense ? 'gap-x-3' : 'gap-x-6';
   const monthGridGapY = isUltraDense ? 'gap-y-2' : isVeryDense ? 'gap-y-2' : isDense ? 'gap-y-3' : 'gap-y-6';
   const monthLabelClass = isUltraDense
-    ? 'text-[10px] mb-0.5'
+    ? 'text-[10px] sm:text-xs mb-0.5'
     : isVeryDense
-      ? 'text-[10px] mb-0.5'
+      ? 'text-[10px] sm:text-xs mb-0.5'
       : isDense
         ? 'text-xs mb-1'
         : 'text-sm mb-2';

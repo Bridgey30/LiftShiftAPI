@@ -111,7 +111,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
                     title="Exit Demo"
                   >
                     <ArrowLeft className="w-3.5 h-3.5" />
-                    <span className="text-[10px]">Back</span>
+                    <span className="text-[11px] sm:text-xs">Back</span>
                   </button>
                 )}
                 <ThemeToggleButton compact={true} />
@@ -261,7 +261,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
               <Calendar className="w-5 h-5" />
             )}
 
-            <span className="text-[10px] font-semibold leading-none mt-1">Calendar</span>
+            <span className="text-[11px] sm:text-xs font-semibold leading-none mt-1">Calendar</span>
 
             {hasActiveCalendarFilter && !calendarOpen ? (
               <button

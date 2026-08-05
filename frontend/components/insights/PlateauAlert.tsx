@@ -53,7 +53,7 @@ export const PlateauAlert: React.FC<PlateauAlertProps> = ({
       <div className="flex-1 min-w-0">
         <div className="text-sm font-medium text-white truncate" style={SEMI_FANCY_FONT}>{exerciseName}</div>
         {suggestion && (
-          <div className="text-[10px] text-amber-400 mt-1 line-clamp-1 flex items-center gap-1">
+          <div className="text-[11px] sm:text-xs text-amber-400 mt-1 line-clamp-1 flex items-center gap-1">
             <svg width="12" height="12" viewBox="0 0 48 48" version="1" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0">
               <path fill="#FBC02D" d="M37,22c0-7.7-6.6-13.8-14.5-12.9c-6,0.7-10.8,5.5-11.4,11.5c-0.5,4.6,1.4,8.7,4.6,11.3 c1.4,1.2,2.3,2.9,2.3,4.8V37h12v-0.1c0-1.8,0.8-3.6,2.2-4.8C35.1,29.7,37,26.1,37,22z" />
               <path fill="#FFF59D" d="M30.6,20.2l-3-2c-0.3-0.2-0.8-0.2-1.1,0L24,19.8l-2.4-1.6c-0.3-0.2-0.8-0.2-1.1,0l-3,2 c-0.2,0.2-0.4,0.4-0.4,0.7s0,0.6,0.2,0.8l3.8,4.7V37h2V26c0-0.2-0.1-0.4-0.2-0.6l-3.3-4.1l1.5-1l2.4,1.6c0.3,0.2,0.8,0.2,1.1,0 l2.4-1.6l1.5,1l-3.3,4.1C25.1,25.6,25,25.8,25,26v11h2V26.4l3.8-4.7c0.2-0.2,0.3-0.5,0.2-0.8S30.8,20.3,30.6,20.2z" />
@@ -72,12 +72,12 @@ export const PlateauAlert: React.FC<PlateauAlertProps> = ({
         {isBodyweightLike ? (
           <>
             <div className="text-sm font-bold text-white">{lastReps} reps</div>
-            <div className="text-[10px] text-slate-500">Bodyweight</div>
+            <div className="text-[11px] sm:text-xs text-slate-500">Bodyweight</div>
           </>
         ) : (
           <>
             <div className="text-sm font-bold text-white">{convertWeight(lastWeight, weightUnit)}{weightUnit}{isLowerWeightBetter ? ' support' : ''}</div>
-            <div className="text-[10px] text-slate-500">×{lastReps} reps</div>
+            <div className="text-[11px] sm:text-xs text-slate-500">×{lastReps} reps</div>
           </>
         )}
       </div>

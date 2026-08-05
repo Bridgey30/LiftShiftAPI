@@ -17,7 +17,7 @@ export const AIAnalysisCard: React.FC<AIAnalysisCardProps> = ({
           <div className="p-1.5 rounded-lg bg-black/20 text-purple-400 flex-shrink-0">
             <Brain className="w-4 h-4" />
           </div>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 truncate">AI Analysis</span>
+          <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 truncate">AI Analysis</span>
         </div>
       </div>
 
@@ -33,7 +33,7 @@ export const AIAnalysisCard: React.FC<AIAnalysisCardProps> = ({
       </div>
 
       <div className="mt-2 flex items-center gap-2">
-        <span className="text-[10px] text-slate-500">Build a custom prompt</span>
+        <span className="text-[11px] sm:text-xs text-slate-500">Build a custom prompt</span>
       </div>
     </div>
   );

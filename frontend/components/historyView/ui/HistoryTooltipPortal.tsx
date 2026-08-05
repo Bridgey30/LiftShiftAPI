@@ -62,13 +62,13 @@ export const TooltipPortal: React.FC<{ data: TooltipState }> = ({ data }) => {
         {structured ? (
           <div className="space-y-3">
             <div>
-              <div className="text-[10px] uppercase tracking-wider text-slate-500 mb-1 font-semibold">Why</div>
+              <div className="text-[10px] sm:text-xs uppercase tracking-wider text-slate-500 mb-1 font-semibold">Why</div>
               <div className="space-y-0.5">{structured.why.map(renderLine)}</div>
             </div>
 
             {structured.improve && structured.improve.length > 0 && (
               <div>
-                <div className="text-[10px] uppercase tracking-wider text-slate-500 mb-1 font-semibold">Tips</div>
+                <div className="text-[10px] sm:text-xs uppercase tracking-wider text-slate-500 mb-1 font-semibold">Tips</div>
                 <div className="space-y-0.5">{structured.improve.map(renderLine)}</div>
               </div>
             )}

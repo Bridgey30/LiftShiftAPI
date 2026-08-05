@@ -157,8 +157,8 @@ export const HypertrophyBarCard: React.FC<HypertrophyBarCardProps> = ({
       <div className="flex-shrink-0">
         <div className="flex items-center justify-between mb-3 gap-3">
           <div>
-            <h2 className="text-xs font-bold text-white">Hypertrophy Scores</h2>
-            <p className="text-[10px] text-slate-500 mt-0.5">Per muscle breakdown</p>
+            <h2 className="text-xs sm:text-lg font-semibold text-white">Hypertrophy Scores</h2>
+            <p className="text-[10px] sm:text-xs text-slate-500 mt-0.5">Per muscle breakdown</p>
           </div>
           <SegmentControl
             options={[
@@ -190,7 +190,7 @@ export const HypertrophyBarCard: React.FC<HypertrophyBarCardProps> = ({
                 {(() => {
                   const rating = getScoreRating(stats.avgScore);
                   return (
-                    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold"
+                    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] sm:text-xs font-bold"
                       style={{ backgroundColor: `${rating.color}20`, color: rating.color }}>
                       <TrendingUp className="w-3 h-3" />
                       {rating.label}
@@ -198,8 +198,8 @@ export const HypertrophyBarCard: React.FC<HypertrophyBarCardProps> = ({
                   );
                 })()}
               </div>
-              <p className="text-[10px] text-slate-500 mt-1 leading-tight">{stats.count} muscles actively trained</p>
-              <p className="text-[10px] text-slate-500 mt-0.5">
+              <p className="text-[10px] sm:text-xs text-slate-500 mt-1 leading-tight">{stats.count} muscles actively trained</p>
+              <p className="text-[10px] sm:text-xs text-slate-500 mt-0.5">
                 {Math.round(stats.avgScore)}% average · Best: {stats.bestMuscle?.muscleName} ({stats.bestMuscle?.score.totalScore}%)
               </p>
             </div>
@@ -207,7 +207,7 @@ export const HypertrophyBarCard: React.FC<HypertrophyBarCardProps> = ({
         )}
 
         {!stats && (
-          <div className="text-[10px] text-slate-500 py-2">No workout data available for hypertrophy scoring.</div>
+          <div className="text-[10px] sm:text-xs text-slate-500 py-2">No workout data available for hypertrophy scoring.</div>
         )}
       </div>
 
@@ -222,7 +222,7 @@ export const HypertrophyBarCard: React.FC<HypertrophyBarCardProps> = ({
               ] as const).map((item) => (
                 <div key={item.label} className="flex items-center gap-1">
                   <div className="w-2 h-2 rounded-sm flex-shrink-0" style={{ backgroundColor: item.color }} />
-                  <span className="text-[8px] text-slate-500">{item.label}</span>
+                  <span className="text-[8px] sm:text-[10px] text-slate-500">{item.label}</span>
                 </div>
               ))}
             </div>
@@ -240,18 +240,18 @@ export const HypertrophyBarCard: React.FC<HypertrophyBarCardProps> = ({
                   onClick={() => { if (window.innerWidth >= 768) onMuscleClick?.(m.muscleId); }}
                   onMouseEnter={(e) => handleMouseEnter(e, m)}
                   onMouseLeave={hideTooltip}>
-              <span className={`text-[10px] w-[15%] lg:w-[13%] truncate flex-shrink-0 ${isSelected ? 'font-semibold text-white' : 'text-slate-500'}`} style={SEMI_FANCY_FONT}>
+              <span className={`text-[10px] sm:text-xs w-[15%] lg:w-[13%] truncate flex-shrink-0 ${isSelected ? 'font-semibold text-white' : 'text-slate-500'}`} style={SEMI_FANCY_FONT}>
                 {m.muscleName}
               </span>
                   <div className="flex-1">
                     <FactorProgressBar volumeScore={m.score.volumeScore} progressiveOverload={m.score.progressiveOverload} frequency={m.score.frequency} />
                   </div>
-                  <span className={`text-[10px] font-semibold w-[7%] text-right flex-shrink-0 ${isSelected ? 'text-white' : 'text-slate-500'}`}>
+                  <span className={`text-[10px] sm:text-xs font-semibold w-[7%] text-right flex-shrink-0 ${isSelected ? 'text-white' : 'text-slate-500'}`}>
                     {m.score.totalScore}%
                   </span>
                   {prevPositionMap ? (
                     <span
-                      className="text-[9px] flex items-center gap-0.5 w-[15%] lg:w-[13%] flex-shrink-0"
+                      className="text-[9px] sm:text-[10px] flex items-center gap-0.5 w-[15%] lg:w-[13%] flex-shrink-0"
                       style={{ color: isNew || movedUp ? '#22c55e' : movedDown ? '#ef4444' : '#3b82f6' }}
                       title={isNew ? 'NEW' : movedUp ? `↑ from #${prevPos}` : movedDown ? `↓ from #${prevPos}` : `= #${currentPos}`}
                     >
@@ -259,7 +259,7 @@ export const HypertrophyBarCard: React.FC<HypertrophyBarCardProps> = ({
                       <span>{isNew ? 'NEW' : (movedUp || movedDown) ? `#${prevPos} → #${currentPos}` : `#${currentPos}`}</span>
                     </span>
                   ) : (
-                    <span className="text-[9px] flex items-center gap-1 w-[15%] lg:w-[13%] flex-shrink-0" style={{ color: rating.color }}>
+                    <span className="text-[9px] sm:text-[10px] flex items-center gap-1 w-[15%] lg:w-[13%] flex-shrink-0" style={{ color: rating.color }}>
                       <span className="truncate">{rating.label}</span>
                       <TrendingUp className="w-3 h-3" />
                     </span>
@@ -269,7 +269,7 @@ export const HypertrophyBarCard: React.FC<HypertrophyBarCardProps> = ({
             })}
           </div>
         ) : (
-          <div className="text-[10px] text-slate-500 py-4 text-center">No muscle data available.</div>
+          <div className="text-[10px] sm:text-xs text-slate-500 py-4 text-center">No muscle data available.</div>
         )}
       </div>
       <ChartDescription>

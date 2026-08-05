@@ -108,7 +108,7 @@ export const HistorySessionHeaderCard: React.FC<
               {session.title}
             </h3>
             {session.totalPRs > 0 && (
-              <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-yellow-500/10 text-yellow-400 text-[10px] font-bold flex-shrink-0">
+              <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-yellow-500/10 text-yellow-400 text-[10px] sm:text-xs font-bold flex-shrink-0">
                 <Trophy className="w-3 h-3" />
                 {session.totalPRs} PR{session.totalPRs > 1 ? "s" : ""}
               </span>
@@ -131,7 +131,7 @@ export const HistorySessionHeaderCard: React.FC<
               <div className="p-1.5 bg-blue-500/10 rounded-lg text-blue-400 flex-shrink-0">
                 <Calendar className="w-4 h-4" />
               </div>
-              <div className="text-[10px] text-slate-600 dark:text-slate-400 truncate">
+              <div className="text-[10px] sm:text-xs text-slate-600 dark:text-slate-400 truncate">
                 {session.date
                   ? formatRelativeTime(session.date, effectiveNow)
                   : "—"}
@@ -248,7 +248,7 @@ export const HistorySessionHeaderCard: React.FC<
             {session.title}
           </h3>
           {session.totalPRs > 0 && (
-            <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-yellow-500/10 text-yellow-400 text-[10px] font-bold flex-shrink-0">
+            <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-yellow-500/10 text-yellow-400 text-[10px] sm:text-xs font-bold flex-shrink-0">
               <Trophy className="w-3 h-3" />
               {session.totalPRs} PR{session.totalPRs > 1 ? "s" : ""}
             </span>

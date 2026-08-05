@@ -104,11 +104,11 @@ export const RecentPRCard: React.FC<RecentPRCardProps> = ({
       </div>
       <div className="flex-1 min-w-0">
         <div className="text-sm font-medium text-[color:var(--text-primary)] truncate" style={SEMI_FANCY_FONT}>{exercise}</div>
-        <div className={`text-[10px] ${isToday ? 'text-yellow-400 font-bold' : 'text-slate-500'}`}>{formatHumanReadableDate(date, { now })}</div>
+        <div className={`text-[11px] sm:text-xs ${isToday ? 'text-yellow-400 font-bold' : 'text-slate-500'}`}>{formatHumanReadableDate(date, { now })}</div>
       </div>
       <div className="text-right">
         <div className="text-sm font-bold text-[color:var(--text-primary)] whitespace-nowrap">{meta.value(weight, reps, weightUnit)}</div>
-        <div className={`text-[10px] font-bold ${improvementClass} flex items-center justify-end gap-1`}>
+        <div className={`text-[11px] sm:text-xs font-bold ${improvementClass} flex items-center justify-end gap-1`}>
           <PrIcon className={`w-3 h-3 ${iconColor}`} />
           {meta.label} PR{isSilver ? ' (1mo)' : ''}
         </div>

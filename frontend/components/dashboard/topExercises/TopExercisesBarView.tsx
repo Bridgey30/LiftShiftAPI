@@ -35,8 +35,8 @@ export const TopExercisesBarView: React.FC<TopExercisesBarViewProps> = ({
   return (
     <div className="w-full h-[320px] flex flex-col px-1 sm:px-2 overflow-x-hidden">
       <div className="flex items-center gap-3 px-1 mb-2">
-        <div className="flex-1 text-[10px] uppercase tracking-wider text-slate-500 font-bold">Exercise</div>
-        <div className="min-w-[64px] text-right text-[10px] uppercase tracking-wider text-slate-500 font-bold">Sets</div>
+        <div className="flex-1 text-[10px] sm:text-xs uppercase tracking-wider text-slate-500 font-bold">Exercise</div>
+        <div className="min-w-[64px] text-right text-[10px] sm:text-xs uppercase tracking-wider text-slate-500 font-bold">Sets</div>
       </div>
 
       <div className="relative flex-1 overflow-hidden">
@@ -220,7 +220,7 @@ export const TopExercisesBarView: React.FC<TopExercisesBarViewProps> = ({
       </div>
 
       <div className="mt-2 flex items-center gap-3 px-1">
-        <div className="flex-1 flex justify-between text-[10px] text-slate-500 font-medium">
+        <div className="flex-1 flex justify-between text-[10px] sm:text-xs text-slate-500 font-medium">
           {tickValues.map((v, i) => (
             <span key={`${v}-${i}`}>{v}</span>
           ))}

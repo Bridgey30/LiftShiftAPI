@@ -75,7 +75,7 @@ export const DashboardInsightsSection: React.FC<DashboardInsightsSectionProps> =
             <span className="text-sm font-semibold text-white">Plateaus</span>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 font-bold">
+            <span className="text-[10px] sm:text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 font-bold">
               {activePlateauExercises.length} {activePlateauExercises.length === 1 ? 'exercise' : 'exercises'}
             </span>
           </div>

@@ -42,7 +42,7 @@ export const Tooltip: React.FC<TooltipProps> = ({ data }) => {
         style={{ maxWidth: TOOLTIP_CONFIG.WIDTH, backgroundColor: 'rgb(var(--mw-tooltip-rgb) / var(--mw-tooltip-alpha))' }}
       >
         <div className="flex items-center gap-2 mb-2 pb-1 border-b border-white/10">
-          <span className="font-bold uppercase text-[10px] tracking-wider" style={titleColor ? { color: titleColor } : undefined}>{title}</span>
+          <span className="font-bold uppercase text-[11px] sm:text-xs tracking-wider" style={titleColor ? { color: titleColor } : undefined}>{title}</span>
         </div>
         {bodySections ? (
           <div className="text-xs leading-relaxed whitespace-pre-line break-words space-y-1">
@@ -67,7 +67,7 @@ export const Tooltip: React.FC<TooltipProps> = ({ data }) => {
           </div>
         )}
         {footer && (
-          <div className="mt-2 text-[10px] font-bold text-blue-400 break-words">{footer}</div>
+          <div className="mt-2 text-[11px] sm:text-xs font-bold text-blue-400 break-words">{footer}</div>
         )}
       </div>
     </div>

@@ -49,11 +49,11 @@ const DeltaBadge: React.FC<{ delta: DeltaResult; suffix?: string; showPercent?: 
     return (
       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400">
         <Activity className="w-3 h-3" />
-        <span className="text-[10px] font-semibold">
+        <span className="text-[11px] sm:text-xs font-semibold">
           Stable
           {showPercent && delta.deltaPercent !== 0 ? ` (${delta.deltaPercent}%)` : ''}
         </span>
-        {context && <span className="text-[9px] opacity-75">{context}</span>}
+        {context && <span className="text-[10px] opacity-75">{context}</span>}
       </span>
     );
   }
@@ -66,11 +66,11 @@ const DeltaBadge: React.FC<{ delta: DeltaResult; suffix?: string; showPercent?: 
   return (
     <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border ${bgClass} ${colorClass}`}>
       <Icon className="w-3 h-3" />
-      <span className="text-[10px] font-semibold">
+      <span className="text-[11px] sm:text-xs font-semibold">
         {safeFormattedPercent}
         {suffix}
       </span>
-      {context && <span className="text-[9px] opacity-75">{context}</span>}
+      {context && <span className="text-[10px] opacity-75">{context}</span>}
     </span>
   );
 };
@@ -171,7 +171,7 @@ export const KPICard: React.FC<KPICardProps> = ({
           <div className={`p-1.5 rounded-lg bg-black/20 ${iconColor} flex-shrink-0`}>
             <Icon className="w-4 h-4" />
           </div>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 truncate">{title}</span>
+          <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 truncate">{title}</span>
         </div>
         {(delta || badge) && (
           <div className="flex flex-wrap items-center gap-1.5 flex-shrink-0">
@@ -183,7 +183,7 @@ export const KPICard: React.FC<KPICardProps> = ({
 
       <div className="flex items-baseline gap-2 flex-wrap">
         {renderValue()}
-        {subtitle && <span className="text-[11px] text-slate-500">{subtitle}</span>}
+        {subtitle && <span className="text-xs text-slate-500">{subtitle}</span>}
       </div>
 
       {sparkline && sparkline.length > 1 && (

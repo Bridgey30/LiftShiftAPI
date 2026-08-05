@@ -39,7 +39,7 @@ export const CalendarMonthRow: React.FC<CalendarMonthRowProps> = ({
           <button
             onClick={() => !disabled && hasDataInMonth && onMonthClick(idx)}
             disabled={disabled || !hasDataInMonth}
-            className={`group relative aspect-square w-full rounded-md flex items-center justify-center text-[11px] font-semibold border-2 transition-all duration-200
+            className={`group relative aspect-square w-full rounded-md flex items-center justify-center text-xs font-semibold border-2 transition-all duration-200
               ${status === 'full' ? 'border-slate-500/60 bg-white/10 text-white'
                 : status === 'partial' ? 'border-slate-600/60 bg-white/5 text-slate-200'
                 : isCurrentView ? (hasDataInMonth ? 'border-emerald-500/30 bg-emerald-500/10 text-slate-200' : 'border-slate-600/60 bg-black/20 text-slate-200')
