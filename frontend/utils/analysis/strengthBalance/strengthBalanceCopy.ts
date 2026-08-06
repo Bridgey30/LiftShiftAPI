@@ -83,6 +83,20 @@ export const getFraming = (result: StrengthBalancePairResult): StrengthBalanceFr
   const typicalMin = laggardIsA ? pair.expectedMin * 100 : 100 / pair.expectedMax;
   const typicalMax = laggardIsA ? pair.expectedMax * 100 : 100 / pair.expectedMin;
 
+  // Display rule: round the current % to the nearest 5% as usual, but never
+  // let a value that is actually OUTSIDE the band round onto the band edge —
+  // an 84.8% reading as "about 85%" next to an "85–95%" band looks in-range
+  // when it isn't. Such borderline values keep one decimal ("84.8%") so the
+  // sentence and the band can't collide.
+  const belowLow = laggardPctRaw < typicalMin - BAND_EPS;
+  const aboveHigh = laggardPctRaw > typicalMax + BAND_EPS;
+  const roundsOntoEdge =
+    (belowLow && roundTo5(laggardPctRaw) >= roundTo5(typicalMin)) ||
+    (aboveHigh && roundTo5(laggardPctRaw) <= roundTo5(typicalMax));
+  const laggardPct = roundsOntoEdge
+    ? Math.round(laggardPctRaw * 10) / 10
+    : roundTo5(laggardPctRaw);
+
   return {
     laggardId,
     strongerId,
@@ -90,7 +104,7 @@ export const getFraming = (result: StrengthBalancePairResult): StrengthBalanceFr
     strongerTitle,
     laggardIsA,
     laggardPctRaw,
-    laggardPct: roundTo5(laggardPctRaw),
+    laggardPct,
     typicalMin,
     typicalMax,
     typicalRange: percentRange(typicalMin, typicalMax),

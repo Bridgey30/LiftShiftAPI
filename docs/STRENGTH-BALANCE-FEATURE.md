@@ -225,6 +225,12 @@ All values are copy-rounded to the nearest 5%. If the displayed start and
 end values round to the same number — or the fitted line's endpoints do —
 the trend is `steady` and no chip is shown.
 
+**The rounding guard.** The current % in the sentence is also rounded to the
+nearest 5% — except when that would round an *out-of-band* value onto the
+band's displayed edge (e.g. a real 84.8% reading as "85%" next to an
+"85–95%" band). Such borderline values keep one decimal ("84.8%") so the
+copy can never make an imbalance look like it's inside the typical range.
+
 ---
 
 ## 5. The chart

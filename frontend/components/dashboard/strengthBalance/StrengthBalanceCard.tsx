@@ -24,8 +24,6 @@ import { SEMI_FANCY_FONT } from '../../../utils/ui/uiConstants';
 
 const TREND_COLORS = { closing: '#34d399', widening: '#f87171', steady: '#94a3b8' } as const;
 
-const roundTo5 = (v: number): number => Math.round(v / 5) * 5;
-
 const weekLabel = (weekStart: number): string =>
   new Date(weekStart).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
@@ -106,7 +104,7 @@ const LaggardPctChart: React.FC<{ result: StrengthBalancePairResult; trendColor:
       <g>
         <circle cx={cx} cy={cy} r={4} fill={trendColor} stroke="#0f172a" strokeWidth={1.5} />
         <text x={cx - 8} y={cy - 7} fontSize={10} fontWeight="bold" fill="var(--text-primary)" textAnchor="end">
-          {roundTo5(Number(payload.pct))}%
+          {f.laggardPct}%
         </text>
       </g>
     );
@@ -139,7 +137,7 @@ const LaggardPctChart: React.FC<{ result: StrengthBalancePairResult; trendColor:
           <Tooltip
             contentStyle={CHART_TOOLTIP_STYLE as any}
             labelStyle={{ color: 'var(--text-primary)' }}
-            formatter={(value: any) => [`${Math.round(Number(value))}%`, `of ${strongerLabel}`]}
+            formatter={(value: any) => [`${Number(value)}%`, `of ${strongerLabel}`]}
           />
           <ReferenceArea
             y1={f.typicalMin}
