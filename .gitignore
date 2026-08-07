@@ -34,6 +34,7 @@ dist-ssr
 
 # Skills
 .agents/
+.windsurf/
 skills-lock.json
 
 # CodeGraph
