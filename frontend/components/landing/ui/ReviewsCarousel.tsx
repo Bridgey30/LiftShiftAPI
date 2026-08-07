@@ -90,13 +90,26 @@ function MarqueeRow({
   const to = direction === 'left' ? '-50' : '0';
   const duration = `${Math.max(30, 110 - speed)}s`;
 
-  // Mobile marquee interaction state (CSS animation pause)
-  const [isTouchPaused, setIsTouchPaused] = useState(false);
+  // Mobile auto-scroll state
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const isInteractingRef = useRef(false);
+  const accumulatedRef = useRef(0);
+  const lastTsRef = useRef(0);
   const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const handleUpRef = useRef<(() => void) | null>(null);
 
+  const syncAccumulated = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const halfWidth = el.scrollWidth / 2;
+    if (halfWidth <= 0) return;
+    accumulatedRef.current =
+      ((el.scrollLeft % halfWidth) + halfWidth) % halfWidth;
+    lastTsRef.current = performance.now();
+  };
+
   const onStartInteraction = () => {
-    setIsTouchPaused(true);
+    isInteractingRef.current = true;
     if (resumeTimerRef.current) {
       clearTimeout(resumeTimerRef.current);
       resumeTimerRef.current = null;
@@ -112,7 +125,8 @@ function MarqueeRow({
       document.removeEventListener('pointercancel', handleUp);
       handleUpRef.current = null;
       resumeTimerRef.current = setTimeout(() => {
-        setIsTouchPaused(false);
+        isInteractingRef.current = false;
+        syncAccumulated();
         resumeTimerRef.current = null;
       }, 1000);
     };
@@ -131,8 +145,41 @@ function MarqueeRow({
     };
   }, []);
 
-  const marqueeStyle: React.CSSProperties =
-    isTouchPaused || isPaused ? { animationPlayState: 'paused' } : {};
+  useEffect(() => {
+    if (!isMobile) return;
+    const el = scrollRef.current;
+    if (!el) return;
+    let rafId = 0;
+    lastTsRef.current = performance.now();
+    const pxPerSec = 30;
+    const dir = direction === 'left' ? 1 : -1;
+
+    const halfWidth = el.scrollWidth / 2;
+    if (halfWidth > 0 && dir === -1) {
+      accumulatedRef.current = halfWidth;
+    }
+    el.scrollLeft = accumulatedRef.current;
+
+    const tick = (ts: number) => {
+      if (!isInteractingRef.current) {
+        const hw = el.scrollWidth / 2;
+        if (hw > 0) {
+          const dt = (ts - lastTsRef.current) / 1000;
+          lastTsRef.current = ts;
+          accumulatedRef.current += dir * pxPerSec * dt;
+          if (accumulatedRef.current >= hw) {
+            accumulatedRef.current -= hw;
+          } else if (accumulatedRef.current < 0) {
+            accumulatedRef.current += hw;
+          }
+          el.scrollLeft = accumulatedRef.current;
+        }
+      }
+      rafId = requestAnimationFrame(tick);
+    };
+    rafId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafId);
+  }, [isMobile, direction]);
 
   const card = (review: ReviewData, key: string) => {
     if (isMobile) {
@@ -188,28 +235,19 @@ function MarqueeRow({
   if (isMobile) {
     return (
       <div className="relative overflow-hidden">
-        <style>{`
-          @keyframes ${uid} {
-            0%   { transform: translate3d(${from}%, 0, 0); }
-            100% { transform: translate3d(${to}%, 0, 0); }
-          }
-          .${uid} {
-            display: flex;
-            width: fit-content;
-            animation: ${uid} ${duration} linear infinite;
-            backface-visibility: hidden;
-          }
-          .${uid}:hover {
-            animation-play-state: paused;
-          }
-        `}</style>
         <div
-          className={uid}
-          style={marqueeStyle}
+          ref={scrollRef}
+          className="overflow-x-auto overflow-y-hidden"
           onPointerDown={onStartInteraction}
+          style={{
+            scrollPaddingLeft: '0.5rem',
+            touchAction: 'pan-x',
+          }}
         >
-          {items.map((r, i) => card(r, `${r.src}-${i}`))}
-          {items.map((r, i) => card(r, `${r.src}-clone-${i}`))}
+          <div className="flex w-max py-1 pr-4">
+            {items.map((r, i) => card(r, `${r.src}-${i}`))}
+            {items.map((r, i) => card(r, `${r.src}-clone-${i}`))}
+          </div>
         </div>
       </div>
     );
@@ -300,22 +338,26 @@ const ExpandedCardOverlay: React.FC<{
       {/* Expanded card */}
       <motion.div
         initial={{
-          x: originalRect.left,
-          y: originalRect.top,
-          scale: originalRect.width / expandedWidth,
+          position: 'fixed',
+          left: originalRect.left,
+          top: originalRect.top,
+          width: originalRect.width,
+          height: originalRect.height,
           rotateY: 0,
-          opacity: 1,
+          zIndex: 101,
         }}
         animate={{
-          x: targetLeft,
-          y: targetTop,
-          scale: 1,
+          left: targetLeft,
+          top: targetTop,
+          width: expandedWidth,
+          height: expandedHeight,
           rotateY: 180,
         }}
         exit={{
-          x: originalRect.left,
-          y: originalRect.top,
-          scale: originalRect.width / expandedWidth,
+          left: originalRect.left,
+          top: originalRect.top,
+          width: originalRect.width,
+          height: originalRect.height,
           rotateY: 0,
           opacity: 0,
           transition: {
@@ -323,15 +365,8 @@ const ExpandedCardOverlay: React.FC<{
             default: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
           },
         }}
-        transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }}
+        transition={{ duration: 0.55, ease: [0.34, 1.56, 0.64, 1] }}
         style={{
-          position: 'fixed',
-          left: 0,
-          top: 0,
-          width: expandedWidth,
-          height: expandedHeight,
-          zIndex: 101,
-          transformOrigin: 'top left',
           perspective: '1200px',
           transformStyle: 'preserve-3d',
           pointerEvents: 'none',
