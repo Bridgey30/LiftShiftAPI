@@ -48,7 +48,7 @@ export const HistorySessionExercises: React.FC<HistorySessionExercisesProps> = (
   setTooltip,
 }) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2 animate-in fade-in duration-300">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2 animate-in fade-in">
       {session.exercises.map((group) => (
         <HistoryExerciseCard
           key={`${session.key}:${group.exerciseName}`}

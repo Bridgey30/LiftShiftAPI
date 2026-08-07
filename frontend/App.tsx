@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router';
+import { AnimatePresence } from 'motion/react';
 import { Trophy } from 'lucide-react';
 import { WorkoutSet } from './types';
 import { Tab } from './app/navigation';
@@ -793,7 +794,11 @@ const App: React.FC = () => {
         onLyfatSyncSaved={handleLyfatSyncSaved}
       />
 
-      <AppLoadingOverlay open={isAnalyzing || showColdStartOverlay} isCompleting={isCompleting} />
+      <AnimatePresence>
+        {(isAnalyzing || showColdStartOverlay) && (
+          <AppLoadingOverlay open={isAnalyzing || showColdStartOverlay} isCompleting={isCompleting} />
+        )}
+      </AnimatePresence>
     </div>
     </ToastProvider>
   );

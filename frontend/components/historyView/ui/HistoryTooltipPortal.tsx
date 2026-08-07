@@ -1,7 +1,7 @@
 import React from 'react';
 import { Target, TrendingDown, TrendingUp } from 'lucide-react';
 import { AnalysisResult, StructuredTooltip, TooltipLine } from '../../../types';
-import { TOOLTIP_THEMES, calculateCenteredTooltipPosition } from '../../../utils/ui/uiConstants';
+import { TOOLTIP_THEMES, TOOLTIP_CONFIG, calculateCenteredTooltipPosition } from '../../../utils/ui/uiConstants';
 
 export interface TooltipState {
   rect: DOMRect;
@@ -45,7 +45,13 @@ export const TooltipPortal: React.FC<{ data: TooltipState }> = ({ data }) => {
   );
 
   return (
-    <div className="fixed z-[9999] pointer-events-none transition-all duration-200 animate-in fade-in zoom-in-95" style={positionStyle}>
+    <div
+      className="fixed z-[9999] pointer-events-none transition-[opacity,transform] duration-100 zoom-in-95"
+      style={{
+        ...positionStyle,
+        transformOrigin: rect.top < TOOLTIP_CONFIG.FLIP_THRESHOLD ? 'top center' : 'bottom center',
+      }}
+    >
       <div className={`border rounded-xl p-4 ${theme} inline-block w-fit`} style={{ maxWidth: HISTORY_TOOLTIP_WIDTH }}>
         <div className="flex items-center justify-between gap-2 mb-3 pb-2 border-b border-white/10">
           <span className="font-bold uppercase text-xs tracking-wider">{title}</span>

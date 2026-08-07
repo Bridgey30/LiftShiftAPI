@@ -37,7 +37,7 @@ export const CalendarYearNav: React.FC<CalendarYearNavProps> = ({
     <div className="relative">
       <button
         onClick={onYearClick}
-        className={`relative px-4 py-1.5 rounded-lg font-bold text-sm border transition-all duration-200 min-w-[80px] ${
+        className={`relative px-4 py-1.5 rounded-lg font-bold text-sm border transition-colors duration-200 min-w-[80px] ${
           yearStatus === 'full'
             ? 'border-slate-500/60 bg-white/10 text-slate-200'
             : yearStatus === 'partial'

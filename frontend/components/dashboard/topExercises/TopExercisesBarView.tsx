@@ -127,7 +127,7 @@ export const TopExercisesBarView: React.FC<TopExercisesBarViewProps> = ({
                   >
                     <div className="hidden sm:flex items-center gap-2 min-w-0">
                       <div
-                        className="relative rounded-full overflow-hidden min-w-0 border border-transparent hover:border-slate-600/40 transition-all"
+                        className="relative rounded-full overflow-hidden min-w-0 border border-transparent hover:border-slate-600/40 transition-colors"
                         style={{
                           height: `${rowH}px`,
                           width: `${barWidthPct}%`,
@@ -176,7 +176,7 @@ export const TopExercisesBarView: React.FC<TopExercisesBarViewProps> = ({
 
                     <div className="flex flex-col gap-1 sm:hidden min-w-0">
                       <div
-                        className="relative rounded-full overflow-hidden min-w-0 border border-transparent hover:border-slate-600/40 transition-all"
+                        className="relative rounded-full overflow-hidden min-w-0 border border-transparent hover:border-slate-600/40 transition-colors"
                         style={{
                           height: `${rowH}px`,
                           width: `${barWidthPct}%`,

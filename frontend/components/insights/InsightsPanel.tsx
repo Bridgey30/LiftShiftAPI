@@ -25,9 +25,9 @@ export const InsightsPanel: React.FC<InsightsPanelProps> = memo(function Insight
     weightUnit,
     weeklySetsDashboard,
   } = props;
-  const { rolling7d, weeklyVolumeSparkline, prSparkline, muscleAvgSparkline } = insights;
+  const { rolling30d, weeklyVolumeSparkline, prSparkline, muscleAvgSparkline } = insights;
 
-  const displayVolume = getDisplayVolume(rolling7d.current.totalVolume, weightUnit, { round: 'int' });
+  const displayVolume = getDisplayVolume(rolling30d.current.totalVolume, weightUnit, { round: 'int' });
   const volumeUnit = weightUnit === 'kg' ? 'kg' : 'lbs';
 
   const weeklySetsAvg = useMemo(() => {
@@ -50,8 +50,8 @@ export const InsightsPanel: React.FC<InsightsPanelProps> = memo(function Insight
         subtitle="total"
         icon={Trophy}
         iconColor="text-yellow-400"
-        delta={rolling7d.prs ?? undefined}
-        deltaContext="vs lst wk"
+        delta={rolling30d.prs ?? undefined}
+        deltaContext="vs prev 30d"
         sparkline={prSparkline}
         sparklineColor="#eab308"
         sparklineTitle="Personal records over last 4 weeks"
@@ -62,11 +62,11 @@ export const InsightsPanel: React.FC<InsightsPanelProps> = memo(function Insight
         <KPICard
           title="Volume"
           value={displayVolume}
-          subtitle={`${volumeUnit} lst 7d`}
+          subtitle={`${volumeUnit} lst 30d`}
           icon={Dumbbell}
           iconColor="text-purple-400"
-          delta={rolling7d.volume ?? undefined}
-          deltaContext="vs lst wk"
+          delta={rolling30d.volume ?? undefined}
+          deltaContext="vs prev 30d"
           sparkline={weeklyVolumeSparkline}
           sparklineColor="#a855f7"
           sparklineTitle="Weekly volume over last 4 weeks"
@@ -77,14 +77,14 @@ export const InsightsPanel: React.FC<InsightsPanelProps> = memo(function Insight
       <KPICard
         title="Weekly Sets"
         value={weeklySetsAvg}
-        subtitle="sets / muscle"
+        subtitle="sets / muscle / wk"
         icon={WeeklySetsBodyIcon}
         iconColor="text-cyan-400"
-        delta={rolling7d.sets ?? undefined}
-        deltaContext="vs lst wk"
+        delta={rolling30d.sets ?? undefined}
+        deltaContext="vs prev 30d"
         sparkline={muscleAvgSparkline}
         sparklineColor="#22c55e"
-        sparklineTitle="Average sets per exercise over last 4 weeks"
+        sparklineTitle="Average sets per muscle over last 4 weeks"
       />
     </div>
   );

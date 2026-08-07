@@ -108,17 +108,23 @@
       .slide-in-from-bottom-2 {
         animation: slideIn 0.3s ease-out reverse;
       }
-      
-      /* Smooth transitions for all interactive elements */
-      * {
-        transition-property: color, border-color, opacity, box-shadow;
-        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-        transition-duration: 150ms;
+
+      @keyframes zoomIn {
+        from { opacity: 0; scale: 0.95; }
+        to { opacity: 1; scale: 1; }
       }
-      
-      /* Chart container animations */
+
+      .zoom-in-95 {
+        animation: zoomIn 0.15s ease-out;
+      }
+
+      .zoom-in-50 {
+        animation: zoomIn 0.15s ease-out;
+      }
+
+      /* Chart container hover — scoped to the one property that changes */
       [class*="bg-slate-900 border"] {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: box-shadow 0.3s cubic-bezier(0.23, 1, 0.32, 1);
       }
       [class*="bg-slate-900 border"]:hover {
         box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);

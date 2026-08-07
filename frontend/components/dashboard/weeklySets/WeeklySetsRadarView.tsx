@@ -65,7 +65,7 @@ export const WeeklySetsRadarView: React.FC<WeeklySetsRadarViewProps> = ({ radarD
             strokeWidth={3}
             fill="#06b6d4"
             fillOpacity={0.35}
-            animationDuration={500}
+            animationDuration={250}
           />
           <Tooltip contentStyle={tooltipStyle} formatter={(value: any) => [`${Number(value).toFixed(1)} sets/wk`]} />
         </RadarChart>

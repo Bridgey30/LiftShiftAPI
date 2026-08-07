@@ -92,7 +92,7 @@ export const TopExercisesAreaView: React.FC<TopExercisesAreaViewProps> = ({
               fill={pieColors[idx % pieColors.length]}
               fillOpacity={0.25}
               mask="url(#efMask)"
-              animationDuration={500}
+              animationDuration={250}
             />
           ))}
         </AreaChart>

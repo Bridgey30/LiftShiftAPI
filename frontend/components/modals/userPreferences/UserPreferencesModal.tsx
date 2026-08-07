@@ -93,7 +93,7 @@ export const UserPreferencesModal: React.FC<UserPreferencesModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="w-8 h-8 rounded-lg bg-slate-900/20 border border-slate-700/50 flex items-center justify-center text-slate-400 hover:text-slate-200 hover:ring-1 hover:ring-emerald-500 transition-all"
+                className="w-8 h-8 rounded-lg bg-slate-900/20 border border-slate-700/50 flex items-center justify-center text-slate-400 hover:text-slate-200 hover:ring-1 hover:ring-emerald-500 transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -143,7 +143,7 @@ export const UserPreferencesModal: React.FC<UserPreferencesModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 bg-transparent border border-emerald-500/40 text-slate-200 hover:border-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 transition-all duration-200 flex-1 sm:flex-none min-w-[140px] sm:min-w-0 cursor-pointer w-full"
+                className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 bg-transparent border border-emerald-500/40 text-slate-200 hover:border-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 transition-colors duration-200 flex-1 sm:flex-none min-w-[140px] sm:min-w-0 cursor-pointer w-full"
               >
                 Done
               </button>

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { motion } from 'motion/react';
 import { CheckCircle2, Loader2, RefreshCw } from 'lucide-react';
 import { SEMI_FANCY_FONT } from '../../utils/ui/uiConstants';
 import { CsvLoadingAnimation, PuzzleLoadingAnimation } from '../modals/csvImport';
@@ -147,12 +148,16 @@ export const AppLoadingOverlay: React.FC<AppLoadingOverlayProps> = ({
     };
   }, [open, baseIndex]);
 
-  if (!open) return null;
-
   const visibleMessages = getVisibleMessages(baseIndex, isCompleting);
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm flex flex-col items-center justify-center animate-fade-in px-4 sm:px-6">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0, transition: { duration: 0.15 } }}
+      transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
+      className="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm flex flex-col items-center justify-center px-4 sm:px-6"
+    >
       <div className="w-full max-w-md p-8 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl flex flex-col items-center">
         <CsvLoadingAnimation className="mb-6" size={160} />
         <h2 className="text-2xl font-bold text-white mb-2" style={SEMI_FANCY_FONT}>Crunching your numbers</h2>
@@ -173,7 +178,7 @@ export const AppLoadingOverlay: React.FC<AppLoadingOverlayProps> = ({
               {visibleMessages.map((msg) => (
                 <div
                   key={msg.key}
-                  className={`flex items-center space-x-3 text-sm h-[36px] transition-opacity duration-100 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+                  className={`flex items-center space-x-3 text-sm h-[36px] transition-opacity duration-100 ease-out ${
                     msg.state === 'completed' ? 'opacity-60' : msg.state === 'active' ? 'opacity-100' : 'opacity-40'
                   }`}>
                   {msg.state === 'completed' ? (
@@ -196,13 +201,13 @@ export const AppLoadingOverlay: React.FC<AppLoadingOverlayProps> = ({
           </div>
 
           {showSlowLoadMessage && (
-            <div className="mt-6 pt-4 animate-fade-in">
+            <div className="mt-6 pt-4 animate-in">
               <p className="text-xs text-slate-500 text-center mb-3">
                 Taking longer than expected?
               </p>
               <button
                 onClick={onReload ?? (() => window.location.reload())}
-                className="flex items-center justify-center w-full gap-2 px-4 py-2.5 text-sm font-medium text-slate-400 border border-slate-700 rounded-lg hover:bg-slate-800 hover:text-white hover:border-slate-600 active:bg-slate-700 transition-all duration-200"
+                className="flex items-center justify-center w-full gap-2 px-4 py-2.5 text-sm font-medium text-slate-400 border border-slate-700 rounded-lg hover:bg-slate-800 hover:text-white hover:border-slate-600 active:bg-slate-700 active:scale-[0.97] transition-[color,background-color,border-color,transform] duration-150"
               >
                 <RefreshCw className="w-4 h-4" />
                 Reload page
@@ -211,6 +216,6 @@ export const AppLoadingOverlay: React.FC<AppLoadingOverlayProps> = ({
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };

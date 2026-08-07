@@ -132,7 +132,7 @@ export const MuscleAnalysisBodyMapPanel: React.FC<MuscleAnalysisBodyMapPanelProp
                     strokeWidth={3}
                     fill="#06b6d4"
                     fillOpacity={0.35}
-                    animationDuration={500}
+                    animationDuration={250}
                   />
                   <RechartsTooltip
                     contentStyle={CHART_TOOLTIP_STYLE}

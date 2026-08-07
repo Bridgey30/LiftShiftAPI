@@ -1,4 +1,4 @@
-import { useInView, useMotionValue, useSpring } from 'motion/react';
+import { animate, useInView, useReducedMotion } from 'motion/react';
 import { useCallback, useEffect, useRef } from 'react';
 
 interface CountUpProps {
@@ -19,7 +19,7 @@ export default function CountUp({
   from = 0,
   direction = 'up',
   delay = 0,
-  duration = 2,
+  duration = 1,
   className = '',
   startWhen = true,
   separator = '',
@@ -27,16 +27,7 @@ export default function CountUp({
   onEnd,
 }: CountUpProps) {
   const ref = useRef<HTMLSpanElement>(null);
-  const motionValue = useMotionValue(direction === 'down' ? to : from);
-
-  const damping = 20 + 40 * (1 / duration);
-  const stiffness = 100 * (1 / duration);
-
-  const springValue = useSpring(motionValue, {
-    damping,
-    stiffness,
-  });
-
+  const reduceMotion = useReducedMotion();
   const isInView = useInView(ref, { once: true, margin: '0px' });
 
   const getDecimalPlaces = (num: number): number => {
@@ -69,47 +60,49 @@ export default function CountUp({
     [maxDecimals, separator]
   );
 
+  const start = direction === 'down' ? to : from;
+  const end = direction === 'down' ? from : to;
+
   useEffect(() => {
     if (ref.current) {
-      ref.current.textContent = formatValue(direction === 'down' ? to : from);
+      ref.current.textContent = formatValue(startWhen ? start : end);
     }
-  }, [from, to, direction, formatValue]);
+  }, [start, end, startWhen, formatValue]);
 
   useEffect(() => {
-    if (isInView && startWhen) {
-      if (typeof onStart === 'function') {
-        onStart();
-      }
+    const el = ref.current;
+    if (!el || !isInView || !startWhen) return;
 
-      const timeoutId = setTimeout(() => {
-        motionValue.set(direction === 'down' ? from : to);
-      }, delay * 1000);
-
-      const durationTimeoutId = setTimeout(
-        () => {
-          if (typeof onEnd === 'function') {
-            onEnd();
-          }
-        },
-        delay * 1000 + duration * 1000
-      );
-
-      return () => {
-        clearTimeout(timeoutId);
-        clearTimeout(durationTimeoutId);
-      };
+    if (typeof onStart === 'function') {
+      onStart();
     }
-  }, [isInView, startWhen, motionValue, direction, from, to, delay, onStart, onEnd, duration]);
 
-  useEffect(() => {
-    const unsubscribe = springValue.on('change', (latest: number) => {
-      if (ref.current) {
-        ref.current.textContent = formatValue(latest);
+    if (reduceMotion) {
+      el.textContent = formatValue(end);
+      if (typeof onEnd === 'function') {
+        onEnd();
       }
+      return;
+    }
+
+    const controls = animate(start, end, {
+      duration: Math.max(0, duration),
+      delay,
+      ease: [0.23, 1, 0.32, 1],
+      onUpdate: (latest: number) => {
+        if (el) {
+          el.textContent = formatValue(latest);
+        }
+      },
+      onComplete: () => {
+        if (typeof onEnd === 'function') {
+          onEnd();
+        }
+      },
     });
 
-    return () => unsubscribe();
-  }, [springValue, formatValue]);
+    return () => controls.stop();
+  }, [isInView, startWhen, direction, from, to, delay, duration, onStart, onEnd, formatValue, reduceMotion]);
 
   return <span className={className} ref={ref} />;
 }

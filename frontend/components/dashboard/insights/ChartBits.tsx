@@ -113,14 +113,12 @@ export const InsightText = ({ text }: { text: string }) => {
 
 export const ChartDescription = ({
   children,
-  isMounted = true,
   topSlot,
 }: {
   children: React.ReactNode;
-  isMounted?: boolean;
   topSlot?: React.ReactNode;
 }) => (
-  <div className={`mt-4 pt-4 border-t border-slate-800 flex flex-col gap-2 transition-opacity duration-700 ${isMounted ? 'opacity-100' : 'opacity-0'}`}>
+  <div className="mt-4 pt-4 border-t border-slate-800 flex flex-col gap-2">
     {topSlot && <div className="flex justify-center">{topSlot}</div>}
     <div className="flex items-start gap-3">
       <Info className="w-4 h-4 text-slate-500 mt-0.5 flex-shrink-0 transition-opacity duration-200 hover:opacity-80" />

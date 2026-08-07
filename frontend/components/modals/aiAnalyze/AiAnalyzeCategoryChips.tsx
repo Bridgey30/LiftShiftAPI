@@ -27,7 +27,7 @@ export const AiAnalyzeCategoryChips: React.FC<AiAnalyzeCategoryChipsProps> = ({
             key={k}
             type="button"
             onClick={() => setActiveCategory(k)}
-            className={`text-xs px-3 py-2 rounded-lg border transition-all ${
+            className={`text-xs px-3 py-2 rounded-lg border transition-colors ${
               selected
                 ? 'bg-purple-500/10 border-purple-500/40 text-purple-700'
                 : isLightTheme

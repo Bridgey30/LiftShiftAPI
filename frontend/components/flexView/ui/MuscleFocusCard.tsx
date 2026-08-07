@@ -64,7 +64,7 @@ export const MuscleFocusCard: React.FC<{
               e.stopPropagation();
               setShowHeatmap((v) => !v);
             }}
-            className={`p-2 rounded-full border transition-all cursor-pointer ${isDark
+            className={`p-2 rounded-full border transition-colors cursor-pointer ${isDark
                 ? 'bg-black/20 border-slate-700/50 text-slate-200 hover:border-slate-600'
                 : 'bg-white/70 border-slate-200 text-slate-700 hover:border-slate-300'
               }`}
@@ -116,7 +116,7 @@ export const MuscleFocusCard: React.FC<{
                     strokeWidth={2}
                     fill={isDark ? '#06b6d4' : '#0891b2'}
                     fillOpacity={0.35}
-                    animationDuration={500}
+                    animationDuration={250}
                   />
                   <Tooltip
                     contentStyle={tooltipStyle}

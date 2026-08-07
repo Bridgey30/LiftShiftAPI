@@ -3,7 +3,6 @@ import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { TrendingUp, TrendingDown, Activity } from 'lucide-react';
 
 import CountUp from '../ui/CountUp';
-import { formatLargeNumber } from '../../utils/data/comparisonData';
 import type { DeltaResult, SparklinePoint } from '../../utils/analysis/insights';
 import { Sparkline } from './Sparkline';
 
@@ -125,10 +124,23 @@ export const KPICard: React.FC<KPICardProps> = ({
 
   const valueClass = 'text-2xl font-bold text-white tracking-tight leading-none';
 
+  const getCompact = (num: number): { value: number; suffix: string } | null => {
+    if (num >= 1_000_000_000) return { value: Math.round((num / 1_000_000_000) * 10) / 10, suffix: 'B' };
+    if (num >= 1_000_000) return { value: Math.round((num / 1_000_000) * 10) / 10, suffix: 'M' };
+    if (num >= 1_000) return { value: Math.round((num / 1_000) * 10) / 10, suffix: 'K' };
+    return null;
+  };
+
   const renderValue = () => {
     if (typeof value === 'number' && Number.isFinite(value)) {
-      if (value >= 1000) {
-        return <span className={valueClass}>{formatLargeNumber(value)}</span>;
+      const compact = getCompact(value);
+      if (compact) {
+        return (
+          <span className={valueClass}>
+            <CountUp from={0} to={compact.value} direction="up" duration={2} />
+            {compact.suffix}
+          </span>
+        );
       }
       return (
         <CountUp
@@ -136,7 +148,7 @@ export const KPICard: React.FC<KPICardProps> = ({
           to={value}
           separator="," 
           direction="up"
-          duration={1}
+          duration={2}
           className={valueClass}
         />
       );
@@ -151,7 +163,7 @@ export const KPICard: React.FC<KPICardProps> = ({
       if (Number.isFinite(parsed) && numericPart.length > 0) {
         return (
           <span className={valueClass}>
-            <CountUp from={0} to={parsed} separator="," direction="up" duration={1} />
+            <CountUp from={0} to={parsed} separator="," direction="up" duration={2} />
             {isPercent ? '%' : ''}
           </span>
         );
@@ -163,7 +175,7 @@ export const KPICard: React.FC<KPICardProps> = ({
 
   return (
     <div
-      className={`bg-black/20 border border-slate-700/50 rounded-xl ${compact ? 'p-3' : 'p-4'} hover:border-slate-600/50 transition-all group overflow-hidden`}
+      className={`bg-black/20 border border-slate-700/50 rounded-xl ${compact ? 'p-3' : 'p-4'} hover:border-slate-600/50 transition-colors group overflow-hidden`}
       style={{ backgroundColor: 'rgb(var(--panel-rgb) / 0.7)' }}
     >
       <div className="flex items-center justify-between gap-2 mb-2">

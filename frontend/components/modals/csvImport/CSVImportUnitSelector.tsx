@@ -20,7 +20,7 @@ export const CSVImportUnitSelector: React.FC<CSVImportUnitSelectorProps> = ({
     <div className="grid grid-cols-2 gap-3">
       <button
         onClick={() => onSelectUnit('kg')}
-        className={`relative p-4 rounded-xl border-2 transition-all duration-200 flex flex-col items-center ${
+        className={`relative p-4 rounded-xl border-2 transition-colors duration-200 flex flex-col items-center ${
           selectedUnit === 'kg'
             ? 'border-emerald-500 bg-emerald-500/10 shadow-lg shadow-emerald-500/20'
             : 'border-slate-700/50 hover:border-slate-500/70 hover:bg-black/60'
@@ -49,7 +49,7 @@ export const CSVImportUnitSelector: React.FC<CSVImportUnitSelectorProps> = ({
 
       <button
         onClick={() => onSelectUnit('lbs')}
-        className={`relative p-4 rounded-xl border-2 transition-all duration-200 flex flex-col items-center ${
+        className={`relative p-4 rounded-xl border-2 transition-colors duration-200 flex flex-col items-center ${
           selectedUnit === 'lbs'
             ? 'border-orange-500 bg-orange-500/10 shadow-lg shadow-orange-500/20'
             : 'border-slate-700/50 hover:border-slate-500/70 hover:bg-black/60'

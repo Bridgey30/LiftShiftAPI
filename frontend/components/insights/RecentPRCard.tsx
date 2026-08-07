@@ -93,7 +93,7 @@ export const RecentPRCard: React.FC<RecentPRCardProps> = ({
       type="button"
       onClick={() => onExerciseClick?.(exercise)}
       disabled={!clickable}
-      className={`w-full flex items-center gap-3 p-2 rounded-lg text-left ${cardClass} ${clickable ? 'cursor-pointer border border-transparent hover:border-slate-600/40 transition-all' : 'cursor-default'}`}
+      className={`w-full flex items-center gap-3 p-2 rounded-lg text-left ${cardClass} ${clickable ? 'cursor-pointer border border-transparent hover:border-slate-600/40 transition-colors' : 'cursor-default'}`}
     >
       <div className="flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 rounded-md overflow-hidden">
         <ExerciseThumbnail

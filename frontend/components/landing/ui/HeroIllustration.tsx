@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { assetPath } from '../../../constants';
 import { useTheme } from '../../theme/ThemeProvider';
 
@@ -278,11 +278,13 @@ function PhoneSlideshow() {
   const [images, setImages] = React.useState<number[]>([0, 1, 2]);
   const imagesRef = React.useRef(images);
   const cursorRef = React.useRef(3);
+  const timerRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
+  const reduceMotion = useReducedMotion();
   const total = mockupScreenshots.length;
 
-  React.useEffect(() => {
-    if (total < 3) return;
-    const timer = setInterval(() => {
+  const startAutoAdvance = React.useCallback(() => {
+    if (timerRef.current) return;
+    timerRef.current = setInterval(() => {
       const prev = imagesRef.current;
       let next = cursorRef.current % total;
       let attempts = 0;
@@ -296,8 +298,20 @@ function PhoneSlideshow() {
       imagesRef.current = nextImages;
       setImages(nextImages);
     }, 3000);
-    return () => clearInterval(timer);
   }, [total]);
+
+  const stopAutoAdvance = React.useCallback(() => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+  }, []);
+
+  React.useEffect(() => {
+    if (total < 3 || reduceMotion) return;
+    startAutoAdvance();
+    return () => stopAutoAdvance();
+  }, [total, reduceMotion, startAutoAdvance, stopAutoAdvance]);
 
   if (total === 0) return null;
 
@@ -311,9 +325,11 @@ function PhoneSlideshow() {
     <motion.div
       className="absolute inset-y-0 right-0 w-[30%] flex items-center justify-center -translate-y-4 sm:-translate-y-6"
       style={{ perspective: '1200px' }}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.6, delay: 0.2 }}
+      initial={{ opacity: 0, scale: 0.94 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+      onMouseEnter={stopAutoAdvance}
+      onMouseLeave={reduceMotion ? undefined : startAutoAdvance}
     >
       <div className="relative w-[100px] sm:w-[140px] md:w-[180px] h-full flex items-center justify-center">
         <AnimatePresence initial={false}>
@@ -331,26 +347,28 @@ function PhoneSlideshow() {
                   scale: 0.82,
                   rotate: -18,
                   x: '-26%',
-                  transition: { duration: 0.3, ease: 'easeIn' },
+                  transition: { duration: 0.3, ease: 'easeOut' },
                 }}
                 transition={spring}
               >
-                <motion.div
-                  animate={{ y: [0, -4, 0] }}
-                  transition={{
-                    duration: 3.5,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                    delay: slotIdx * 0.5,
-                  }}
-                >
-                  <img
-                    src={assetPath(`${MOCKUPS_DIR}/${mockupScreenshots[imgIdx]}`)}
-                    alt="LiftShift dashboard"
-                    className="w-full h-auto object-contain drop-shadow-xl"
-                    loading="lazy"
-                  />
-                </motion.div>
+                {!reduceMotion && (
+                  <motion.div
+                    animate={{ y: [0, -4, 0] }}
+                    transition={{
+                      duration: 3.5,
+                      repeat: Infinity,
+                      ease: 'easeInOut',
+                      delay: slotIdx * 0.5,
+                    }}
+                  >
+                    <img
+                      src={assetPath(`${MOCKUPS_DIR}/${mockupScreenshots[imgIdx]}`)}
+                      alt="LiftShift dashboard"
+                      className="w-full h-auto object-contain drop-shadow-xl"
+                      loading="lazy"
+                    />
+                  </motion.div>
+                )}
               </motion.div>
             );
           })}

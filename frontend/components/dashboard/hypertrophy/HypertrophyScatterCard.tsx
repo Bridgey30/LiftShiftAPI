@@ -415,7 +415,7 @@ export const HypertrophyScatterCard: React.FC<HypertrophyScatterCardProps> = ({
 
               <Scatter
                 data={chartData}
-                animationDuration={1000}
+                animationDuration={1000} animationEasing="ease-out"
                 shape={({ cx, cy, fill }: any) =>
                   cx != null && cy != null ? (
                     <>
@@ -432,7 +432,7 @@ export const HypertrophyScatterCard: React.FC<HypertrophyScatterCardProps> = ({
 
               <Scatter
                 data={chartData}
-                animationDuration={1000}
+                animationDuration={1000} animationEasing="ease-out"
                 legendType="none"
                 shape={({ cx, cy, payload }: any) => {
                   if (cx == null || cy == null || !payload) return null;

@@ -1,4 +1,5 @@
 import React from 'react';
+import { AnimatePresence } from 'motion/react';
 import { AppHeader } from '../../components/app/AppHeader';
 import { AppCalendarOverlay } from '../../components/app/AppCalendarOverlay';
 import { AppTabContent } from '../../components/app/AppTabContent';
@@ -126,26 +127,28 @@ export const AppShell: React.FC<AppShellProps> = ({
         onClearCalendarFilter={onClearCalendarFilter}
       />
 
-      {calendarOpen ? (
-        <AppCalendarOverlay
-          open={calendarOpen}
-          onClose={onCloseCalendar}
-          selectedDay={selectedDay}
-          selectedRange={selectedRange}
-          selectedWeeks={selectedWeeks}
-          effectiveNow={calendarEffectiveNow}
-          minDate={minDate}
-          maxDate={maxDate}
-          availableDatesSet={availableDatesSet}
-          onSelectWeeks={onSelectWeeks}
-          onSelectDay={onSelectDay}
-          onSelectWeek={onSelectWeek}
-          onSelectMonth={onSelectMonth}
-          onSelectYear={onSelectYear}
-          onClear={onClearCalendar}
-          onApply={onApplyCalendar}
-        />
-      ) : null}
+      <AnimatePresence>
+        {calendarOpen ? (
+          <AppCalendarOverlay
+            open={calendarOpen}
+            onClose={onCloseCalendar}
+            selectedDay={selectedDay}
+            selectedRange={selectedRange}
+            selectedWeeks={selectedWeeks}
+            effectiveNow={calendarEffectiveNow}
+            minDate={minDate}
+            maxDate={maxDate}
+            availableDatesSet={availableDatesSet}
+            onSelectWeeks={onSelectWeeks}
+            onSelectDay={onSelectDay}
+            onSelectWeek={onSelectWeek}
+            onSelectMonth={onSelectMonth}
+            onSelectYear={onSelectYear}
+            onClear={onClearCalendar}
+            onApply={onApplyCalendar}
+          />
+        ) : null}
+      </AnimatePresence>
 
       <AppTabContent
         mainRef={mainRef}

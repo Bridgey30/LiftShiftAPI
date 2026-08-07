@@ -35,7 +35,6 @@ type VolumeDensityTrend = {
 } | null;
 
 export const VolumeDensityCard = ({
-  isMounted,
   mode,
   onToggle,
   view,
@@ -45,7 +44,6 @@ export const VolumeDensityCard = ({
   volumeDensityTrend,
   tooltipStyle,
 }: {
-  isMounted: boolean;
   mode: TimeFilterMode;
   onToggle: (m: TimeFilterMode) => void;
   view: VolumeView;
@@ -75,7 +73,7 @@ export const VolumeDensityCard = ({
 
   return (
     <div className="bg-black/20 border border-slate-700/50 px-2 sm:px-3 py-4 sm:py-6 rounded-xl min-h-[400px] sm:min-h-[520px] flex flex-col transition-[opacity,transform] duration-300" style={{ backgroundColor: 'rgb(var(--panel-rgb) / 0.5)' }}>
-      <div className={`flex flex-row justify-between items-center mb-3 gap-3 transition-opacity duration-700 ${isMounted ? 'opacity-100' : 'opacity-0'}`}>
+      <div className="flex flex-row justify-between items-center mb-3 gap-3">
         <h3 className="text-sm sm:text-lg font-semibold text-white flex items-center gap-2 transition-opacity duration-200 hover:opacity-90">
           <Timer className="w-5 h-5 text-purple-500 transition-opacity duration-200 hover:opacity-80" />
           <span>Volume Density</span>
@@ -104,7 +102,7 @@ export const VolumeDensityCard = ({
         </div>
       </div>
 
-      <div className={`flex-1 w-full min-h-[250px] sm:min-h-[300px] transition-all duration-700 delay-100 ${isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+      <div className="flex-1 w-full min-h-[250px] sm:min-h-[300px]">
         <ResponsiveContainer width="100%" height={300} minWidth={0}>
           <ComposedChart key={view} data={chartData} margin={{ top: 10, ...RECHARTS_YAXIS_MARGIN, bottom: 0 }}>
             <defs>
@@ -163,7 +161,7 @@ export const VolumeDensityCard = ({
                 mask="url(#efMask)"
                 dot={false}
                 activeDot={false}
-                animationDuration={500}
+                animationDuration={250}
               />
               <Line
                 type="monotone"
@@ -175,7 +173,7 @@ export const VolumeDensityCard = ({
                 dot={false}
                 activeDot={{ r: 5, strokeWidth: 0 }}
                 isAnimationActive={true}
-                animationDuration={500}
+                animationDuration={250}
                 markerEnd="url(#densityArrow)"
               />
               </>
@@ -185,14 +183,14 @@ export const VolumeDensityCard = ({
                 name={`Volume per Set (${weightUnit})`}
                 fill="#8b5cf6"
                 radius={[8, 8, 0, 0]}
-                animationDuration={500}
+                animationDuration={250}
               />
             )}
           </ComposedChart>
         </ResponsiveContainer>
       </div>
 
-      <ChartDescription isMounted={isMounted}>
+      <ChartDescription>
         <InsightLine>
           {volumeDensityTrend ? (
             <>

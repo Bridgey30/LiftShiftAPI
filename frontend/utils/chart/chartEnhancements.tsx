@@ -134,7 +134,7 @@ export const EnhancedAreaChart = ({
         dot={<ValueDot valueKey={valueKey} unit={unit} showEveryOther={showEveryOther} data={props.data} />}
         activeDot={{ r: 5, strokeWidth: 0 }}
         isAnimationActive={true}
-        animationDuration={500}
+        animationDuration={250}
       />
     </>
   );

@@ -1,5 +1,6 @@
 import React from 'react';
 import { startOfDay, endOfDay } from 'date-fns';
+import { motion } from 'motion/react';
 import { CalendarSelector } from '../modals/calendar/CalendarSelector';
 
 type DateRange = { start: Date; end: Date };
@@ -55,7 +56,13 @@ export const AppCalendarOverlay: React.FC<AppCalendarOverlayProps> = ({
       : null;
 
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center p-4">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0, transition: { duration: 0.12 } }}
+      transition={{ duration: 0.15, ease: [0.23, 1, 0.32, 1] }}
+      className="fixed inset-0 z-50 grid place-items-center p-4"
+    >
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
       <CalendarSelector
         mode="both"
@@ -74,6 +81,6 @@ export const AppCalendarOverlay: React.FC<AppCalendarOverlayProps> = ({
         onClose={onClose}
         onApply={onApply}
       />
-    </div>
+    </motion.div>
   );
 };

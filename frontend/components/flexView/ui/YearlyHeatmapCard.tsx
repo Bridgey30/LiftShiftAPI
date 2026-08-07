@@ -170,7 +170,7 @@ export const YearlyHeatmapCard: React.FC<{
                   return (
                     <div
                       key={idx}
-                      className={`aspect-square w-full rounded-sm ${getCellColor(count)} transition-all duration-300 ${
+                      className={`aspect-square w-full rounded-sm ${getCellColor(count)} transition-colors duration-200 ${
                         count > 0
                           ? isDark
                             ? 'shadow-[0_0_18px_rgba(16,185,129,0.18)]'

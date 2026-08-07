@@ -169,7 +169,7 @@ export const MuscleAnalysisDetailPanel: React.FC<MuscleAnalysisDetailPanelProps>
                       mask="url(#efMask)"
                       dot={false}
                       activeDot={false}
-                      animationDuration={500}
+                      animationDuration={250}
                     />
                     <Line
                       type="monotone"
@@ -180,7 +180,7 @@ export const MuscleAnalysisDetailPanel: React.FC<MuscleAnalysisDetailPanelProps>
                       dot={false}
                       activeDot={{ r: 5, strokeWidth: 0 }}
                       isAnimationActive={true}
-                      animationDuration={500}
+                      animationDuration={250}
                       markerEnd={`url(#${volumeDelta?.direction === 'down' ? 'muscleArrowDown' : 'muscleArrowUp'})`}
                     />
                     </>

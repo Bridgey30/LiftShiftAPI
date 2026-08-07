@@ -41,14 +41,12 @@ type WeeklyRhythmInsight = {
 } | null;
 
 export const WeeklyRhythmCard = ({
-  isMounted,
   view,
   onViewToggle,
   weekShapeData,
   weeklyRhythmInsight,
   tooltipStyle,
 }: {
-  isMounted: boolean;
   view: WeekShapeView;
   onViewToggle: (v: WeekShapeView) => void;
   weekShapeData: WeekShapeDatum[];
@@ -61,7 +59,7 @@ export const WeeklyRhythmCard = ({
 
   return (
     <div className="bg-black/20 border border-slate-700/50 px-2 sm:px-3 py-4 sm:py-6 rounded-xl min-h-[400px] sm:min-h-[520px] flex flex-col transition-[opacity,transform] duration-300" style={{ backgroundColor: 'rgb(var(--panel-rgb) / 0.5)' }}>
-      <div className={`flex flex-row justify-between items-center mb-3 gap-3 transition-opacity duration-700 ${isMounted ? 'opacity-100' : 'opacity-0'}`}>
+      <div className="flex flex-row justify-between items-center mb-3 gap-3">
         <h3 className="text-sm sm:text-lg font-semibold text-white flex items-center gap-2 transition-opacity duration-200 hover:opacity-90">
           <Clock className="w-5 h-5 text-pink-500 transition-opacity duration-200 hover:opacity-80" />
           <span>Weekly Rhythm</span>
@@ -79,7 +77,7 @@ export const WeeklyRhythmCard = ({
         </div>
       </div>
 
-      <div className={`flex-1 w-full min-h-[250px] sm:min-h-[300px] transition-all duration-700 delay-100 ${isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+      <div className="flex-1 w-full min-h-[250px] sm:min-h-[300px]">
         <ResponsiveContainer width="100%" height={300} minWidth={0}>
           {view === 'radar' ? (
             <RadarChart key="radar" cx="50%" cy="50%" outerRadius="70%" data={weekShapeData}>
@@ -93,7 +91,7 @@ export const WeeklyRhythmCard = ({
                 strokeWidth={3}
                 fill="#ec4899"
                 fillOpacity={0.4}
-                animationDuration={500}
+                animationDuration={250}
               />
               <Tooltip contentStyle={tooltipStyle as any} />
             </RadarChart>
@@ -103,13 +101,13 @@ export const WeeklyRhythmCard = ({
               <XAxis dataKey="subject" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} padding={RECHARTS_XAXIS_PADDING as any} />
               <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} domain={yAxisDomain} tickFormatter={(val) => formatAxisNumber(Number(val))} />
               <Tooltip contentStyle={tooltipStyle as any} cursor={{ fill: 'rgb(var(--overlay-rgb) / 0.12)' }} />
-              <Bar dataKey="A" name="Workouts" fill="#ec4899" radius={[8, 8, 0, 0]} animationDuration={500} />
+              <Bar dataKey="A" name="Workouts" fill="#ec4899" radius={[8, 8, 0, 0]} animationDuration={250} />
             </BarChart>
           )}
         </ResponsiveContainer>
       </div>
 
-      <ChartDescription isMounted={isMounted}>
+      <ChartDescription>
         <InsightLine>
           {weeklyRhythmInsight ? (
             <>

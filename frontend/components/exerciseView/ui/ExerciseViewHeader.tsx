@@ -28,7 +28,7 @@ export const ExerciseViewHeader: React.FC<ExerciseViewHeaderProps> = ({
 
     const isSelected = (s: ExerciseTrendStatus) => trendFilter === s;
     const chipCls = (s: ExerciseTrendStatus, tone: 'good' | 'warn' | 'bad' | 'info') => {
-      const base = 'text-[11px] sm:text-xs px-2.5 py-1 rounded-full font-semibold border border-white/20 whitespace-nowrap transition-all duration-200 tracking-wide';
+      const base = 'text-[11px] sm:text-xs px-2.5 py-1 rounded-full font-semibold border border-white/20 whitespace-nowrap transition-colors duration-200 tracking-wide';
       const selected = isSelected(s);
 
       if (selected) {
@@ -79,28 +79,28 @@ export const ExerciseViewHeader: React.FC<ExerciseViewHeaderProps> = ({
               <button
                 type="button"
                 onClick={() => setTrendFilter(null)}
-                className={`w-full text-center text-[11px] sm:text-xs px-2 py-1 rounded-full font-semibold border whitespace-nowrap transition-all duration-200 cursor-pointer tracking-wide ${trendFilter === null ? 'bg-slate-500/20 text-slate-200 border-slate-400/50 shadow-[0_0_12px_rgba(100,116,139,0.15)]' : 'bg-slate-500/8 text-slate-400/80 border-slate-500/20 hover:border-slate-400/40 hover:bg-slate-500/15'}`}
+                className={`w-full text-center text-[11px] sm:text-xs px-2 py-1 rounded-full font-semibold border whitespace-nowrap transition-colors duration-200 cursor-pointer tracking-wide ${trendFilter === null ? 'bg-slate-500/20 text-slate-200 border-slate-400/50 shadow-[0_0_12px_rgba(100,116,139,0.15)]' : 'bg-slate-500/8 text-slate-400/80 border-slate-500/20 hover:border-slate-400/40 hover:bg-slate-500/15'}`}
               >
                 {trainingStructure.activeCount} active
               </button>
               <button
                 type="button"
                 onClick={() => setTrendFilter(trendFilter === 'overload' ? null : 'overload')}
-                className={`w-full text-center text-[11px] sm:text-xs px-2 py-1 rounded-full font-semibold border whitespace-nowrap transition-all duration-200 cursor-pointer tracking-wide ${trendFilter === 'overload' ? 'bg-emerald-500/20 text-emerald-200 border-emerald-400/50 shadow-[0_0_12px_rgba(16,185,129,0.15)]' : 'bg-emerald-500/8 text-emerald-400/80 border-emerald-500/20 hover:border-emerald-400/40 hover:bg-emerald-500/15'}`}
+                className={`w-full text-center text-[11px] sm:text-xs px-2 py-1 rounded-full font-semibold border whitespace-nowrap transition-colors duration-200 cursor-pointer tracking-wide ${trendFilter === 'overload' ? 'bg-emerald-500/20 text-emerald-200 border-emerald-400/50 shadow-[0_0_12px_rgba(16,185,129,0.15)]' : 'bg-emerald-500/8 text-emerald-400/80 border-emerald-500/20 hover:border-emerald-400/40 hover:bg-emerald-500/15'}`}
               >
                 {trainingStructure.overloadCount} {positiveLabel}
               </button>
               <button
                 type="button"
                 onClick={() => setTrendFilter(trendFilter === 'stagnant' ? null : 'stagnant')}
-                className={`w-full text-center text-[10.5px] sm:text-xs px-2 py-1 rounded-full font-semibold border whitespace-nowrap transition-all duration-200 cursor-pointer tracking-wide ${trendFilter === 'stagnant' ? 'bg-amber-500/20 text-amber-200 border-amber-400/50 shadow-[0_0_12px_rgba(245,158,11,0.15)]' : 'bg-amber-500/8 text-amber-400/80 border-amber-500/20 hover:border-amber-400/40 hover:bg-amber-500/15'}`}
+                className={`w-full text-center text-[10.5px] sm:text-xs px-2 py-1 rounded-full font-semibold border whitespace-nowrap transition-colors duration-200 cursor-pointer tracking-wide ${trendFilter === 'stagnant' ? 'bg-amber-500/20 text-amber-200 border-amber-400/50 shadow-[0_0_12px_rgba(245,158,11,0.15)]' : 'bg-amber-500/8 text-amber-400/80 border-amber-500/20 hover:border-amber-400/40 hover:bg-amber-500/15'}`}
               >
                 {trainingStructure.plateauCount} Plateauing
               </button>
               <button
                 type="button"
                 onClick={() => setTrendFilter(trendFilter === 'regression' ? null : 'regression')}
-                className={`w-full text-center text-[11px] sm:text-xs px-2 py-1 rounded-full font-semibold border whitespace-nowrap transition-all duration-200 cursor-pointer tracking-wide ${trendFilter === 'regression' ? 'bg-rose-500/20 text-rose-200 border-rose-400/50 shadow-[0_0_12px_rgba(244,63,94,0.15)]' : 'bg-rose-500/8 text-rose-400/80 border-rose-500/20 hover:border-rose-400/40 hover:bg-rose-500/15'}`}
+                className={`w-full text-center text-[11px] sm:text-xs px-2 py-1 rounded-full font-semibold border whitespace-nowrap transition-colors duration-200 cursor-pointer tracking-wide ${trendFilter === 'regression' ? 'bg-rose-500/20 text-rose-200 border-rose-400/50 shadow-[0_0_12px_rgba(244,63,94,0.15)]' : 'bg-rose-500/8 text-rose-400/80 border-rose-500/20 hover:border-rose-400/40 hover:bg-rose-500/15'}`}
               >
                 {trainingStructure.regressionCount} {negativeLabel}
               </button>

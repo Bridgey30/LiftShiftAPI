@@ -114,7 +114,7 @@ const SectionView: React.FC<{ section: HowItWorksSection; level: number; linkTar
       <div className={'transition-opacity duration-400' + (isDimmed ? ' opacity-50' : '')}>
         <HeadingTag
           className={[
-            'transition-all duration-700',
+            'transition-colors duration-200',
             level === 2 ? 'text-xl font-bold' : 'text-lg font-semibold',
             isFlashing ? 'text-emerald-300 drop-shadow-[0_0_8px_rgba(52,211,153,0.4)]' : (isLight ? 'text-slate-900' : 'text-white'),
           ].join(' ')}

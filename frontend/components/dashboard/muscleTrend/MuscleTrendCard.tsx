@@ -27,7 +27,6 @@ const formatSignedPctWithNoun = (pct: number, noun: string) =>
   `${formatDeltaPercentage(pct, getDeltaFormatPreset('badge'))} ${noun}`;
 
 export const MuscleTrendCard = ({
-  isMounted,
   muscleGrouping,
   setMuscleGrouping,
   musclePeriod,
@@ -40,7 +39,6 @@ export const MuscleTrendCard = ({
   tooltipStyle,
   muscleVsLabel,
 }: {
-  isMounted: boolean;
   muscleGrouping: MuscleGrouping;
   setMuscleGrouping: (v: MuscleGrouping) => void;
   musclePeriod: MusclePeriod;
@@ -64,9 +62,7 @@ export const MuscleTrendCard = ({
     />
 
     <div
-      className={`flex-1 w-full min-h-[250px] sm:min-h-[320px] transition-all duration-700 delay-100 ${
-        isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-      } min-w-0`}
+      className="flex-1 w-full min-h-[250px] sm:min-h-[320px] min-w-0"
     >
       <MuscleTrendChart
         trendData={trendData}
@@ -78,7 +74,7 @@ export const MuscleTrendCard = ({
       />
     </div>
 
-    <ChartDescription isMounted={isMounted}>
+    <ChartDescription>
       <InsightLine>
         {muscleTrendInsight ? (
           <>

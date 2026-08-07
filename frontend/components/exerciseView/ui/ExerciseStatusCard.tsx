@@ -45,7 +45,7 @@ export const ExerciseStatusCard: React.FC<ExerciseStatusCardProps> = ({
 
   return (
     <div
-      className={`rounded-lg p-2.5 sm:p-3 border ${currentStatus.borderColor} relative overflow-hidden transition-all duration-500`}
+      className={`rounded-lg p-2.5 sm:p-3 border ${currentStatus.borderColor} relative overflow-hidden transition-colors duration-500`}
       style={{ backgroundColor: 'rgb(var(--panel-rgb) / 0.85)' }}
     >
       <div className={`absolute inset-0 ${currentStatus.bgColor} pointer-events-none`} />

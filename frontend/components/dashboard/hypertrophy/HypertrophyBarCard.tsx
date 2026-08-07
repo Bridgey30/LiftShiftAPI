@@ -179,7 +179,7 @@ export const HypertrophyBarCard: React.FC<HypertrophyBarCardProps> = ({
                   stroke={getScoreRating(stats.avgScore).color} strokeLinecap="round"
                   strokeDasharray={2 * Math.PI * 24}
                   strokeDashoffset={2 * Math.PI * 24 * (1 - stats.avgScore / 100)}
-                  className="transition-all duration-700 ease-out" />
+                  className="transition-[stroke-dashoffset,stroke] duration-200 ease-out" />
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
                 <span className="text-[13px] font-bold text-white">{Math.round(stats.avgScore)}%</span>

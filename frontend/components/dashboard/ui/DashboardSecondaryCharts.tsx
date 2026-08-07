@@ -40,7 +40,6 @@ export const DashboardSecondaryCharts: React.FC<DashboardSecondaryChartsProps> =
     <LazyRender className="min-w-0" placeholder={<ChartSkeleton className="min-h-[360px]" />}>
       <Suspense fallback={<ChartSkeleton className="min-h-[360px]" />}>
         <TopExercisesCard
-          isMounted={true}
           topExerciseMode={topExerciseMode}
           setTopExerciseMode={setTopExerciseMode}
           topExercisesView={topExercisesView}

@@ -51,9 +51,9 @@ export const HevyLoginHelp = ({ loginMode }: HevyLoginHelpProps) => {
   return (
     <div className="mt-4">
       <motion.div
-        initial={{ opacity: 0, height: 0 }}
-        animate={{ opacity: 1, height: 'auto' }}
-        exit={{ opacity: 0, height: 0 }}
+        initial={{ opacity: 0, y: -6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.18, ease: [0.23, 1, 0.32, 1] }}
         className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-4 space-y-2"
       >
         <p className="text-xs text-emerald-100 font-semibold">API key login</p>

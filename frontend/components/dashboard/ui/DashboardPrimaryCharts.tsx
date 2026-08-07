@@ -28,7 +28,6 @@ interface DashboardPrimaryChartsProps {
   hypertrophyData30d?: any[];
   hypertrophyPeriod: '7d' | '30d';
   setHypertrophyPeriod: (v: '7d' | '30d') => void;
-  isMounted: boolean;
   chartModes: { volumeVsDuration: TimeFilterMode; intensityEvo: TimeFilterMode; prTrend: TimeFilterMode };
   toggleChartMode: (key: string, mode: TimeFilterMode) => void;
   prTrendView: 'area' | 'bar';
@@ -71,7 +70,6 @@ interface DashboardPrimaryChartsProps {
 }
 
 export const DashboardPrimaryCharts: React.FC<DashboardPrimaryChartsProps> = ({
-  isMounted,
   chartModes,
   toggleChartMode,
   prTrendView,
@@ -130,7 +128,6 @@ export const DashboardPrimaryCharts: React.FC<DashboardPrimaryChartsProps> = ({
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-2">
       <Suspense fallback={<ChartSkeleton className="min-h-[400px] sm:min-h-[480px]" />}>
         <PrTrendCard
-          isMounted={isMounted}
           mode={chartModes.prTrend}
           onToggle={(m) => toggleChartMode('prTrend', m)}
           view={prTrendView}
@@ -144,7 +141,6 @@ export const DashboardPrimaryCharts: React.FC<DashboardPrimaryChartsProps> = ({
 
       <Suspense fallback={<ChartSkeleton className="min-h-[400px] sm:min-h-[480px]" />}>
         <WeeklySetsCard
-          isMounted={isMounted}
           weeklySetsView={weeklySetsView}
           setWeeklySetsView={setWeeklySetsView}
           muscleCompQuick={muscleCompQuick}
@@ -222,7 +218,6 @@ export const DashboardPrimaryCharts: React.FC<DashboardPrimaryChartsProps> = ({
       <LazyRender className="min-w-0" placeholder={<ChartSkeleton className="min-h-[400px] sm:min-h-[520px]" />}>
         <Suspense fallback={<ChartSkeleton className="min-h-[400px] sm:min-h-[520px]" />}>
           <VolumeDensityCard
-            isMounted={isMounted}
             mode={chartModes.volumeVsDuration}
             onToggle={(m) => toggleChartMode('volumeVsDuration', m)}
             view={volumeView}
@@ -239,7 +234,6 @@ export const DashboardPrimaryCharts: React.FC<DashboardPrimaryChartsProps> = ({
     <LazyRender className="min-w-0" placeholder={<ChartSkeleton className="min-h-[400px] sm:min-h-[480px]" />}>
       <Suspense fallback={<ChartSkeleton className="min-h-[400px] sm:min-h-[480px]" />}>
         <IntensityEvolutionCard
-          isMounted={isMounted}
           mode={chartModes.intensityEvo}
           onToggle={(m) => toggleChartMode('intensityEvo', m)}
           intensityData={intensityData}
@@ -252,7 +246,6 @@ export const DashboardPrimaryCharts: React.FC<DashboardPrimaryChartsProps> = ({
     <LazyRender className="min-w-0" placeholder={<ChartSkeleton className="min-h-[400px] sm:min-h-[520px]" />}>
       <Suspense fallback={<ChartSkeleton className="min-h-[400px] sm:min-h-[520px]" />}>
         <MuscleTrendCard
-          isMounted={isMounted}
           muscleGrouping={muscleGrouping}
           setMuscleGrouping={setMuscleGrouping}
           musclePeriod={musclePeriod}

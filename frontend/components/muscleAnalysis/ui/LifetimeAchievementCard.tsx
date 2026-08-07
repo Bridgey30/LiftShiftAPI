@@ -322,15 +322,15 @@ const HypertrophyScatterChart: React.FC<{ data: MuscleHypertrophyData[] }> = ({ 
         />
         <RechartsTooltip content={<CustomScatterTooltip />} />
         {/* Diagonal reference line across full Cartesian grid */}
-        <Scatter data={diagonalData} line={{ stroke: '#94a3b8', strokeDasharray: '4 4', strokeWidth: 1 }} lineType="joint" shape={() => <></>} animationDuration={500} legendType="none" />
+        <Scatter data={diagonalData} line={{ stroke: '#94a3b8', strokeDasharray: '4 4', strokeWidth: 1 }} lineType="joint" shape={() => <></>} animationDuration={500} animationEasing="ease-out" legendType="none" />
         {/* Main data dots */}
-        <Scatter data={chartData} shape="circle" animationDuration={500}>
+        <Scatter data={chartData} shape="circle" animationDuration={500} animationEasing="ease-out">
           {chartData.map((entry) => (
             <Cell key={entry.muscleId} fill={getColor(entry.total)} fillOpacity={0.85} stroke={getColor(entry.total)} strokeWidth={0.5} />
           ))}
         </Scatter>
         {/* Extreme point labels only */}
-        <Scatter data={extremes} shape="circle" animationDuration={500} legendType="none"
+        <Scatter data={extremes} shape="circle" animationDuration={500} animationEasing="ease-out" legendType="none"
           label={{ dataKey: 'name', position: 'top', fontSize: 9, fill: '#94a3b8', offset: 6 }}
         >
           {extremes.map((entry) => (
@@ -521,7 +521,7 @@ export const LifetimeAchievementCard: React.FC<LifetimeAchievementCardProps> = (
                   strokeLinecap="round"
                   strokeDasharray={2 * Math.PI * 24}
                   strokeDashoffset={2 * Math.PI * 24 * (1 - overallData.avgAchievement / 100)}
-                  className="transition-all duration-700 ease-out"
+                  className="transition-[stroke-dashoffset,stroke] duration-200 ease-out"
                 />
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">

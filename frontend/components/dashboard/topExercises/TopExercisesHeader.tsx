@@ -4,7 +4,6 @@ import { SegmentControl } from '../../ui/SegmentControl';
 import type { TopExerciseMode, TopExercisesView } from './TopExercisesCard';
 
 interface TopExercisesHeaderProps {
-  isMounted: boolean;
   topExerciseMode: TopExerciseMode;
   setTopExerciseMode: (m: TopExerciseMode) => void;
   topExercisesView: TopExercisesView;
@@ -12,16 +11,13 @@ interface TopExercisesHeaderProps {
 }
 
 export const TopExercisesHeader: React.FC<TopExercisesHeaderProps> = ({
-  isMounted,
   topExerciseMode,
   setTopExerciseMode,
   topExercisesView,
   setTopExercisesView,
 }) => (
   <div
-    className={`flex flex-row justify-between items-center mb-4 gap-3 transition-opacity duration-700 ${
-      isMounted ? 'opacity-100' : 'opacity-0'
-    }`}
+    className="flex flex-row justify-between items-center mb-4 gap-3"
   >
     <h3 className="text-sm sm:text-base sm:text-lg font-semibold text-white flex items-center gap-2">
       <Zap className="w-5 h-5 text-amber-500" />

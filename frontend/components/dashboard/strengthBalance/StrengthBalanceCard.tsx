@@ -158,7 +158,7 @@ const LaggardPctChart: React.FC<{ result: StrengthBalancePairResult; trendColor:
             dot={renderCurrentDot}
             activeDot={{ r: 5, strokeWidth: 0 }}
             isAnimationActive={true}
-            animationDuration={500}
+            animationDuration={250}
           />
         </LineChart>
       </ResponsiveContainer>

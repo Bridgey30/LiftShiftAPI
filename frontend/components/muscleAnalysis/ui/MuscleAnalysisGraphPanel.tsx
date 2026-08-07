@@ -578,7 +578,7 @@ export const MuscleAnalysisGraphPanel: React.FC<MuscleAnalysisGraphPanelProps> =
                       stroke="none"
                       fill="url(#zoneGradient)"
                       mask="url(#zoneAreaTopFadeMaskDef)"
-                      animationDuration={500}
+                      animationDuration={250}
                     />
                     <Line
                       type="monotone"
@@ -589,7 +589,7 @@ export const MuscleAnalysisGraphPanel: React.FC<MuscleAnalysisGraphPanelProps> =
                       dot={false}
                       activeDot={{ r: 5, strokeWidth: 0 }}
                       isAnimationActive={true}
-                      animationDuration={500}
+                      animationDuration={250}
                       markerEnd="url(#graphArrow)"
                     />
                   </ComposedChart>

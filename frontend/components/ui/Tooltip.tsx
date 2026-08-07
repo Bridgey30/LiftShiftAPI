@@ -34,8 +34,11 @@ export const Tooltip: React.FC<TooltipProps> = ({ data }) => {
 
   return (
     <div
-      className="fixed z-[9999] pointer-events-none transition-all duration-200 animate-in fade-in zoom-in-95"
-      style={positionStyle}
+      className="fixed z-[9999] pointer-events-none transition-[opacity,transform] duration-100 zoom-in-95"
+      style={{
+        ...positionStyle,
+        transformOrigin: rect ? (rect.top < TOOLTIP_CONFIG.FLIP_THRESHOLD ? 'top center' : 'bottom center') : 'bottom center',
+      }}
     >
       <div
         className={`border rounded-xl p-3 ${theme} inline-block w-fit`}

@@ -43,7 +43,7 @@ export function SegmentControl<T extends string = string>({
             title={option.title}
             aria-label={option.title}
             aria-pressed={active}
-            className={`h-7 flex items-center justify-center gap-1 rounded-2xl cursor-pointer transition-all duration-200 ${colorClass} ${
+            className={`h-7 flex items-center justify-center gap-1 rounded-2xl cursor-pointer transition-colors duration-200 ${colorClass} ${
               option.icon ? 'pl-2 pr-1.5 pt-0.5' : 'px-1.5 text-xs font-bold leading-none whitespace-nowrap'
             }`}
           >

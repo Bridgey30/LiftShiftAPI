@@ -30,14 +30,12 @@ import { getRechartsXAxisInterval, RECHARTS_XAXIS_PADDING, RECHARTS_YAXIS_MARGIN
 import { formatVsPrevRollingWindow, getRollingWindowDaysForMode } from '../../../utils/date/dateUtils';
 
 export const IntensityEvolutionCard = ({
-  isMounted,
   mode,
   onToggle,
   intensityData,
   intensityInsight,
   tooltipStyle,
 }: {
-  isMounted: boolean;
   mode: TimeFilterMode;
   onToggle: (m: TimeFilterMode) => void;
   intensityData: any[];
@@ -83,7 +81,7 @@ export const IntensityEvolutionCard = ({
 
   return (
     <div className="bg-black/20 border border-slate-700/50 px-2 sm:px-3 py-4 sm:py-6 rounded-xl min-h-[400px] sm:min-h-[480px] flex flex-col transition-[opacity,transform] duration-300" style={{ backgroundColor: 'rgb(var(--panel-rgb) / 0.5)' }}>
-      <div className={`flex flex-row justify-between items-center mb-3 gap-3 transition-opacity duration-700 ${isMounted ? 'opacity-100' : 'opacity-0'}`}>
+      <div className="flex flex-row justify-between items-center mb-3 gap-3">
         <h3 className="text-sm sm:text-lg font-semibold text-white flex items-center gap-2 transition-opacity duration-200 hover:opacity-90">
           <Layers className="w-5 h-5 text-orange-500 transition-opacity duration-200 hover:opacity-80" />
           <span>Training Style Evolution</span>
@@ -105,7 +103,7 @@ export const IntensityEvolutionCard = ({
 
       {intensityData && intensityData.length > 0 ? (
         <div
-          className={`flex-1 w-full transition-all duration-700 delay-100 ${isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+          className="flex-1 w-full"
           style={{ minHeight: '250px', height: '100%' }}
         >
           <LazyRender className="w-full" placeholder={<ChartSkeleton style={{ height: 250 }} />}>
@@ -157,9 +155,9 @@ export const IntensityEvolutionCard = ({
                   />
                   <Legend {...({ wrapperStyle: { fontSize: '11px', left: '52%', transform: 'translateX(-50%)', position: 'absolute' }, payload: legendPayload } as any)} />
 
-                  <Area type="monotone" dataKey="Strength" name="Strength (1-5)" stackId="1" stroke="#3b82f6" fill="url(#gStrength)" mask="url(#efMask)" animationDuration={500} />
-                  <Area type="monotone" dataKey="Hypertrophy" name="Hypertrophy (6-12)" stackId="1" stroke="#10b981" fill="url(#gHyper)" mask="url(#efMask)" animationDuration={500} />
-                  <Area type="monotone" dataKey="Endurance" name="Endurance (13+)" stackId="1" stroke="#a855f7" fill="url(#gEndure)" mask="url(#efMask)" animationDuration={500} />
+                  <Area type="monotone" dataKey="Strength" name="Strength (1-5)" stackId="1" stroke="#3b82f6" fill="url(#gStrength)" mask="url(#efMask)" animationDuration={250} />
+                  <Area type="monotone" dataKey="Hypertrophy" name="Hypertrophy (6-12)" stackId="1" stroke="#10b981" fill="url(#gHyper)" mask="url(#efMask)" animationDuration={250} />
+                  <Area type="monotone" dataKey="Endurance" name="Endurance (13+)" stackId="1" stroke="#a855f7" fill="url(#gEndure)" mask="url(#efMask)" animationDuration={250} />
 
                 </AreaChart>
               </ResponsiveContainer>
@@ -175,7 +173,7 @@ export const IntensityEvolutionCard = ({
         </div>
       )}
 
-      <ChartDescription isMounted={isMounted}>
+      <ChartDescription>
         <InsightLine>
           {intensityInsight ? (
             <>

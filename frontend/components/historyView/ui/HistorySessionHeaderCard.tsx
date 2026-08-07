@@ -93,7 +93,7 @@ export const HistorySessionHeaderCard: React.FC<
         }}
       />
       <div className="absolute inset-0 bg-slate-700/10 pointer-events-none rounded-2xl" />
-      <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none group-hover:bg-blue-500/10 transition-all duration-700"></div>
+      <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none group-hover:bg-blue-500/10 transition-colors duration-200"></div>
 
       {sessionHeatmapHasData && (
         <div

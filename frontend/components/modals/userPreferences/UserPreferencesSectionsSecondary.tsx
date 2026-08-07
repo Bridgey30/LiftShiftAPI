@@ -72,7 +72,7 @@ export const ThemeSection: React.FC<ThemeSectionProps> = ({
             <button
               type="button"
               onClick={() => onDarkBgChoiceChange?.('dark-bg1')}
-              className={`flex-1 py-1.5 rounded-md border text-xs font-medium transition-all cursor-pointer ${
+              className={`flex-1 py-1.5 rounded-md border text-xs font-medium transition-colors cursor-pointer ${
                 darkBgChoice === 'dark-bg1'
                   ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-400'
                   : 'bg-slate-900/20 border-slate-700/50 text-slate-400 hover:ring-1 hover:ring-emerald-500'
@@ -83,7 +83,7 @@ export const ThemeSection: React.FC<ThemeSectionProps> = ({
             <button
               type="button"
               onClick={() => onDarkBgChoiceChange?.('dark-bg5')}
-              className={`flex-1 py-1.5 rounded-md border text-xs font-medium transition-all cursor-pointer ${
+              className={`flex-1 py-1.5 rounded-md border text-xs font-medium transition-colors cursor-pointer ${
                 darkBgChoice === 'dark-bg5'
                   ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-400'
                   : 'bg-slate-900/20 border-slate-700/50 text-slate-400 hover:ring-1 hover:ring-emerald-500'
@@ -133,7 +133,7 @@ export const ThemeSection: React.FC<ThemeSectionProps> = ({
               <button
                 type="button"
                 onClick={() => onDarkBgChoiceChange?.('dark-bg1')}
-                className={`flex-1 py-1.5 rounded-md border text-xs font-medium transition-all cursor-pointer ${
+                className={`flex-1 py-1.5 rounded-md border text-xs font-medium transition-colors cursor-pointer ${
                   darkBgChoice === 'dark-bg1'
                     ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-400'
                     : 'bg-slate-900/20 border-slate-700/50 text-slate-400 hover:ring-1 hover:ring-emerald-500'
@@ -144,7 +144,7 @@ export const ThemeSection: React.FC<ThemeSectionProps> = ({
               <button
                 type="button"
                 onClick={() => onDarkBgChoiceChange?.('dark-bg5')}
-                className={`flex-1 py-1.5 rounded-md border text-xs font-medium transition-all cursor-pointer ${
+                className={`flex-1 py-1.5 rounded-md border text-xs font-medium transition-colors cursor-pointer ${
                   darkBgChoice === 'dark-bg5'
                     ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-400'
                     : 'bg-slate-900/20 border-slate-700/50 text-slate-400 hover:ring-1 hover:ring-emerald-500'

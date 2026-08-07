@@ -92,7 +92,7 @@ export const CalendarWeekGrid: React.FC<CalendarWeekGridProps> = ({
                       ${!enabledWeek ? 'opacity-25 cursor-not-allowed border-slate-700 bg-slate-800' : ''}
                       ${weekStatus === 'full' ? 'border-slate-500/60 bg-white/10' : ''}
                       ${weekStatus === 'partial' ? 'border-slate-600/60 bg-white/5' : ''}
-                      ${weekStatus === 'none' && enabledWeek ? 'border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/15 hover:scale-105' : ''}
+                      ${weekStatus === 'none' && enabledWeek ? 'border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/15 pointer-fine:hover:scale-105' : ''}
                       ${showWeekTooltip ? '' : ''}
                     `}
                     onClick={() => enabledWeek && onWeekClick(weekStart)}

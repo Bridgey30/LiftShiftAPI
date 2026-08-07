@@ -66,8 +66,6 @@ export const Dashboard: React.FC<DashboardProps> = ({
   now,
   secondarySetMultiplier = 0.5,
 }) => {
-  const [isMounted, setIsMounted] = useState(true);
-
   const effectiveNow = useMemo(() => now ?? getEffectiveNowFromWorkoutData(parsedData), [now, parsedData]);
 
   // For hypertrophy: use filteredData's max date so calendar filter is respected
@@ -300,6 +298,17 @@ export const Dashboard: React.FC<DashboardProps> = ({
     secondarySetMultiplier,
   });
 
+  // Fixed 30d window for the KPI row so Volume and Weekly Sets always share one period
+  const { weeklySetsDashboard: weeklySetsDashboard30d } = useDashboardWeeklySetsDashboard({
+    assetsMap,
+    fullData: filteredData,
+    effectiveNow,
+    muscleCompQuick: '30d',
+    compositionGrouping,
+    filterCacheKey,
+    secondarySetMultiplier,
+  });
+
   const hypertrophyWindowStart = useMemo(() => {
     const days = hypertrophyPeriod === '7d' ? 7 : 30;
     return new Date(hypertrophyEffectiveNow.getTime() - days * 24 * 60 * 60 * 1000);
@@ -403,7 +412,6 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
   return (
     <DashboardLayout
-      isMounted={isMounted}
       filtersSlot={filtersSlot}
       stickyHeader={stickyHeader}
       totalWorkouts={totalWorkouts}
@@ -435,6 +443,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
       muscleCompQuick={muscleCompQuick}
       setMuscleCompQuick={setMuscleCompQuick}
       weeklySetsDashboard={weeklySetsDashboard}
+      weeklySetsDashboard30d={weeklySetsDashboard30d}
       bodyMapGender={bodyMapGender}
       intensityData={intensityData}
       intensityInsight={intensityInsight}

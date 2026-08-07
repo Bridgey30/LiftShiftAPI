@@ -78,7 +78,7 @@ export const VolumeComparisonCard: React.FC<{
             e.stopPropagation();
             onThemeToggle?.();
           }}
-          className={`absolute top-3 right-3 z-10 p-2 rounded-xl border transition-all duration-300 cursor-pointer ${
+          className={`absolute top-3 right-3 z-10 p-2 rounded-xl border transition-colors duration-200 cursor-pointer ${
             isDark
               ? 'bg-slate-800/80 border-slate-700 hover:bg-slate-700 text-yellow-400'
               : 'bg-white/80 border-slate-300 hover:bg-slate-100 text-slate-700'

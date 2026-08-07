@@ -59,7 +59,7 @@ export const BuyMeACoffeeModal: React.FC<BuyMeACoffeeModalProps> = ({ isOpen, on
               <button
                 type="button"
                 onClick={() => onClose()}
-                className="w-8 h-8 rounded-lg bg-red-50 border border-red-200 flex items-center justify-center text-red-400 hover:text-red-600 hover:ring-1 hover:ring-red-400 transition-all"
+                className="w-8 h-8 rounded-lg bg-red-50 border border-red-200 flex items-center justify-center text-red-400 hover:text-red-600 hover:ring-1 hover:ring-red-400 transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -85,7 +85,7 @@ export const BuyMeACoffeeModal: React.FC<BuyMeACoffeeModalProps> = ({ isOpen, on
               <button
                 type="button"
                 onClick={handleSupporterClick}
-                className={`text-xs transition-all ${
+                className={`text-xs transition-colors ${
                   confirming
                     ? 'text-emerald-700 font-medium'
                     : 'text-gray-400 hover:text-gray-600'

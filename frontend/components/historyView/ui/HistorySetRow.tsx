@@ -88,12 +88,8 @@ export const HistorySetRow: React.FC<HistorySetRowProps> = ({
 
   const prShimmerStyle: React.CSSProperties = isPrRow ? (set.isPr ? {
     background: 'linear-gradient(90deg, transparent 0%, rgba(234,179,8,0.08) 25%, rgba(234,179,8,0.15) 50%, rgba(234,179,8,0.08) 75%, transparent 100%)',
-    backgroundSize: '200% 100%',
-    animation: 'prRowShimmer 3s ease-in-out infinite',
   } : {
     background: 'linear-gradient(90deg, transparent 0%, rgba(100,116,139,0.08) 25%, rgba(100,116,139,0.15) 50%, rgba(100,116,139,0.08) 75%, transparent 100%)',
-    backgroundSize: '200% 100%',
-    animation: 'prRowShimmer 3s ease-in-out infinite',
   }) : {};
 
   const handleRowMouseEnter = (e: React.MouseEvent) => {
@@ -119,13 +115,13 @@ export const HistorySetRow: React.FC<HistorySetRowProps> = ({
 
   return (
     <div
-      className={`relative z-10 flex items-center gap-2 sm:gap-3 p-1.5 sm:p-2 rounded-lg border ${rowStatusClass} transition-all hover:bg-black/60 group overflow-visible ${insight ? 'cursor-help' : ''}`}
+      className={`relative z-10 flex items-center gap-2 sm:gap-3 p-1.5 sm:p-2 rounded-lg border ${rowStatusClass} transition-colors hover:bg-black/60 group overflow-visible ${insight ? 'cursor-help' : ''}`}
       style={prShimmerStyle}
       onMouseEnter={handleRowMouseEnter}
       onMouseLeave={handleRowMouseLeave}
     >
       <div
-        className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[11px] sm:text-xs font-bold border-2 transition-all text-white ${set.isPr
+        className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[11px] sm:text-xs font-bold border-2 transition-colors text-white ${set.isPr
           ? dotClass
           : isWorking && !setConfig.shortLabel
             ? dotClass
@@ -157,7 +153,7 @@ export const HistorySetRow: React.FC<HistorySetRowProps> = ({
                   return (
                     <span
                       key="legacy-vol"
-                      className={`flex items-center gap-0.5 px-0.5 py-0.5 rounded text-[6px] sm:text-[8px] font-bold uppercase tracking-wider whitespace-nowrap leading-none border animate-pulse ${set.isPr ? 'bg-amber-200/70 text-yellow-300 dark:bg-yellow-500/10 dark:text-yellow-400 border-amber-300/80 dark:border-yellow-500/20' : 'bg-slate-200/70 text-slate-600 dark:bg-slate-500/10 dark:text-slate-400 border-slate-300/80 dark:border-slate-500/20'}`}
+                      className={`flex items-center gap-0.5 px-0.5 py-0.5 rounded text-[6px] sm:text-[8px] font-bold uppercase tracking-wider whitespace-nowrap leading-none border ${set.isPr ? 'bg-amber-200/70 text-yellow-300 dark:bg-yellow-500/10 dark:text-yellow-400 border-amber-300/80 dark:border-yellow-500/20' : 'bg-slate-200/70 text-slate-600 dark:bg-slate-500/10 dark:text-slate-400 border-slate-300/80 dark:border-slate-500/20'}`}
                       title="Volume PR (best-ever single-set volume)"
                       aria-label="Volume PR (best-ever single-set volume)"
                     >
@@ -177,7 +173,7 @@ export const HistorySetRow: React.FC<HistorySetRowProps> = ({
                 const label = set.isPr ? meta.gold : meta.silver;
 
                 return (
-                  <span key={badge.prType} className={`flex items-center gap-0.5 px-0.5 py-0.5 rounded text-[6px] sm:text-[8px] font-bold uppercase tracking-wider whitespace-nowrap leading-none border animate-pulse ${set.isPr ? 'bg-amber-200/70 text-yellow-300 dark:bg-yellow-500/10 dark:text-yellow-400 border-amber-300/80 dark:border-yellow-500/20' : 'bg-slate-200/70 text-slate-600 dark:bg-slate-500/10 dark:text-slate-400 border-slate-300/80 dark:border-slate-500/20'}`}>
+                  <span key={badge.prType} className={`flex items-center gap-0.5 px-0.5 py-0.5 rounded text-[6px] sm:text-[8px] font-bold uppercase tracking-wider whitespace-nowrap leading-none border ${set.isPr ? 'bg-amber-200/70 text-yellow-300 dark:bg-yellow-500/10 dark:text-yellow-400 border-amber-300/80 dark:border-yellow-500/20' : 'bg-slate-200/70 text-slate-600 dark:bg-slate-500/10 dark:text-slate-400 border-slate-300/80 dark:border-slate-500/20'}`}>
                     <Icon className="w-2 h-2 sm:w-2.5 sm:h-2.5 flex-none" />
                     <span>{label}</span>
                     {badge.prType === 'weight' && prDelta > 0 && (

@@ -73,7 +73,7 @@ export const ViewHeader: React.FC<ViewHeaderProps> = ({
               <div className="relative w-full sm:w-auto">
                 <button 
                   onClick={() => setIsMenuOpen(!isMenuOpen)} 
-                  className="inline-flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start whitespace-nowrap rounded-md text-xs font-medium focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 h-9 px-3 py-1.5 bg-transparent border border-black/70 text-slate-200 hover:border-white hover:text-white hover:bg-white/5 transition-all duration-200"
+                  className="inline-flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start whitespace-nowrap rounded-md text-xs font-medium focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 h-9 px-3 py-1.5 bg-transparent border border-black/70 text-slate-200 hover:border-white hover:text-white hover:bg-white/5 transition-colors duration-200"
                 >
                   <Eye className="w-4 h-4" /> Configure View <ChevronDown className={`w-4 h-4 transition-transform ${isMenuOpen ? 'rotate-180' : ''}`} />
                 </button>

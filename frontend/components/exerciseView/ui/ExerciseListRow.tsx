@@ -54,7 +54,7 @@ export const ExerciseListRow: React.FC<ExerciseListRowProps> = ({
         e.currentTarget.blur();
         onSelect();
       }}
-      className={`w-full text-left px-2 py-1.5 rounded-md transition-all duration-200 flex items-center justify-between group border cursor-pointer ${isSelected
+      className={`w-full text-left px-2 py-1.5 rounded-md transition-colors duration-200 flex items-center justify-between group border cursor-pointer ${isSelected
         ? selectedHighlight.button
         : 'border-transparent hover:bg-black/60 hover:border-slate-600/50'
         } ${!isEligible ? 'opacity-60' : ''}`}
@@ -79,7 +79,7 @@ export const ExerciseListRow: React.FC<ExerciseListRowProps> = ({
 
       <div className="flex items-center gap-1.5 shrink-0">
         {isEligible ? (
-          <div className={`px-2 py-0.5 rounded-full ${status.bgColor} border ${status.borderColor} ${isSelected ? 'animate-in zoom-in-50 duration-200' : ''} flex items-center gap-1`}>
+          <div className={`px-2 py-0.5 rounded-full ${status.bgColor} border ${status.borderColor} flex items-center gap-1`}>
             <RowStatusIcon className={`w-2.5 h-2.5 ${status.color}`} />
             <span className={`text-[9px] sm:text-xs font-semibold ${status.color}`}>{displayLabel}</span>
             {status.diffPct !== undefined && (
@@ -89,7 +89,7 @@ export const ExerciseListRow: React.FC<ExerciseListRowProps> = ({
             )}
           </div>
         ) : (
-          <div className={`px-2 py-0.5 rounded-full bg-slate-700/15 border border-slate-600/20 ${isSelected ? 'animate-in zoom-in-50 duration-200' : ''} flex items-center gap-1`}>
+          <div className={`px-2 py-0.5 rounded-full bg-slate-700/15 border border-slate-600/20 flex items-center gap-1`}>
             {IneligibleStatusIcon ? (
               <IneligibleStatusIcon className="w-2.5 h-2.5 text-slate-400" />
             ) : null}

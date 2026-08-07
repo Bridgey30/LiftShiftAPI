@@ -12,7 +12,6 @@ import { DashboardPrimaryCharts } from './DashboardPrimaryCharts';
 import { DashboardSecondaryCharts } from './DashboardSecondaryCharts';
 
 interface DashboardLayoutProps {
-  isMounted: boolean;
   filtersSlot?: React.ReactNode;
   stickyHeader: boolean;
   totalWorkouts: number;
@@ -44,6 +43,7 @@ interface DashboardLayoutProps {
   muscleCompQuick: 'all' | '7d' | '30d' | '365d';
   setMuscleCompQuick: (v: 'all' | '7d' | '30d' | '365d') => void;
   weeklySetsDashboard: any;
+  weeklySetsDashboard30d: any;
   bodyMapGender: BodyMapGender;
   intensityData: any[];
   intensityInsight: any;
@@ -91,7 +91,6 @@ interface DashboardLayoutProps {
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = (props) => {
   const {
-    isMounted,
     filtersSlot,
     stickyHeader,
     totalWorkouts,
@@ -123,6 +122,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = (props) => {
     muscleCompQuick,
     setMuscleCompQuick,
     weeklySetsDashboard,
+    weeklySetsDashboard30d,
     bodyMapGender,
     intensityData,
     intensityInsight,
@@ -171,7 +171,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = (props) => {
   return (
     <>
       <style>{animationKeyframes}</style>
-      <div className="space-y-2 pb-2 animate-[fadeIn_0.3s_ease-out]">
+      <div className="space-y-2 pb-2 animate-[fadeIn_0.2s_ease-out]">
         <DashboardHeaderBar
           totalWorkouts={totalWorkouts}
           filtersSlot={filtersSlot}
@@ -194,11 +194,11 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = (props) => {
           dailyData={dailyData}
           timelineProgress={timelineProgress}
           weeklySetsDashboard={weeklySetsDashboard}
+          weeklySetsDashboard30d={weeklySetsDashboard30d}
           onStrengthBalanceDetails={onStrengthBalanceDetails}
         />
 
         <DashboardPrimaryCharts
-          isMounted={isMounted}
           chartModes={chartModes}
           toggleChartMode={toggleChartMode}
           prTrendView={prTrendView}

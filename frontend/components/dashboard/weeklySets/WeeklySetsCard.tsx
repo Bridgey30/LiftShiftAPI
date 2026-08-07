@@ -31,7 +31,6 @@ const formatWindowDuration = (days: number): string => {
 const safePct = (n: number, d: number) => (d > 0 ? (n / d) * 100 : 0);
 
 export const WeeklySetsCard = ({
-  isMounted,
   weeklySetsView,
   setWeeklySetsView,
   muscleCompQuick,
@@ -44,7 +43,6 @@ export const WeeklySetsCard = ({
   now,
   trainingLevel,
 }: {
-  isMounted: boolean;
   weeklySetsView: WeeklySetsView;
   setWeeklySetsView: (v: WeeklySetsView) => void;
   muscleCompQuick: WeeklySetsWindow;
@@ -133,9 +131,7 @@ export const WeeklySetsCard = ({
       />
 
       <div
-        className={`relative z-10 flex-1 w-full min-h-[250px] sm:min-h-[300px] transition-all duration-700 delay-100 ${
-          isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-        } min-w-0 pb-10`}
+        className="relative z-10 flex-1 w-full min-h-[250px] sm:min-h-[300px] min-w-0 pb-10"
       >
         {weeklySetsView === 'radar' ? (
           <WeeklySetsRadarView radarData={radarData} tooltipStyle={tooltipStyle} />
@@ -159,7 +155,6 @@ export const WeeklySetsCard = ({
       ) : null}
 
       <ChartDescription
-        isMounted={isMounted}
        
       >
         <InsightLine>

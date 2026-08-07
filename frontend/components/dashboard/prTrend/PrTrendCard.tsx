@@ -32,7 +32,6 @@ import { formatVsPrevRollingWindow, getRollingWindowDaysForMode } from '../../..
 type PrTrendView = 'area' | 'bar';
 
 export const PrTrendCard = ({
-  isMounted,
   mode,
   onToggle,
   view,
@@ -42,7 +41,6 @@ export const PrTrendCard = ({
   prTrendDelta,
   prTrendDelta7d,
 }: {
-  isMounted: boolean;
   mode: TimeFilterMode;
   onToggle: (m: TimeFilterMode) => void;
   view: PrTrendView;
@@ -82,7 +80,7 @@ export const PrTrendCard = ({
 
   return (
     <div className="bg-black/20 border border-slate-700/50 px-2 sm:px-3 py-4 sm:py-6 rounded-xl min-h-[400px] sm:min-h-[480px] flex flex-col transition-[opacity,transform] duration-300" style={{ backgroundColor: 'rgb(var(--panel-rgb) / 0.5)' }}>
-      <div className={`flex flex-row justify-between items-center mb-3 gap-3 transition-opacity duration-700 ${isMounted ? 'opacity-100' : 'opacity-0'}`}>
+      <div className="flex flex-row justify-between items-center mb-3 gap-3">
         <h3 className="text-sm sm:text-lg font-semibold text-white flex items-center gap-2 transition-opacity duration-200 hover:opacity-90">
           <Trophy className="w-5 h-5 text-yellow-500 transition-opacity duration-200 hover:opacity-80" />
           <span>PRs Over Time</span>
@@ -111,7 +109,7 @@ export const PrTrendCard = ({
         </div>
       </div>
 
-      <div className={`flex-1 w-full min-h-[250px] sm:min-h-[300px] transition-all duration-700 delay-100 ${isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+      <div className="flex-1 w-full min-h-[250px] sm:min-h-[300px]">
         <LazyRender className="h-full w-full" placeholder={<ChartSkeleton className="h-full min-h-[250px] sm:min-h-[300px]" />}>
           <ResponsiveContainer width="100%" height={300} minWidth={0}>
             <ComposedChart key={view} data={chartData} margin={{ top: 10, ...RECHARTS_YAXIS_MARGIN, bottom: 0 }}>
@@ -164,7 +162,7 @@ export const PrTrendCard = ({
                   mask="url(#efMask)"
                   dot={false}
                   activeDot={false}
-                  animationDuration={500}
+                  animationDuration={250}
                 />
                 <Line
                   type="monotone"
@@ -176,19 +174,19 @@ export const PrTrendCard = ({
                   dot={<ValueDot valueKey="count" unit="" data={chartData} color="#eab308" showAtIndexMap={dotShowMap} showDotWhenHidden={false} />}
                   activeDot={{ r: 5, strokeWidth: 0 }}
                   isAnimationActive={true}
-                  animationDuration={500}
+                  animationDuration={250}
                   markerEnd="url(#prArrow)"
                 />
                 </>
               ) : (
-                <Bar dataKey="count" name="PRs" fill="#eab308" radius={[8, 8, 0, 0]} animationDuration={500} />
+                <Bar dataKey="count" name="PRs" fill="#eab308" radius={[8, 8, 0, 0]} animationDuration={250} />
               )}
             </ComposedChart>
           </ResponsiveContainer>
         </LazyRender>
       </div>
 
-      <ChartDescription isMounted={isMounted}>
+      <ChartDescription>
         <InsightLine>
           {prTrendDelta ? (
             <TrendBadge

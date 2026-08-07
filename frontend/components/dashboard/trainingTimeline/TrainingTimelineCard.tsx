@@ -170,7 +170,7 @@ const CheckpointIconNode: React.FC<{
         `}
         style={{
           backgroundColor: 'rgba(100, 100, 100, 0.15)',
-          animation: isCurrent ? 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite' : undefined,
+          animation: isCurrent ? 'pulse 4s var(--ease-in-out) infinite' : undefined,
         }}
       >
         <CheckpointIcon

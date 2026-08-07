@@ -31,7 +31,7 @@ export const AiAnalyzeModuleGrid: React.FC<AiAnalyzeModuleGridProps> = ({
               key={m.id}
               type="button"
               onClick={() => onToggleModule(m.id)}
-              className={`text-left p-3 rounded-xl border transition-all ${
+              className={`text-left p-3 rounded-xl border transition-colors ${
                 selected
                   ? 'bg-emerald-500/10 border-emerald-500/40'
                   : 'bg-black/20 border-slate-700/50 hover:border-slate-600 hover:bg-white/10'

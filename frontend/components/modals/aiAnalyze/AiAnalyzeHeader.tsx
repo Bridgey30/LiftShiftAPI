@@ -20,7 +20,7 @@ export const AiAnalyzeHeader: React.FC<AiAnalyzeHeaderProps> = ({ onClose }) => 
     <button
       type="button"
       onClick={onClose}
-      className="w-8 h-8 rounded-lg bg-slate-900/20 border border-slate-700/50 flex items-center justify-center text-slate-400 hover:text-slate-200 hover:border-slate-600 transition-all"
+      className="w-8 h-8 rounded-lg bg-slate-900/20 border border-slate-700/50 flex items-center justify-center text-slate-400 hover:text-slate-200 hover:border-slate-600 transition-colors"
       aria-label="Close"
     >
       <X className="w-4 h-4" />

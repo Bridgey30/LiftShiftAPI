@@ -44,7 +44,7 @@ export const CalendarMonthRow: React.FC<CalendarMonthRowProps> = ({
                 : status === 'partial' ? 'border-slate-600/60 bg-white/5 text-slate-200'
                 : isCurrentView ? (hasDataInMonth ? 'border-emerald-500/30 bg-emerald-500/10 text-slate-200' : 'border-slate-600/60 bg-black/20 text-slate-200')
                 : (hasDataInMonth ? 'border-emerald-500/20 bg-emerald-500/5 text-slate-200 hover:bg-emerald-500/10' : 'border-slate-700/50 bg-black/20 text-slate-300 hover:bg-white/5')}
-              ${disabled || !hasDataInMonth ? 'opacity-20 cursor-not-allowed' : 'cursor-pointer hover:scale-105'}
+              ${disabled || !hasDataInMonth ? 'opacity-20 cursor-not-allowed' : 'cursor-pointer pointer-fine:hover:scale-105'}
               ${showTooltip ? '' : ''}
             `}
             title={`${MONTH_NAMES[idx]}${isCurrentView ? ' (click again to select)' : ''}`}

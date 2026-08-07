@@ -99,7 +99,7 @@ export const ExerciseListPanel: React.FC<ExerciseListPanelProps> = ({
         <input
           type="text"
           placeholder="Search exercises or muscles..."
-          className="w-full bg-black/20 border border-slate-700/50 rounded-lg pl-9 pr-[8.5rem] py-1 sm:py-2 text-[11px] sm:text-xs text-slate-200 focus:outline-none focus:border-transparent transition-all"
+          className="w-full bg-black/20 border border-slate-700/50 rounded-lg pl-9 pr-[8.5rem] py-1 sm:py-2 text-[11px] sm:text-xs text-slate-200 focus:outline-none focus:border-transparent transition-colors"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />

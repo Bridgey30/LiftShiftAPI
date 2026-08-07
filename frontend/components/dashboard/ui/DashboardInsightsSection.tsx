@@ -27,6 +27,7 @@ interface DashboardInsightsSectionProps {
   dailyData: DailySummary[];
   timelineProgress: TimelineProgress;
   weeklySetsDashboard: WeeklySetsDashboardResult | null;
+  weeklySetsDashboard30d: WeeklySetsDashboardResult | null;
   onStrengthBalanceDetails?: () => void;
 }
 
@@ -46,6 +47,7 @@ export const DashboardInsightsSection: React.FC<DashboardInsightsSectionProps> =
   dailyData,
   timelineProgress,
   weeklySetsDashboard,
+  weeklySetsDashboard30d,
   onStrengthBalanceDetails,
 }) => (
   <>
@@ -60,7 +62,7 @@ export const DashboardInsightsSection: React.FC<DashboardInsightsSectionProps> =
       insights={dashboardInsights}
       totalPRs={totalPrs}
       weightUnit={weightUnit}
-      weeklySetsDashboard={weeklySetsDashboard}
+      weeklySetsDashboard={weeklySetsDashboard30d}
     />
 
     <RecentPRsPanel prInsights={dashboardInsights.prInsights} weightUnit={weightUnit} now={effectiveNow} onExerciseClick={onExerciseClick} />

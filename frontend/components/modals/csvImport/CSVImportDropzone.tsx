@@ -46,7 +46,7 @@ export const CSVImportDropzone: React.FC<CSVImportDropzoneProps> = ({
         onDragOver={canUploadCsv ? onDragOver : undefined}
         onDrop={canUploadCsv ? onDrop : undefined}
         onClick={() => canUploadCsv && fileInputRef.current?.click()}
-        className={`w-full border-2 border-dashed rounded-xl transition-all flex flex-col items-center justify-center flex-1 min-h-0 px-6 sm:px-10 py-8 ${
+        className={`w-full border-2 border-dashed rounded-xl transition-colors flex flex-col items-center justify-center flex-1 min-h-0 px-6 sm:px-10 py-8 ${
           canUploadCsv
             ? 'border-slate-600 hover:border-slate-400 hover:bg-black/60 cursor-pointer'
             : 'border-slate-800 bg-black/40 cursor-not-allowed opacity-50'

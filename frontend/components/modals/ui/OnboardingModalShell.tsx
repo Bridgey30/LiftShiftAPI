@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'motion/react';
 import { resolveDarkBgByMode, resolveLightBg } from '../../../src/assets/images/misc/bgConfig';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useAppPreferences } from '../../../hooks/app';
@@ -22,7 +23,12 @@ export function OnboardingModalShell({
   const isLightTheme = mode === 'light';
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm overflow-y-auto overscroll-contain">
+    <motion.div
+      initial={{ opacity: 0, scale: 0.97 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.16, ease: [0.23, 1, 0.32, 1] }}
+      className="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm overflow-y-auto overscroll-contain"
+    >
       <div className="min-h-full w-full px-3 sm:px-6 py-8 flex items-center justify-center">
         <div className={`w-full ${maxWidthClassName} mx-auto`}>
           <div className="relative bg-black/60 border border-slate-700/50 rounded-2xl p-5 sm:p-6 overflow-hidden backdrop-blur-md flex flex-col min-h-[500px] max-h-[min(720px,calc(100vh-5rem))]">
@@ -52,6 +58,6 @@ export function OnboardingModalShell({
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

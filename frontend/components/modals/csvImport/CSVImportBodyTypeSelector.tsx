@@ -22,7 +22,7 @@ export const CSVImportBodyTypeSelector: React.FC<CSVImportBodyTypeSelectorProps>
     <div className="grid grid-cols-2 gap-3">
       <button
         onClick={() => onSelectGender('male')}
-        className={`relative p-3 rounded-xl border-2 transition-all duration-200 flex flex-col items-center ${
+        className={`relative p-3 rounded-xl border-2 transition-colors duration-200 flex flex-col items-center ${
           selectedGender === 'male'
             ? 'border-blue-500 bg-blue-500/10 shadow-lg shadow-blue-500/20'
             : 'border-slate-700/50 hover:border-slate-500/70 hover:bg-black/60'
@@ -47,7 +47,7 @@ export const CSVImportBodyTypeSelector: React.FC<CSVImportBodyTypeSelectorProps>
 
       <button
         onClick={() => onSelectGender('female')}
-        className={`relative p-3 rounded-xl border-2 transition-all duration-200 flex flex-col items-center ${
+        className={`relative p-3 rounded-xl border-2 transition-colors duration-200 flex flex-col items-center ${
           selectedGender === 'female'
             ? 'border-pink-500 bg-pink-500/10 shadow-lg shadow-pink-500/20'
             : 'border-slate-700/50 hover:border-slate-500/70 hover:bg-black/60'

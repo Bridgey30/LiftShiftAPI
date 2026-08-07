@@ -320,7 +320,7 @@ export const ActivityHeatmap = memo(({
                       return (
                         <div
                           key={day.date.toISOString()}
-                          className={`w-[18px] h-[18px] rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-medium ${bgClass} ${textColor} transition-all duration-300 hover:ring-1 hover:ring-white/20 ${day.totalVolume > 0 && !isFuture ? 'cursor-pointer' : 'cursor-default'} ${isToday ? 'ring-2 ring-blue-400/70' : ''}`}
+                          className={`w-[18px] h-[18px] rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-medium ${bgClass} ${textColor} transition-colors duration-200 hover:ring-1 hover:ring-white/20 ${day.totalVolume > 0 && !isFuture ? 'cursor-pointer' : 'cursor-default'} ${isToday ? 'ring-2 ring-blue-400/70' : ''}`}
                           style={style}
                           onClick={() => day.count > 0 && !isFuture && onDayClick?.(day.date)}
                           onMouseEnter={(e) => !isFuture && handleMouseEnter(e, day)}

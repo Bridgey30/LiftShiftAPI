@@ -189,7 +189,7 @@ export const HistoryView: React.FC<HistoryViewProps> = ({
         </div>
       )}
 
-      <div key={currentPage} className="space-y-2 sm:space-y-3 animate-in fade-in slide-in-from-bottom-8 duration-500 fill-mode-forwards">
+      <div key={currentPage} className="space-y-2 sm:space-y-3">
         {currentSessions.map((session, index) => (
           <HistorySessionBlock
             key={session.key}

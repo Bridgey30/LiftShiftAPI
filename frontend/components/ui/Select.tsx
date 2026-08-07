@@ -35,7 +35,7 @@ export function Select<T extends string = string>({
       {subtitle && (
         <p className="text-[11px] sm:text-xs text-slate-500 leading-relaxed">{subtitle}</p>
       )}
-      <div className="relative rounded-md border border-slate-700/50 bg-slate-900/20 hover:ring-1 hover:ring-emerald-500 hover:bg-slate-900/40 focus-within:ring-1 focus-within:ring-emerald-500 transition-all">
+      <div className="relative rounded-md border border-slate-700/50 bg-slate-900/20 hover:ring-1 hover:ring-emerald-500 hover:bg-slate-900/40 focus-within:ring-1 focus-within:ring-emerald-500 transition-colors">
         <select
           value={value}
           onChange={(e) => onChange(e.target.value as T)}
