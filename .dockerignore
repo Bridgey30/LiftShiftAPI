@@ -1,0 +1,24 @@
+# Root build context (used by frontend/Dockerfile).
+# Keep build inputs, drop everything else.
+node_modules
+dist
+dist-ssr
+.git
+.github
+.netlify
+agents
+.windsurf
+.codegraph
+backend/node_modules
+backend/dist
+backend/.env
+frontend/node_modules
+frontend/dist
+*.local
+npm-debug.log*
+*.log
+.DS_Store
+coverage
+.opencode
+opencode.json
+skills-lock.json

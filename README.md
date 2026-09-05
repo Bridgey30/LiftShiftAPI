@@ -111,6 +111,8 @@ npm run dev
 
 Requires Node.js >= 22. See [CONTRIBUTING.md](CONTRIBUTING.md) for setup details and coding standards.
 
+Prefer Docker? See [DOCKER.md](DOCKER.md): `docker compose --env-file .env.docker.example up --build`, then open `http://localhost:3000`.
+
 **Tech stack:** React 19, TypeScript, Vite, Tailwind CSS, Recharts on the frontend. Node.js + Express + Puppeteer on the backend proxy. All analytics run client-side. The backend only proxies API calls to Hevy and Lyfta.
 
 ---
