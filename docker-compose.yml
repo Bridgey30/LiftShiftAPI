@@ -1,0 +1,107 @@
+# LiftShift local self-host — one command: `docker compose up --build`
+# Frontend (Nginx :80 -> host :3000) proxies /api/* to backend:5000 (same-origin, no CORS).
+name: liftshift
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: liftshift-backend:local
+    container_name: liftshift-backend
+    restart: unless-stopped
+    init: true
+    shm_size: 1gb
+    env_file:
+      - path: ./.env
+        required: false
+    environment:
+      PORT: 5000
+      HEVY_X_API_KEY: ${HEVY_X_API_KEY:-}
+      HEVY_BASE_URL: ${HEVY_BASE_URL:-https://api.hevyapp.com}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000}
+    expose:
+      - "5000"
+    # No host port published on purpose: the browser reaches the backend via
+    # the frontend Nginx proxy (same-origin /api), so host port 5000 — often
+    # taken by macOS AirPlay Receiver — can never collide.
+    # To debug the backend directly, uncomment the next two lines:
+    # ports:
+    #   - "${BACKEND_PORT:-5051}:5000"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:'+(process.env.PORT||'5000')+'/api/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      args:
+        VITE_BACKEND_URL: ${VITE_BACKEND_URL:-}
+        VITE_BASE_PATH: ${VITE_BASE_PATH:-/}
+        BASE_ASSETS: ${BASE_ASSETS:-/}
+    image: liftshift-frontend:local
+    container_name: liftshift-frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      # Runtime backend override (no rebuild). "" = same-origin via Nginx (recommended).
+      # Example for hosted backend: BACKEND_URL=https://liftshift-backend.onrender.com
+      BACKEND_URL: ${BACKEND_URL:-}
+    ports:
+      - "${FRONTEND_PORT:-3000}:80"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:80/"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
+  # CSV-only frontend (no backend pull). Usage:
+  #   docker compose --profile frontend-only up frontend-only --build
+  # Standalone copy of `frontend` WITHOUT depends_on, so the backend
+  # container is never created. (extends + `depends_on: []` does not
+  # reliably clear the dependency, hence the explicit duplication.)
+  frontend-only:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      args:
+        VITE_BACKEND_URL: ${VITE_BACKEND_URL:-}
+        VITE_BASE_PATH: ${VITE_BASE_PATH:-/}
+        BASE_ASSETS: ${BASE_ASSETS:-/}
+    image: liftshift-frontend:local
+    container_name: liftshift-frontend-only
+    restart: unless-stopped
+    environment:
+      BACKEND_URL: ${BACKEND_URL:-}
+    ports:
+      - "${FRONTEND_PORT:-3000}:80"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:80/"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    profiles:
+      - frontend-only

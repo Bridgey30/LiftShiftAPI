@@ -68,8 +68,20 @@ const stripTrailingApiPath = (url: string): string => {
   }
 };
 
+const getRuntimeEnvUrl = (): string | undefined => {
+  try {
+    const w = window as unknown as { __LIFTSHIFT_ENV__?: { VITE_BACKEND_URL?: unknown } };
+    const v = w.__LIFTSHIFT_ENV__?.VITE_BACKEND_URL;
+    return typeof v === 'string' && v.trim() ? v.trim() : undefined;
+  } catch {
+    return undefined;
+  }
+};
+
 export const getBackendBaseUrl = (): string => {
-  const envUrl = import.meta.env.VITE_BACKEND_URL as string | undefined;
+  // Docker runtime injection wins over build-time Vite env so one image
+  // works everywhere without rebuilding (see frontend/public/env.js).
+  const envUrl = getRuntimeEnvUrl() ?? (import.meta.env.VITE_BACKEND_URL as string | undefined);
   if (envUrl && typeof envUrl === 'string' && envUrl.trim()) {
     const normalized = stripTrailingApiPath(envUrl.trim());
     // In dev, prefer same-origin + Vite proxy so the app works on LAN devices.
@@ -105,6 +117,7 @@ export const parseError = async (res: Response): Promise<string> => {
 
 export const buildBackendUrl = (path: string): string => {
   const base = getBackendBaseUrl();
-  if (!base && !import.meta.env.DEV) throw new Error('Missing VITE_BACKEND_URL (backend API).');
+  // Empty base = same-origin /api (Vite dev proxy or Docker Nginx proxy).
+  // This keeps `docker compose up` working without a rebuild.
   return base ? `${base}${path}` : path;
 };

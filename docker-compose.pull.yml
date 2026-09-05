@@ -1,0 +1,73 @@
+# LiftShift — pull prebuilt images, no local build.
+# Usage:
+#   docker compose -f docker-compose.pull.yml up
+# Images are published to GHCR on every GitHub Release (see .github/workflows/docker-publish.yml).
+# Set LIFTSHIFT_TAG to a release tag (default: latest).
+name: liftshift
+
+services:
+  backend:
+    image: ghcr.io/aree6/liftshift-backend:${LIFTSHIFT_TAG:-latest}
+    container_name: liftshift-backend
+    restart: unless-stopped
+    init: true
+    shm_size: 1gb
+    env_file:
+      - path: ./.env
+        required: false
+    environment:
+      PORT: 5000
+      HEVY_X_API_KEY: ${HEVY_X_API_KEY:-}
+      HEVY_BASE_URL: ${HEVY_BASE_URL:-https://api.hevyapp.com}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000}
+    expose:
+      - "5000"
+    # No host port published on purpose (see docker-compose.yml comments).
+    # To debug the backend directly, uncomment the next two lines:
+    # ports:
+    #   - "${BACKEND_PORT:-5051}:5000"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:'+(process.env.PORT||'5000')+'/api/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
+  frontend:
+    image: ghcr.io/aree6/liftshift-frontend:${LIFTSHIFT_TAG:-latest}
+    container_name: liftshift-frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      BACKEND_URL: ${BACKEND_URL:-}
+    ports:
+      - "${FRONTEND_PORT:-3000}:80"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:80/"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
+  frontend-only:
+    image: ghcr.io/aree6/liftshift-frontend:${LIFTSHIFT_TAG:-latest}
+    container_name: liftshift-frontend-only
+    restart: unless-stopped
+    environment:
+      BACKEND_URL: ${BACKEND_URL:-}
+    ports:
+      - "${FRONTEND_PORT:-3000}:80"
+    profiles:
+      - frontend-only

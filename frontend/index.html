@@ -60,6 +60,8 @@
     <meta name="robots" content="index, follow">
 
     <base href="%BASE_URL%">
+    <!-- Docker runtime config (overwritten at container startup; no-op on static hosts). -->
+    <script src="/env.js" defer></script>
     <style>
       /* Custom Scrollbar for a sleeker look */
       ::-webkit-scrollbar {
